@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -68,6 +69,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         context.getSupportFragmentManager().beginTransaction()
                 .addToBackStack("loginFragment")
                 .replace(R.id.mainFrame, RegisterFragment.newInstance(username), "registerFragment")
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                 .commit();
     }
 
