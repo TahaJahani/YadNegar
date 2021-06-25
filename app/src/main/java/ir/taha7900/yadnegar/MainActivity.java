@@ -16,6 +16,6 @@ public class MainActivity extends AppCompatActivity {
         mainFrame = findViewById(R.id.mainFrame);
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.mainFrame, LoginFragment.newInstance(), "loginFragment")
-                .addToBackStack("loginFragment").commit();
+                .commit();
     }
 }

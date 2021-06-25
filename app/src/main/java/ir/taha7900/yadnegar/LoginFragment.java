@@ -13,6 +13,9 @@ import android.view.ViewGroup;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 
+import java.lang.ref.WeakReference;
+import java.util.Objects;
+
 public class LoginFragment extends Fragment implements View.OnClickListener {
 
     private TextInputEditText usernameInput;
@@ -59,7 +62,13 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     }
 
     public void registerClicked(View view) {
-
+        String username = null;
+        if (usernameInput.length() != 0)
+            username = Objects.requireNonNull(usernameInput.getText()).toString();
+        context.getSupportFragmentManager().beginTransaction()
+                .addToBackStack("loginFragment")
+                .replace(R.id.mainFrame, RegisterFragment.newInstance(username), "registerFragment")
+                .commit();
     }
 
     public void loginClicked(View view) {

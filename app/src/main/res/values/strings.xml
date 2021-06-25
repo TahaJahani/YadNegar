@@ -5,6 +5,12 @@
     <string name="login">Login</string>
     <string name="or">or</string>
     <string name="register">Register</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="email">Email</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="name_optional">Name (Optional)</string>
+    <string name="birthday_optional">Birthday (Optional)</string>
+    <string name="create_account">Create Account</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="field_is_required">Field Is Required</string>
+    <string name="passwords_do_not_match">Passwords Do Not Match</string>
 </resources>
