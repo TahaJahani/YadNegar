@@ -23,13 +23,9 @@ import com.google.android.material.navigation.NavigationView;
 import ir.taha7900.yadnegar.Models.User;
 
 
-public class HomeFragment extends Fragment implements View.OnClickListener, NavigationView.OnNavigationItemSelectedListener {
+public class HomeFragment extends Fragment {
 
     private MainActivity context;
-    private NavigationView sideNavDrawer;
-    private MaterialToolbar topAppBar;
-    private DrawerLayout drawerLayout;
-    private View drawerHeader;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -48,66 +44,13 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Navi
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         this.context = (MainActivity) context;
-        ((MainActivity) context).getSupportActionBar().hide();
+        ((MainActivity) context).topAppBar.setTitle(R.string.home);
+        ((MainActivity) context).setShowNavigationIcon(true);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_home, container, false);
-        topAppBar = view.findViewById(R.id.topAppBar);
-        sideNavDrawer = view.findViewById(R.id.sideNavDrawer);
-        drawerLayout = view.findViewById(R.id.drawerLayout);
-        drawerHeader = sideNavDrawer.getHeaderView(0);
-        topAppBar.setNavigationOnClickListener(this);
-        sideNavDrawer.setNavigationItemSelectedListener(this);
-        drawerHeader.setOnClickListener(this::profileClicked);
-        return view;
-    }
-
-    @Override
-    public void onClick(View view) {
-        drawerLayout.openDrawer(GravityCompat.START);
-    }
-
-    public void profileClicked(View view) {
-        Toast.makeText(context, "Profile Clicked!", Toast.LENGTH_SHORT).show();
-        drawerLayout.closeDrawer(GravityCompat.START);
-    }
-
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        int clickedId = item.getItemId();
-        if (clickedId == R.id.home)
-            homeClicked();
-        else if (clickedId == R.id.memories)
-            memoriesClicked();
-        else if (clickedId == R.id.setting)
-            settingClicked();
-        else if (clickedId == R.id.logout)
-            logoutClicked();
-        drawerLayout.closeDrawer(GravityCompat.START);
-        return true;
-    }
-
-    private void logoutClicked() {
-        User.logoutCurrentUser();
-        context.getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.mainFrame, LoginFragment.newInstance(), "loginFragment")
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE)
-                .commit();
-    }
-
-    private void homeClicked() {
-
-    }
-
-    private void memoriesClicked() {
-
-    }
-
-    private void settingClicked() {
-
+        return inflater.inflate(R.layout.fragment_home, container, false);
     }
 }
