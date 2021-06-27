@@ -17,6 +17,10 @@ public class User {
         return currentUser;
     }
 
+    public static void logoutCurrentUser() {
+        User.currentUser = null;
+    }
+
     public static void setCurrentUser(User currentUser) {
         User.currentUser = currentUser;
     }
