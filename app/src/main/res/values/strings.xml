@@ -13,4 +13,10 @@
     <string name="confirm_password">Confirm Password</string>
     <string name="field_is_required">Field Is Required</string>
     <string name="passwords_do_not_match">Passwords Do Not Match</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="home">Home</string>
+    <string name="memories">Memories</string>
+    <string name="setting">Setting</string>
+    <string name="logout">Logout</string>
 </resources>

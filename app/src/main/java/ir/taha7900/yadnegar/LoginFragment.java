@@ -75,5 +75,9 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 
     public void loginClicked(View view) {
         //TODO: completed
+        context.getSupportFragmentManager().beginTransaction()
+                .replace(R.id.mainFrame, HomeFragment.newInstance(), "homeFragment")
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                .commit();
     }
 }
