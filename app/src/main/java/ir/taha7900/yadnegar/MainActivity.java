@@ -63,7 +63,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void profileClicked(View view) {
-        Toast.makeText(this, "Profile Clicked!", Toast.LENGTH_SHORT).show();
+        getSupportFragmentManager().beginTransaction()
+                .addToBackStack("profileFragment")
+                .replace(R.id.mainFrame, ProfileFragment.newInstance(), "profileFragment")
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).commit();
         drawerLayout.closeDrawer(GravityCompat.START);
     }
 
@@ -92,7 +95,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void homeClicked() {
-
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.mainFrame, HomeFragment.newInstance(), "homeFragment")
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                .commit();
     }
 
     private void memoriesClicked() {

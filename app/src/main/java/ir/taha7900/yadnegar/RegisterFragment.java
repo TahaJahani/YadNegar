@@ -75,6 +75,13 @@ public class RegisterFragment extends Fragment implements View.OnClickListener {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        context.topAppBar.setTitle(R.string.register);
+        context.setShowNavigationIcon(false);
+    }
+
+    @Override
     public void onClick(View view) {
 
     }

@@ -19,4 +19,5 @@
     <string name="memories">Memories</string>
     <string name="setting">Setting</string>
     <string name="logout">Logout</string>
+    <string name="profile">Profile</string>
 </resources>
