@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.navigation.NavigationView;
 
+import ir.taha7900.yadnegar.Models.Memory;
 import ir.taha7900.yadnegar.Models.User;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, NavigationView.OnNavigationItemSelectedListener {
@@ -110,7 +111,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void memoriesClicked() {
-
+        //TODO: change
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.mainFrame, MemoryFragment.newInstance(new Memory(1)))
+                .addToBackStack(null)
+                .commit();
     }
 
     private void settingClicked() {

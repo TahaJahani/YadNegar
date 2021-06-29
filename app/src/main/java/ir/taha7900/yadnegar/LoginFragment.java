@@ -1,9 +1,11 @@
 package ir.taha7900.yadnegar;
 
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -15,7 +17,11 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.lang.ref.WeakReference;
+import java.time.Instant;
+import java.util.Date;
 import java.util.Objects;
+
+import ir.taha7900.yadnegar.Models.User;
 
 public class LoginFragment extends Fragment implements View.OnClickListener {
 
@@ -81,8 +87,11 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                 .commit();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public void loginClicked(View view) {
-        //TODO: completed
+        //TODO: completed, and remove line before function
+        User.setCurrentUser(new User(1, "Taha Jahani",
+                "Taha7900", Date.from(Instant.now()), "09367642209"));
         context.getSupportFragmentManager().beginTransaction()
                 .replace(R.id.mainFrame, HomeFragment.newInstance(), "homeFragment")
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)

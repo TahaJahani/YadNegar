@@ -12,6 +12,13 @@ public class User {
     private Date birthDate;
     private String phoneNumber;
 
+    public User(long id, String name, String username, Date birthDate, String phoneNumber) {
+        this.id = id;
+        this.name = name;
+        this.username = username;
+        this.birthDate = birthDate;
+        this.phoneNumber = phoneNumber;
+    }
 
     public static User getCurrentUser() {
         return currentUser;
@@ -23,5 +30,9 @@ public class User {
 
     public static void setCurrentUser(User currentUser) {
         User.currentUser = currentUser;
+    }
+
+    public long getId() {
+        return id;
     }
 }
