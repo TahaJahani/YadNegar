@@ -49,8 +49,9 @@ public class HomeFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        ((MainActivity) context).topAppBar.setTitle(R.string.home);
-        ((MainActivity) context).setShowNavigationIcon(true);
+        context.topAppBar.setTitle(R.string.home);
+        context.setShowNavigationIcon(true);
+        context.clearTopAppBar();
     }
 
     @Override

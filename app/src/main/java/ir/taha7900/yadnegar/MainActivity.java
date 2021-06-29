@@ -57,6 +57,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
+    public void clearTopAppBar() {
+        if (topAppBar.getMenu() != null) {
+            topAppBar.getMenu().clear();
+            topAppBar.setOnMenuItemClickListener(null);
+        }
+    }
+
     @Override
     public void onClick(View view) {
         drawerLayout.openDrawer(GravityCompat.START);

@@ -79,6 +79,7 @@ public class RegisterFragment extends Fragment implements View.OnClickListener {
         super.onResume();
         context.topAppBar.setTitle(R.string.register);
         context.setShowNavigationIcon(false);
+        context.clearTopAppBar();
     }
 
     @Override

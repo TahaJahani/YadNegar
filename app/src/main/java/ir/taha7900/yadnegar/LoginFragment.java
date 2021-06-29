@@ -62,6 +62,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         super.onResume();
         context.topAppBar.setTitle(R.string.login);
         context.setShowNavigationIcon(false);
+        context.clearTopAppBar();
     }
 
     @Override
