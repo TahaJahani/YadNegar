@@ -9,11 +9,15 @@ import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.lang.ref.WeakReference;
@@ -22,8 +26,11 @@ import java.util.Date;
 import java.util.Objects;
 
 import ir.taha7900.yadnegar.Models.User;
+import ir.taha7900.yadnegar.Utils.MsgCode;
+import ir.taha7900.yadnegar.Utils.Network;
+import okhttp3.OkHttpClient;
 
-public class LoginFragment extends Fragment implements View.OnClickListener {
+public class LoginFragment extends Fragment {
 
     private TextInputEditText usernameInput;
     private TextInputEditText passwordInput;
@@ -31,8 +38,22 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     private MaterialButton registerButton;
     private MainActivity context;
 
+    private Handler handler;
+
     public LoginFragment() {
-        // Required empty public constructor
+        handler = new Handler(Looper.getMainLooper()) {
+            @Override
+            public void handleMessage(@NonNull Message msg) {
+                switch (msg.what) {
+                    case MsgCode.LOGIN_SUCCESSFUL:
+                        loginSuccessful();
+                        break;
+                    case MsgCode.LOGIN_FAILED:
+                        loginFailed();
+                        break;
+                }
+            }
+        };
     }
 
     public static LoginFragment newInstance() {
@@ -71,11 +92,6 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         context.clearTopAppBar();
     }
 
-    @Override
-    public void onClick(View view) {
-
-    }
-
     public void registerClicked(View view) {
         String username = null;
         if (usernameInput.length() != 0)
@@ -87,14 +103,29 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                 .commit();
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
+
     public void loginClicked(View view) {
-        //TODO: completed, and remove line before function
-        User.setCurrentUser(new User(1, "Taha Jahani",
-                "Taha7900", Date.from(Instant.now()), "09367642209"));
+        if (usernameInput.getText() == null) {
+            usernameInput.setError(getString(R.string.this_field_is_required));
+            return;
+        }
+        if (passwordInput.getText() == null){
+            passwordInput.setError(getString(R.string.this_field_is_required));
+            return;
+        }
+        String username = usernameInput.getText().toString();
+        String password = passwordInput.getText().toString();
+        Network.sendLoginRequest(username, password, handler);
+    }
+
+    private void loginSuccessful() {
         context.getSupportFragmentManager().beginTransaction()
                 .replace(R.id.mainFrame, HomeFragment.newInstance(), "homeFragment")
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                 .commit();
+    }
+
+    private void loginFailed() {
+        Snackbar.make(getView(), getString(R.string.login_failed), Snackbar.LENGTH_LONG).show();
     }
 }

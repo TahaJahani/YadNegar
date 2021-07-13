@@ -34,4 +34,6 @@
         \nThis action cannot be undone</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="this_field_is_required">This field is required</string>
+    <string name="login_failed">Login failed</string>
 </resources>

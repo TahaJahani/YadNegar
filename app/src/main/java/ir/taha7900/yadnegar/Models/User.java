@@ -1,5 +1,6 @@
 package ir.taha7900.yadnegar.Models;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 public class User {
@@ -7,18 +8,16 @@ public class User {
     private static User currentUser;
 
     private long id;
-    private String name;
+    private String first_name;
+    private String last_name;
     private String username;
-    private Date birthDate;
-    private String phoneNumber;
-
-    public User(long id, String name, String username, Date birthDate, String phoneNumber) {
-        this.id = id;
-        this.name = name;
-        this.username = username;
-        this.birthDate = birthDate;
-        this.phoneNumber = phoneNumber;
-    }
+    private String password;
+    private String email;
+    private Date birthday_date;
+    private String phone_number;
+    private int[] friends;
+    private LocalDateTime created;
+    private String token;
 
     public static User getCurrentUser() {
         return currentUser;
