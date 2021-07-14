@@ -16,7 +16,7 @@ public class User {
     private Date birthday_date;
     private String phone_number;
     private int[] friends;
-    private LocalDateTime created;
+    private String created;
     private String token;
 
     public static User getCurrentUser() {

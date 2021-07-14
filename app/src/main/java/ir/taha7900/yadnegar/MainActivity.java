@@ -3,13 +3,17 @@ package ir.taha7900.yadnegar;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
+import androidx.core.view.ViewCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.material.appbar.MaterialToolbar;
@@ -23,6 +27,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private FrameLayout mainFrame;
     public DrawerLayout drawerLayout;
+    private ProgressBar progressBar;
     public MaterialToolbar topAppBar;
     public NavigationView sideDrawer;
 
@@ -33,6 +38,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         getSupportActionBar().hide();
         setContentView(R.layout.activity_main);
         mainFrame = findViewById(R.id.mainFrame);
+        progressBar = findViewById(R.id.progressBar);
         drawerLayout = findViewById(R.id.drawerLayout);
         topAppBar = findViewById(R.id.topAppBar);
         sideDrawer = findViewById(R.id.sideNavDrawer);
@@ -122,6 +128,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void settingClicked() {
 
+    }
+
+    public void showLoading(boolean show) {
+        progressBar.setVisibility(show ? View.VISIBLE : View.GONE);
+        progressBar.bringToFront();
+    }
+
+    public void hideKeyboard() {
+        InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+        View view = getCurrentFocus();
+        if (view == null) {
+            view = new View(this);
+        }
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
 }

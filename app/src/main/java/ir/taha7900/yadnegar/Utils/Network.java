@@ -62,7 +62,7 @@ public class Network {
                     handler.sendEmptyMessage(LOGIN_FAILED);
                     return;
                 }
-                String body = response.body().toString();
+                String body = response.body().string();
                 User user = gson.fromJson(body, User.class);
                 User.setCurrentUser(user);
                 handler.sendEmptyMessage(LOGIN_SUCCESSFUL);
@@ -89,8 +89,8 @@ public class Network {
                     handler.sendMessage(message);
                     return;
                 }
+                User.setCurrentUser(gson.fromJson(body, User.class));
                 handler.sendEmptyMessage(REGISTER_SUCCESSFUL);
-                //TODO: login current user
             }
         });
     }

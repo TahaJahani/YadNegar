@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Handler;
 import android.os.Looper;
@@ -48,12 +49,15 @@ public class RegisterFragment extends Fragment {
             public void handleMessage(@NonNull Message msg) {
                 switch (msg.what) {
                     case NETWORK_ERROR:
+                        context.showLoading(false);
                         showNetworkError();
                         break;
                     case REGISTER_ERROR:
+                        context.showLoading(false);
                         showRegisterError((String)msg.obj);
                         break;
                     case REGISTER_SUCCESSFUL:
+                        context.showLoading(false);
                         login();
                         break;
                 }
@@ -62,8 +66,11 @@ public class RegisterFragment extends Fragment {
     }
 
     private void login() {
-        //TODO: change, if needed
-        context.getSupportFragmentManager().popBackStackImmediate();
+        context.getSupportFragmentManager().beginTransaction()
+                .replace(R.id.mainFrame, HomeFragment.newInstance(), "homeFragment")
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                .commit();
+//        context.getSupportFragmentManager().popBackStackImmediate();
     }
 
 
@@ -117,8 +124,11 @@ public class RegisterFragment extends Fragment {
     }
 
     public void registerClicked(View view) {
-        if (isInputValid())
+        context.hideKeyboard();
+        if (isInputValid()) {
+            context.showLoading(true);
             Network.sendRegisterRequest(collectData(), handler);
+        }
     }
 
     private HashMap<String, String> collectData() {

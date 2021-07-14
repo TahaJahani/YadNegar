@@ -46,9 +46,11 @@ public class LoginFragment extends Fragment {
             public void handleMessage(@NonNull Message msg) {
                 switch (msg.what) {
                     case MsgCode.LOGIN_SUCCESSFUL:
+                        context.showLoading(false);
                         loginSuccessful();
                         break;
                     case MsgCode.LOGIN_FAILED:
+                        context.showLoading(false);
                         loginFailed();
                         break;
                 }
@@ -105,6 +107,7 @@ public class LoginFragment extends Fragment {
 
 
     public void loginClicked(View view) {
+        context.hideKeyboard();
         if (usernameInput.getText() == null) {
             usernameInput.setError(getString(R.string.this_field_is_required));
             return;
@@ -115,6 +118,7 @@ public class LoginFragment extends Fragment {
         }
         String username = usernameInput.getText().toString();
         String password = passwordInput.getText().toString();
+        context.showLoading(true);
         Network.sendLoginRequest(username, password, handler);
     }
 
