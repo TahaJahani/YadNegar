@@ -7,7 +7,6 @@
     <string name="register">Register</string>
     <string name="email">Email</string>
     <string name="phone_number">Phone Number</string>
-    <string name="name_optional">Name (Optional)</string>
     <string name="birthday_optional">Birthday (Optional)</string>
     <string name="create_account">Create Account</string>
     <string name="confirm_password">Confirm Password</string>
@@ -36,4 +35,6 @@
     <string name="no">No</string>
     <string name="this_field_is_required">This field is required</string>
     <string name="login_failed">Login failed</string>
+    <string name="surname">Surname</string>
+    <string name="connection_error">Connection Error</string>
 </resources>

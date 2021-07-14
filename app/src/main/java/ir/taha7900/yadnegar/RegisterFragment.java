@@ -6,16 +6,25 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 
-import java.util.ArrayList;
+import static ir.taha7900.yadnegar.Utils.MsgCode.*;
 
-public class RegisterFragment extends Fragment implements View.OnClickListener {
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import ir.taha7900.yadnegar.Utils.Network;
+
+public class RegisterFragment extends Fragment {
 
     private static final String ARG_USERNAME = "USERNAME";
     private String username;
@@ -25,12 +34,36 @@ public class RegisterFragment extends Fragment implements View.OnClickListener {
     private TextInputEditText passwordInput;
     private TextInputEditText confirmPasswordInput;
     private TextInputEditText nameInput;
+    private TextInputEditText surnameInput;
     private TextInputEditText birthdayInput;
     private TextInputEditText emailInput;
     private TextInputEditText phoneNumberInput;
     private MaterialButton registerButton;
 
+    private Handler handler;
+
     public RegisterFragment() {
+        this.handler = new Handler(Looper.getMainLooper()) {
+            @Override
+            public void handleMessage(@NonNull Message msg) {
+                switch (msg.what) {
+                    case NETWORK_ERROR:
+                        showNetworkError();
+                        break;
+                    case REGISTER_ERROR:
+                        showRegisterError((String)msg.obj);
+                        break;
+                    case REGISTER_SUCCESSFUL:
+                        login();
+                        break;
+                }
+            }
+        };
+    }
+
+    private void login() {
+        //TODO: change, if needed
+        context.getSupportFragmentManager().popBackStackImmediate();
     }
 
 
@@ -60,6 +93,7 @@ public class RegisterFragment extends Fragment implements View.OnClickListener {
         passwordInput = view.findViewById(R.id.passwordInput);
         confirmPasswordInput = view.findViewById(R.id.confirmPasswordInput);
         nameInput = view.findViewById(R.id.nameInput);
+        surnameInput = view.findViewById(R.id.surnameInput);
         birthdayInput = view.findViewById(R.id.birthdayInput);
         emailInput = view.findViewById(R.id.emailInput);
         phoneNumberInput = view.findViewById(R.id.phoneNumberInput);
@@ -82,19 +116,34 @@ public class RegisterFragment extends Fragment implements View.OnClickListener {
         context.clearTopAppBar();
     }
 
-    @Override
-    public void onClick(View view) {
-
+    public void registerClicked(View view) {
+        if (isInputValid())
+            Network.sendRegisterRequest(collectData(), handler);
     }
 
-    public void registerClicked(View view) {
-        if (isInputValid()) {
-            //TODO: complete
-            context.getSupportFragmentManager().popBackStackImmediate();
-        }
+    private HashMap<String, String> collectData() {
+        HashMap<String, String> data = new HashMap<>();
+        data.put("username", usernameInput.getText().toString());
+        data.put("password", passwordInput.getText().toString());
+        data.put("first_name", nameInput.getText().toString());
+        data.put("last_name", surnameInput.getText().toString());
+        if (birthdayInput.getText() != null)
+            data.put("birthday_date", birthdayInput.getText().toString());
+        data.put("password", passwordInput.getText().toString());
+        data.put("phone_number", phoneNumberInput.getText().toString());
+        data.put("email", emailInput.getText().toString());
+        return data;
     }
 
     private boolean isInputValid() {
+        if (nameInput.length() == 0){
+            setError(nameInput);
+            return false;
+        }
+        if (surnameInput.length() == 0){
+            setError(surnameInput);
+            return false;
+        }
         if (usernameInput.length() == 0) {
             setError(usernameInput);
             return false;
@@ -115,7 +164,7 @@ public class RegisterFragment extends Fragment implements View.OnClickListener {
             setError(phoneNumberInput);
             return false;
         }
-        if (!passwordInput.getText().toString().equals(confirmPasswordInput.getText().toString())){
+        if (!passwordInput.getText().toString().equals(confirmPasswordInput.getText().toString())) {
             passwordInput.setError(getString(R.string.passwords_do_not_match));
             return false;
         }
@@ -124,5 +173,13 @@ public class RegisterFragment extends Fragment implements View.OnClickListener {
 
     private void setError(TextInputEditText editText) {
         editText.setError(getString(R.string.field_is_required));
+    }
+
+    private void showNetworkError() {
+        Snackbar.make(getView(), R.string.connection_error, Snackbar.LENGTH_LONG).show();
+    }
+
+    private void showRegisterError(String error) {
+        Snackbar.make(getView(), error, Snackbar.LENGTH_LONG).show();
     }
 }
