@@ -7,4 +7,6 @@ public class MsgCode {
     public static final int LOGIN_FAILED = 1;
     public static final int REGISTER_SUCCESSFUL = 2;
     public static final int REGISTER_ERROR = 3;
+    public static final int TAG_ERROR = 4;
+    public static final int CREATE_TAG_SUCCESSFUL = 5;
 }

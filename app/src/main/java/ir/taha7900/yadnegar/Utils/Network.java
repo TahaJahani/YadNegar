@@ -10,8 +10,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Objects;
 
-import static ir.taha7900.yadnegar.Utils.MsgCode.*;
+import ir.taha7900.yadnegar.Models.Tag;
 import ir.taha7900.yadnegar.Models.User;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -21,15 +22,26 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
+import static ir.taha7900.yadnegar.Utils.MsgCode.CREATE_TAG_SUCCESSFUL;
+import static ir.taha7900.yadnegar.Utils.MsgCode.LOGIN_FAILED;
+import static ir.taha7900.yadnegar.Utils.MsgCode.LOGIN_SUCCESSFUL;
+import static ir.taha7900.yadnegar.Utils.MsgCode.NETWORK_ERROR;
+import static ir.taha7900.yadnegar.Utils.MsgCode.REGISTER_ERROR;
+import static ir.taha7900.yadnegar.Utils.MsgCode.REGISTER_SUCCESSFUL;
+import static ir.taha7900.yadnegar.Utils.MsgCode.TAG_ERROR;
+
 public class Network {
 
     static class URL {
-        static String LOGIN = "http://memoreminder.ir/api/v1/login/";
-        static String REGISTER = "http://memoreminder.ir/api/v1/memo-user/";
+        static String BASE = "http://memoreminder.ir";
+        static String LOGIN = BASE + "/api/v1/login/";
+        static String REGISTER = BASE + "/api/v1/memo-user/";
+        static String TAG = BASE + "/api/v1/tag/";
     }
 
     static abstract class CustomCallback implements Callback {
         private Handler handler;
+
         public CustomCallback(Handler handler) {
             this.handler = handler;
         }
@@ -47,6 +59,11 @@ public class Network {
     private static Request.Builder getAuthorizedRequest() {
         return new Request.Builder()
                 .addHeader("Authorization", "token 3386fb2b1433447606917b3b70c837d834d6f505");
+    }
+
+    private static String getAuthorizedUrl(String baseUrl) {
+        User user = User.getCurrentUser();
+        return baseUrl + "?token=" + user.getToken();
     }
 
     public static void sendLoginRequest(String username, String password, Handler handler) {
@@ -82,7 +99,8 @@ public class Network {
                 String body = response.body().string();
                 System.out.println(body);
                 if (code != 201) {
-                    HashMap<String, String[]> errors = gson.fromJson(body, new TypeToken<HashMap<String, String[]>>(){}.getType());
+                    HashMap<String, String[]> errors = gson.fromJson(body, new TypeToken<HashMap<String, String[]>>() {
+                    }.getType());
                     Message message = new Message();
                     message.what = REGISTER_ERROR;
                     message.obj = errors.values().iterator().next()[0];
@@ -91,6 +109,27 @@ public class Network {
                 }
                 User.setCurrentUser(gson.fromJson(body, User.class));
                 handler.sendEmptyMessage(REGISTER_SUCCESSFUL);
+            }
+        });
+    }
+
+    public static void createTag(String name, String color, Handler handler) {
+        RequestBody body = new FormBody.Builder()
+                .add("name", name)
+                .add("color", color).build();
+        Request request = getAuthorizedRequest().url(getAuthorizedUrl(URL.TAG)).post(body).build();
+        httpClient.newCall(request).enqueue(new CustomCallback(handler) {
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                int code = response.code();
+                if (code / 100 != 2) {
+                    handler.sendEmptyMessage(TAG_ERROR);
+                    return;
+                }
+                String body = Objects.requireNonNull(response.body()).string();
+                Tag tag = gson.fromJson(body, Tag.class);
+                // todo
+                handler.sendEmptyMessage(CREATE_TAG_SUCCESSFUL);
             }
         });
     }
