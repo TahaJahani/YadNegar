@@ -7,8 +7,11 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
 
@@ -133,4 +136,30 @@ public class Network {
             }
         });
     }
+
+    public static void getTags(Handler handler) {
+        Request request = getAuthorizedRequest().url(getAuthorizedUrl(URL.TAG)).get().build();
+        httpClient.newCall(request).enqueue(new CustomCallback(handler) {
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                int code = response.code();
+                if (code / 100 != 2) {
+                    handler.sendEmptyMessage(TAG_ERROR);
+                    return;
+                }
+                String body = Objects.requireNonNull(response.body()).string();
+                try {
+                    JSONObject outerObj = new JSONObject(body);
+                    ArrayList<Tag> tags = gson.fromJson(String.valueOf(outerObj.getJSONArray("results")), new TypeToken<ArrayList<Tag>>() {
+                    }.getType());
+                    // todo
+                    handler.sendEmptyMessage(CREATE_TAG_SUCCESSFUL);
+                } catch (JSONException e) {
+                    handler.sendEmptyMessage(TAG_ERROR);
+                    return;
+                }
+            }
+        });
+    }
+
 }
