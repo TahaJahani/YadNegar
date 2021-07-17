@@ -6,15 +6,9 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
-import androidx.transition.FragmentTransitionSupport;
 
 import android.transition.ChangeBounds;
-import android.transition.Fade;
-import android.transition.Slide;
-import android.transition.Transition;
-import android.transition.TransitionInflater;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,11 +16,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.google.android.material.imageview.ShapeableImageView;
-import com.google.android.material.textfield.TextInputEditText;
-
-import java.util.ArrayList;
-import java.util.HashMap;
+import ir.taha7900.yadnegar.Models.User;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -35,8 +25,9 @@ import java.util.HashMap;
  */
 public class ProfileEditModeFragment extends Fragment implements Toolbar.OnMenuItemClickListener {
 
-    private TextView nameText;
+    private EditText usernameInput;
     private EditText nameInput;
+    private EditText surnameInput;
     private EditText emailInput;
     private EditText birthdayInput;
     private EditText phoneNumberInput;
@@ -82,11 +73,24 @@ public class ProfileEditModeFragment extends Fragment implements Toolbar.OnMenuI
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        nameText = view.findViewById(R.id.nameText);
+        usernameInput = view.findViewById(R.id.usernameInput);
         nameInput = view.findViewById(R.id.nameInput);
+        surnameInput = view.findViewById(R.id.surnameInput);
         emailInput = view.findViewById(R.id.emailInput);
         birthdayInput = view.findViewById(R.id.birthdayInput);
         phoneNumberInput = view.findViewById(R.id.phoneNumberInput);
+
+        User current = User.getCurrentUser();
+        usernameInput.setText(current.getUsername());
+        nameInput.setText(current.getFirst_name());
+        surnameInput.setText(current.getLast_name());
+        emailInput.setText(current.getEmail());
+        if (current.getBirthday_date() == null)
+            birthdayInput.setText(null);
+        else
+            birthdayInput.setText(current.getBirthday_date().toString());
+        phoneNumberInput.setText(current.getPhone_number());
+
     }
 
     @Override

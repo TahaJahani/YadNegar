@@ -20,7 +20,6 @@ import com.google.android.material.textfield.TextInputEditText;
 
 import static ir.taha7900.yadnegar.Utils.MsgCode.*;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import ir.taha7900.yadnegar.Utils.Network;
@@ -99,7 +98,7 @@ public class RegisterFragment extends Fragment {
             usernameInput.setText(username);
         passwordInput = view.findViewById(R.id.passwordInput);
         confirmPasswordInput = view.findViewById(R.id.confirmPasswordInput);
-        nameInput = view.findViewById(R.id.nameInput);
+        nameInput = view.findViewById(R.id.firstNameInput);
         surnameInput = view.findViewById(R.id.surnameInput);
         birthdayInput = view.findViewById(R.id.birthdayInput);
         emailInput = view.findViewById(R.id.emailInput);

@@ -23,6 +23,8 @@ import android.widget.TextView;
 
 import com.google.android.material.imageview.ShapeableImageView;
 
+import ir.taha7900.yadnegar.Models.User;
+
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link ProfileFragment#newInstance} factory method to
@@ -72,6 +74,7 @@ public class ProfileFragment extends Fragment implements Toolbar.OnMenuItemClick
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
         usernameText = view.findViewById(R.id.usernameText);
+        usernameText.setText(User.getCurrentUser().getUsername());
         ViewCompat.setTransitionName(usernameText, "username_Text");
         userProfilePicture = view.findViewById(R.id.userPicture);
         ViewCompat.setTransitionName(userProfilePicture, "user_Picture");

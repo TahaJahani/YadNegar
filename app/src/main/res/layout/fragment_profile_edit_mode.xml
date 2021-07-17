@@ -26,14 +26,38 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
+            android:text="@string/username" />
+
+        <EditText
+            android:id="@+id/usernameInput"
+            android:layout_width="match_parent"
+            android:transitionName="nameText"
+            android:layout_height="wrap_content"
+            android:text="SPNeshaei" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
             android:text="@string/name" />
 
         <EditText
             android:id="@+id/nameInput"
             android:layout_width="match_parent"
-            android:transitionName="nameText"
             android:layout_height="wrap_content"
-            android:text="Seyed Parsa Neshei" />
+            android:text="Seyyed Parsa" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/surname" />
+
+        <EditText
+            android:id="@+id/surnameInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Neshaei" />
 
         <TextView
             android:layout_width="wrap_content"

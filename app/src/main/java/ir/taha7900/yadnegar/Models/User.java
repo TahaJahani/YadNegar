@@ -35,6 +35,42 @@ public class User {
         return id;
     }
 
+    public String getFirst_name() {
+        return first_name;
+    }
+
+    public String getLast_name() {
+        return last_name;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public Date getBirthday_date() {
+        return birthday_date;
+    }
+
+    public String getPhone_number() {
+        return phone_number;
+    }
+
+    public int[] getFriends() {
+        return friends;
+    }
+
+    public String getCreated() {
+        return created;
+    }
+
     public String getToken() {
         return token;
     }
