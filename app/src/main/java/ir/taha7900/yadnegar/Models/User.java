@@ -1,7 +1,9 @@
 package ir.taha7900.yadnegar.Models;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.Objects;
 
 public class User {
 
@@ -73,5 +75,12 @@ public class User {
 
     public String getToken() {
         return token;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        return ((User) o).id == this.id;
     }
 }

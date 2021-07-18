@@ -58,4 +58,8 @@ public class Memory implements Serializable {
     public String getModified() {
         return modified;
     }
+
+    public boolean hasFiles() {
+        return this.post_files != null && this.post_files.length > 0;
+    }
 }

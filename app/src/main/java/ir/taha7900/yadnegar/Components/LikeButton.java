@@ -91,6 +91,10 @@ public class LikeButton extends View {
         }
     }
 
+    public void setLiked(boolean liked) {
+        this.liked = liked;
+    }
+
     @Override
     public boolean performClick() {
         super.performClick();
