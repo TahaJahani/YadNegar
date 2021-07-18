@@ -8,19 +8,28 @@ import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Adapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
+
+import ir.taha7900.yadnegar.Adapters.MemoryAdapter;
+import ir.taha7900.yadnegar.Models.Memory;
 import ir.taha7900.yadnegar.Models.User;
+import ir.taha7900.yadnegar.Utils.MsgCode;
 import ir.taha7900.yadnegar.Utils.Network;
 
 
 public class HomeFragment extends Fragment {
 
     private MainActivity context;
+    private RecyclerView memoriesList;
 
     private Handler handler;
 
@@ -30,10 +39,21 @@ public class HomeFragment extends Fragment {
             @Override
             public void handleMessage(@NonNull Message msg) {
                 switch (msg.what) {
-                    // todo
+                    case MsgCode.MEMORY_DATA_READY:
+                        showTopMemories((ArrayList<Memory>) msg.obj);
+                        break;
+                    case MsgCode.MEMORY_ERROR:
+                        //TODO: show error
                 }
             }
         };
+    }
+
+    private void showTopMemories(ArrayList<Memory> memories) {
+        MemoryAdapter adapter = new MemoryAdapter(memories);
+        memoriesList.setLayoutManager(new LinearLayoutManager(context));
+        memoriesList.setAdapter(adapter);
+        context.showLoading(false);
     }
 
     public static HomeFragment newInstance() {
@@ -43,6 +63,8 @@ public class HomeFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        context.showLoading(true);
+        Network.getTopMemories(handler);
     }
 
     @Override
@@ -70,6 +92,8 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_home, container, false);
+        View view = inflater.inflate(R.layout.fragment_home, container, false);
+        memoriesList = view.findViewById(R.id.memoriesList);
+        return view;
     }
 }

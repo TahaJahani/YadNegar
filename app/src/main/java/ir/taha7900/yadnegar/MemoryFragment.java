@@ -35,20 +35,13 @@ public class MemoryFragment extends Fragment implements Toolbar.OnMenuItemClickL
         // Required empty public constructor
     }
 
-    public static MemoryFragment newInstance(Memory memory) {
-        MemoryFragment fragment = new MemoryFragment();
-        Bundle args = new Bundle();
-        args.putSerializable(ARG_MEMORY, memory);
-        fragment.setArguments(args);
-        return fragment;
+    public static MemoryFragment newInstance() {
+        return new MemoryFragment();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            memory = (Memory) getArguments().getSerializable(ARG_MEMORY);
-        }
     }
 
     @Override
@@ -73,10 +66,10 @@ public class MemoryFragment extends Fragment implements Toolbar.OnMenuItemClickL
         super.onResume();
         context.clearTopAppBar();
         context.topAppBar.setTitle(getString(R.string.memory));
-        if (memory.getUserId() == User.getCurrentUser().getId()) {
-            context.topAppBar.inflateMenu(R.menu.memory_top_menu);
-            context.topAppBar.setOnMenuItemClickListener(this);
-        }
+//        if (memory.getUserId() == User.getCurrentUser().getId()) {
+//            context.topAppBar.inflateMenu(R.menu.memory_top_menu);
+//            context.topAppBar.setOnMenuItemClickListener(this);
+//        }
     }
 
     @Override

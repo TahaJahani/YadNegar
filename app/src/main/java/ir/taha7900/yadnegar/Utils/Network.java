@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
 
+import ir.taha7900.yadnegar.Models.Memory;
 import ir.taha7900.yadnegar.Models.Tag;
 import ir.taha7900.yadnegar.Models.User;
 import okhttp3.Call;
@@ -28,6 +29,8 @@ import okhttp3.Response;
 import static ir.taha7900.yadnegar.Utils.MsgCode.CREATE_TAG_SUCCESSFUL;
 import static ir.taha7900.yadnegar.Utils.MsgCode.LOGIN_FAILED;
 import static ir.taha7900.yadnegar.Utils.MsgCode.LOGIN_SUCCESSFUL;
+import static ir.taha7900.yadnegar.Utils.MsgCode.MEMORY_DATA_READY;
+import static ir.taha7900.yadnegar.Utils.MsgCode.MEMORY_ERROR;
 import static ir.taha7900.yadnegar.Utils.MsgCode.NETWORK_ERROR;
 import static ir.taha7900.yadnegar.Utils.MsgCode.REGISTER_ERROR;
 import static ir.taha7900.yadnegar.Utils.MsgCode.REGISTER_SUCCESSFUL;
@@ -40,6 +43,7 @@ public class Network {
         static String LOGIN = BASE + "/api/v1/login/";
         static String REGISTER = BASE + "/api/v1/memo-user/";
         static String TAG = BASE + "/api/v1/tag/";
+        static String TOP_MEMO = BASE + "/api/v1/top-post/";
     }
 
     static abstract class CustomCallback implements Callback {
@@ -157,6 +161,33 @@ public class Network {
                 } catch (JSONException e) {
                     handler.sendEmptyMessage(TAG_ERROR);
                     return;
+                }
+            }
+        });
+    }
+
+    public static void getTopMemories(Handler handler) {
+        Request request = getAuthorizedRequest().url(getAuthorizedUrl(URL.TOP_MEMO)).get().build();
+        httpClient.newCall(request).enqueue(new CustomCallback(handler) {
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                int code = response.code();
+                if (code / 100 != 2) {
+                    handler.sendEmptyMessage(MEMORY_ERROR);
+                    return;
+                }
+                String body = Objects.requireNonNull(response.body()).string();
+                try {
+                    JSONObject outerObj = new JSONObject(body);
+                    ArrayList<Memory> topMemories = gson.fromJson(String.valueOf(outerObj.getJSONArray("results"))
+                            , new TypeToken<ArrayList<Memory>>() {
+                    }.getType());
+                    Message msg = new Message();
+                    msg.obj = topMemories;
+                    msg.what = MEMORY_DATA_READY;
+                    handler.sendMessage(msg);
+                } catch (JSONException e) {
+                    handler.sendEmptyMessage(MEMORY_ERROR);
                 }
             }
         });
