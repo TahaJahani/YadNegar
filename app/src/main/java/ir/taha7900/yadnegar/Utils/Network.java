@@ -39,7 +39,7 @@ import static ir.taha7900.yadnegar.Utils.MsgCode.TAG_ERROR;
 public class Network {
 
     static class URL {
-        static String BASE = "http://memoreminder.ir";
+        static String BASE = "https://memoreminder.ir";
         static String LOGIN = BASE + "/api/v1/login/";
         static String REGISTER = BASE + "/api/v1/memo-user/";
         static String TAG = BASE + "/api/v1/tag/";
