@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
 
+import ir.taha7900.yadnegar.Models.Comment;
 import ir.taha7900.yadnegar.Models.Memory;
 import ir.taha7900.yadnegar.Models.Tag;
 import ir.taha7900.yadnegar.Models.User;
@@ -26,6 +27,8 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
+import static ir.taha7900.yadnegar.Utils.MsgCode.COMMENT_ADDED;
+import static ir.taha7900.yadnegar.Utils.MsgCode.COMMENT_ERROR;
 import static ir.taha7900.yadnegar.Utils.MsgCode.CREATE_TAG_SUCCESSFUL;
 import static ir.taha7900.yadnegar.Utils.MsgCode.LOGIN_FAILED;
 import static ir.taha7900.yadnegar.Utils.MsgCode.LOGIN_SUCCESSFUL;
@@ -44,6 +47,7 @@ public class Network {
         static String REGISTER = BASE + "/api/v1/memo-user/";
         static String TAG = BASE + "/api/v1/tag/";
         static String TOP_MEMO = BASE + "/api/v1/top-post/";
+        static String ADD_COMMENT = BASE + "/api/v1/comment/";
     }
 
     static abstract class CustomCallback implements Callback {
@@ -181,7 +185,7 @@ public class Network {
                     JSONObject outerObj = new JSONObject(body);
                     ArrayList<Memory> topMemories = gson.fromJson(String.valueOf(outerObj.getJSONArray("results"))
                             , new TypeToken<ArrayList<Memory>>() {
-                    }.getType());
+                            }.getType());
                     Message msg = new Message();
                     msg.obj = topMemories;
                     msg.what = MEMORY_DATA_READY;
@@ -189,6 +193,32 @@ public class Network {
                 } catch (JSONException e) {
                     handler.sendEmptyMessage(MEMORY_ERROR);
                 }
+            }
+        });
+    }
+
+    public static void addComment(Memory memory, Comment comment, Handler handler) {
+        FormBody body = new FormBody.Builder()
+                .add("post", String.valueOf(memory.getId()))
+                .add("text", comment.getText()).build();
+        Request request = getAuthorizedRequest()
+                .url(getAuthorizedUrl(URL.ADD_COMMENT))
+                .post(body).build();
+        httpClient.newCall(request).enqueue(new CustomCallback(handler) {
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                int code = response.code();
+                if (code / 100 != 2) {
+                    handler.sendEmptyMessage(COMMENT_ERROR);
+                    return;
+                }
+                String body = Objects.requireNonNull(response.body()).string();
+                System.out.println(body);
+//                Comment addedComment = gson.fromJson(body, Comment.class);
+//                comment.setId(addedComment.getId());
+//                comment.setLikes(addedComment.getLikes()); TODO: change server
+                comment.setSending(false);
+                handler.sendEmptyMessage(COMMENT_ADDED);
             }
         });
     }

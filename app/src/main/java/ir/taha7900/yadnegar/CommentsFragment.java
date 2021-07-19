@@ -14,18 +14,15 @@ import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.ImageButton;
 
 import com.google.android.material.textfield.TextInputEditText;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-
 import ir.taha7900.yadnegar.Adapters.CommentAdapter;
 import ir.taha7900.yadnegar.Models.Comment;
 import ir.taha7900.yadnegar.Models.Memory;
+import ir.taha7900.yadnegar.Models.User;
+import ir.taha7900.yadnegar.Utils.MsgCode;
 import ir.taha7900.yadnegar.Utils.Network;
 
 /**
@@ -41,6 +38,7 @@ public class CommentsFragment extends Fragment {
     private RecyclerView commentsList;
     private TextInputEditText newCommentInput;
     private ImageButton sendButton;
+    private CommentAdapter adapter;
 
     public static String PARAM_MEMORY = "memory";
 
@@ -49,7 +47,9 @@ public class CommentsFragment extends Fragment {
             @Override
             public void handleMessage(@NonNull Message msg) {
                 switch (msg.what){
-                    //todo
+                    case MsgCode.COMMENT_ADDED:
+                        adapter.notifyDataSetChanged();
+                        break;
                 }
             }
         };
@@ -92,10 +92,25 @@ public class CommentsFragment extends Fragment {
         this.commentsList = view.findViewById(R.id.commentsList);
         this.newCommentInput = view.findViewById(R.id.newCommentInput);
         this.sendButton = view.findViewById(R.id.sendButton);
-
-        CommentAdapter adapter = new CommentAdapter(new ArrayList<>(Arrays.asList(memory.getComments())));
+        this.sendButton.setOnClickListener(this::sendComment);
+        adapter = new CommentAdapter(memory.getComments());
         commentsList.setLayoutManager(new LinearLayoutManager(context));
         commentsList.setAdapter(adapter);
         return view;
+    }
+
+    private void sendComment(View view) {
+        if (newCommentInput.length() == 0 )
+            return;
+        String commentBody = newCommentInput.getText().toString().trim();
+        if (commentBody.isEmpty())
+            return;
+        Comment comment = new Comment();
+        comment.setSending(true);
+        comment.setText(commentBody);
+        comment.setMemoUser(User.getCurrentUser());
+        memory.addComment(comment);
+        Network.addComment(memory ,comment, handler);
+        adapter.notifyDataSetChanged();
     }
 }

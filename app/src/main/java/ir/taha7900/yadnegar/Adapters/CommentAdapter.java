@@ -4,6 +4,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -44,6 +45,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
         holder.contentText.setText(comment.getText());
         holder.likeButton.setLiked(hasLiked(comment));
         holder.likeButton.setOnTouchListener(this::likeComment);
+        holder.progressBar.setVisibility(comment.isSending() ? View.VISIBLE : View.GONE);
     }
 
     private boolean likeComment(View view, MotionEvent motionEvent) {
@@ -57,6 +59,8 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
     }
 
     private boolean hasLiked(Comment comment) {
+        if (comment.getLikes() == null)
+            return false;
         for (Like like : comment.getLikes()) {
             if (like.getMemoUser().equals(User.getCurrentUser()))
                 return true;
@@ -70,6 +74,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
         private ShapeableImageView profileImage;
         private TextView usernameText;
         private TextView contentText;
+        private ProgressBar progressBar;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -77,6 +82,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
             this.profileImage = itemView.findViewById(R.id.profileImage);
             this.usernameText = itemView.findViewById(R.id.usernameText);
             this.contentText = itemView.findViewById(R.id.contentText);
+            this.progressBar = itemView.findViewById(R.id.progressBar);
         }
     }
 }

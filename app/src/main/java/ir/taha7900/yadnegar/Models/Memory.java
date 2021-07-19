@@ -1,6 +1,7 @@
 package ir.taha7900.yadnegar.Models;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class Memory implements Serializable {
     private long id;
@@ -11,7 +12,7 @@ public class Memory implements Serializable {
     private Tag[] tags;
     private String[] post_files;
     private Like[] likes;
-    private Comment[] comments;
+    private ArrayList<Comment> comments;
     private String created;
     private String modified;
 
@@ -47,7 +48,7 @@ public class Memory implements Serializable {
         return likes;
     }
 
-    public Comment[] getComments() {
+    public ArrayList<Comment> getComments() {
         return comments;
     }
 
@@ -61,5 +62,9 @@ public class Memory implements Serializable {
 
     public boolean hasFiles() {
         return this.post_files != null && this.post_files.length > 0;
+    }
+
+    public void addComment(Comment comment) {
+        this.comments.add(comment);
     }
 }

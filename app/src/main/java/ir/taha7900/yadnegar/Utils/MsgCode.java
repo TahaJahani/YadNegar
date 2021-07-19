@@ -11,4 +11,6 @@ public class MsgCode {
     public static final int CREATE_TAG_SUCCESSFUL = 5;
     public static final int MEMORY_DATA_READY = 6;
     public static final int MEMORY_ERROR = 7;
+    public static final int COMMENT_ADDED = 8;
+    public static final int COMMENT_ERROR = 9;
 }

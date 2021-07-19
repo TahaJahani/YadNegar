@@ -37,18 +37,6 @@ public class CommentButton extends View {
     }
 
     @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        GestureDetector detector = new GestureDetector(CommentButton.this.getContext(), new CommentButton.TapListener());
-        boolean result = detector.onTouchEvent(event);
-        if (result) {
-            if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                performClick();
-            }
-        }
-        return result;
-    }
-
-    @Override
     public boolean performClick() {
         super.performClick();
         return true;
