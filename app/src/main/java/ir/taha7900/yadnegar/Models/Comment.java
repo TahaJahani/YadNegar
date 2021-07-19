@@ -1,11 +1,13 @@
 package ir.taha7900.yadnegar.Models;
 
+import java.util.ArrayList;
+
 public class Comment {
     private long id;
     private User memo_user;
     private long post;
     private String text;
-    private Like[] likes;
+    private ArrayList<Like> likes;
     private boolean isSending = false;
 
     public long getId() {
@@ -20,8 +22,12 @@ public class Comment {
         return text;
     }
 
-    public Like[] getLikes() {
+    public ArrayList<Like> getLikes() {
         return likes;
+    }
+
+    public void addLike(Like like) {
+        this.likes.add(like);
     }
 
     public boolean isSending() {
@@ -44,7 +50,7 @@ public class Comment {
         this.text = text;
     }
 
-    public void setLikes(Like[] likes) {
+    public void setLikes(ArrayList<Like> likes) {
         this.likes = likes;
     }
 }

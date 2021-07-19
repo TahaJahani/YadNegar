@@ -13,4 +13,5 @@ public class MsgCode {
     public static final int MEMORY_ERROR = 7;
     public static final int COMMENT_ADDED = 8;
     public static final int COMMENT_ERROR = 9;
+    public static final int LIKE_ERROR = 10;
 }

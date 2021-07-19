@@ -20,6 +20,7 @@ import ir.taha7900.yadnegar.Models.Comment;
 import ir.taha7900.yadnegar.Models.Like;
 import ir.taha7900.yadnegar.Models.User;
 import ir.taha7900.yadnegar.R;
+import ir.taha7900.yadnegar.Utils.Network;
 
 public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHolder> {
     private MainActivity context;
@@ -44,14 +45,10 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
         holder.usernameText.setText(comment.getMemoUser().getUsername());
         holder.contentText.setText(comment.getText());
         holder.likeButton.setLiked(hasLiked(comment));
-        holder.likeButton.setOnTouchListener(this::likeComment);
+        holder.likeButton.setOnClickListener(view -> Network.likeComment(comment));
         holder.progressBar.setVisibility(comment.isSending() ? View.VISIBLE : View.GONE);
     }
 
-    private boolean likeComment(View view, MotionEvent motionEvent) {
-        //TODO: send network call
-        return false;
-    }
 
     @Override
     public int getItemCount() {

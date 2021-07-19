@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.Objects;
 
 import ir.taha7900.yadnegar.Models.Comment;
+import ir.taha7900.yadnegar.Models.Like;
 import ir.taha7900.yadnegar.Models.Memory;
 import ir.taha7900.yadnegar.Models.Tag;
 import ir.taha7900.yadnegar.Models.User;
@@ -30,6 +31,7 @@ import okhttp3.Response;
 import static ir.taha7900.yadnegar.Utils.MsgCode.COMMENT_ADDED;
 import static ir.taha7900.yadnegar.Utils.MsgCode.COMMENT_ERROR;
 import static ir.taha7900.yadnegar.Utils.MsgCode.CREATE_TAG_SUCCESSFUL;
+import static ir.taha7900.yadnegar.Utils.MsgCode.LIKE_ERROR;
 import static ir.taha7900.yadnegar.Utils.MsgCode.LOGIN_FAILED;
 import static ir.taha7900.yadnegar.Utils.MsgCode.LOGIN_SUCCESSFUL;
 import static ir.taha7900.yadnegar.Utils.MsgCode.MEMORY_DATA_READY;
@@ -48,6 +50,7 @@ public class Network {
         static String TAG = BASE + "/api/v1/tag/";
         static String TOP_MEMO = BASE + "/api/v1/top-post/";
         static String ADD_COMMENT = BASE + "/api/v1/comment/";
+        static String LIKE_COMMENT = BASE + "/api/v1/comment-like/";
     }
 
     static abstract class CustomCallback implements Callback {
@@ -219,6 +222,32 @@ public class Network {
 //                comment.setLikes(addedComment.getLikes()); TODO: change server
                 comment.setSending(false);
                 handler.sendEmptyMessage(COMMENT_ADDED);
+            }
+        });
+    }
+
+    public static void likeComment(Comment comment) {
+        FormBody body = new FormBody.Builder()
+                .add("comment", String.valueOf(comment.getId())).build();
+        Request request = getAuthorizedRequest()
+                .url(getAuthorizedUrl(URL.LIKE_COMMENT))
+                .post(body).build();
+        httpClient.newCall(request).enqueue(new CustomCallback(null) {
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                int code = response.code();
+                if (code / 2 == 100){
+                    try {
+                        JSONObject jsonObject = new JSONObject(Objects.requireNonNull(response.body()).string());
+//                        Like like = new Like();
+//                        like.setMemo_user(User.getCurrentUser());
+//                        like.setId(jsonObject.getLong("id"));
+//                        comment.addLike(like);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+                System.out.println(response.body().string()); //TODO: debug and complete
             }
         });
     }
