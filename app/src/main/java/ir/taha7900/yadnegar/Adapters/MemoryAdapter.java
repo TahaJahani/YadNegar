@@ -1,5 +1,6 @@
 package ir.taha7900.yadnegar.Adapters;
 
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -11,8 +12,10 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.google.android.material.imageview.ShapeableImageView;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import ir.taha7900.yadnegar.Components.CommentButton;
 import ir.taha7900.yadnegar.Components.LikeButton;
@@ -26,15 +29,18 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.ViewHolder
 
     private MainActivity context;
     private final ArrayList<Memory> memories;
+    private String[] colorsList;
 
     public MemoryAdapter(ArrayList<Memory> memories) {
         this.memories = memories;
+
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         this.context = (MainActivity) parent.getContext();
+        this.colorsList = context.getResources().getStringArray(R.array.profileColors);
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.row_memory, parent, false);
         return new ViewHolder(view);
@@ -43,6 +49,8 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.ViewHolder
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Memory memory = memories.get(position);
+        String randomColor = colorsList[new Random().nextInt(colorsList.length)];
+        holder.userProfileImage.setBackgroundColor(Color.parseColor(randomColor));
         holder.usernameText.setText(memory.getCreator_user().getUsername());
         holder.fullNameText.setText(memory.getCreator_user().getFirst_name() + " " + memory.getCreator_user().getLast_name());
         holder.titleText.setText(memory.getTitle());
@@ -87,6 +95,7 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.ViewHolder
         private final TextView contentText;
         private final LikeButton likeButton;
         private final ImageView memoryImage;
+        private final ShapeableImageView userProfileImage;
         private final CommentButton commentButton;
 
         public ViewHolder(@NonNull View itemView) {
@@ -98,6 +107,7 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.ViewHolder
             this.likeButton = itemView.findViewById(R.id.likeButton);
             this.memoryImage = itemView.findViewById(R.id.memoryImage);
             this.commentButton = itemView.findViewById(R.id.commentButton);
+            this.userProfileImage = itemView.findViewById(R.id.userProfileImage);
         }
     }
 }
