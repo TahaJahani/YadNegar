@@ -7,7 +7,7 @@ public class Memory implements Serializable {
     private User creator_user;
     private String title;
     private String text;
-    private long[] tagged_people;
+    private User[] tagged_people;
     private Tag[] tags;
     private String[] post_files;
     private Like[] likes;
@@ -31,7 +31,7 @@ public class Memory implements Serializable {
         return text;
     }
 
-    public long[] getTagged_people() {
+    public User[] getTagged_people() {
         return tagged_people;
     }
 

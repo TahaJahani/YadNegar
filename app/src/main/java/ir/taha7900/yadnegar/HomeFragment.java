@@ -30,6 +30,8 @@ public class HomeFragment extends Fragment {
 
     private MainActivity context;
     private RecyclerView memoriesList;
+    private MemoryAdapter adapter;
+    private ArrayList<Memory> memories;
 
     private Handler handler;
 
@@ -40,7 +42,8 @@ public class HomeFragment extends Fragment {
             public void handleMessage(@NonNull Message msg) {
                 switch (msg.what) {
                     case MsgCode.MEMORY_DATA_READY:
-                        showTopMemories((ArrayList<Memory>) msg.obj);
+                        memories = (ArrayList<Memory>) msg.obj;
+                        showTopMemories();
                         break;
                     case MsgCode.MEMORY_ERROR:
                         //TODO: show error
@@ -49,8 +52,8 @@ public class HomeFragment extends Fragment {
         };
     }
 
-    private void showTopMemories(ArrayList<Memory> memories) {
-        MemoryAdapter adapter = new MemoryAdapter(memories);
+    private void showTopMemories() {
+        adapter = new MemoryAdapter(memories);
         memoriesList.setLayoutManager(new LinearLayoutManager(context));
         memoriesList.setAdapter(adapter);
         context.showLoading(false);
@@ -94,6 +97,8 @@ public class HomeFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         memoriesList = view.findViewById(R.id.memoriesList);
+        if (memories != null)
+            showTopMemories();
         return view;
     }
 }

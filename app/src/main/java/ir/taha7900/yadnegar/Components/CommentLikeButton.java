@@ -24,8 +24,8 @@ public class CommentLikeButton extends View {
 
     private boolean liked;
     private final LikeDrawable heartShape = new LikeDrawable();
-    private final float height = dp(35);
-    private final float width = dp(28.6f);
+    private final float height = dp(17.5f);
+    private final float width = dp(14.3f);
 
     public CommentLikeButton(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);

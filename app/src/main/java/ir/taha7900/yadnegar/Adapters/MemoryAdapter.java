@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -17,9 +18,11 @@ import com.google.android.material.imageview.ShapeableImageView;
 import java.util.ArrayList;
 import java.util.Random;
 
+import ir.taha7900.yadnegar.CommentsFragment;
 import ir.taha7900.yadnegar.Components.CommentButton;
 import ir.taha7900.yadnegar.Components.LikeButton;
 import ir.taha7900.yadnegar.MainActivity;
+import ir.taha7900.yadnegar.Models.Comment;
 import ir.taha7900.yadnegar.Models.Like;
 import ir.taha7900.yadnegar.Models.Memory;
 import ir.taha7900.yadnegar.Models.User;
@@ -57,21 +60,30 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.ViewHolder
         holder.contentText.setText(memory.getText());
         holder.likeButton.setLiked(hasLiked(memory));
         holder.likeButton.setOnTouchListener(this::likeMemory);
-        holder.commentButton.setOnTouchListener(this::openComments);
+        holder.commentButton.setOnTouchListener((view, motionEvent) -> {
+            openComments(memory);
+            view.performClick();
+            return false;
+        });
         if (memory.hasFiles())
             Glide.with(context).load(memory.getPost_files()[0]).into(holder.memoryImage);
         else
             holder.memoryImage.setVisibility(View.GONE);
     }
 
-    private boolean openComments(View view, MotionEvent motionEvent) {
-        //TODO: open comments page for the current memory
-        return false;
-    }
-
     private boolean likeMemory(View view, MotionEvent motionEvent) {
         //TODO: send toggle like request to server
         return false;
+    }
+
+    private void openComments(Memory memory) {
+        CommentsFragment fragment = CommentsFragment.newInstance(memory);
+        context.getSupportFragmentManager()
+                .beginTransaction()
+                .addToBackStack("comments")
+                .replace(R.id.mainFrame, fragment)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                .commit();
     }
 
     private boolean hasLiked(Memory memory) {
