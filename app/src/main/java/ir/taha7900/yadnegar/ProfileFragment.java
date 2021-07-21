@@ -30,7 +30,7 @@ import ir.taha7900.yadnegar.Models.User;
  * Use the {@link ProfileFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ProfileFragment extends Fragment implements Toolbar.OnMenuItemClickListener {
+public class ProfileFragment extends Fragment implements Toolbar.OnMenuItemClickListener, android.widget.Toolbar.OnMenuItemClickListener {
 
     private MainActivity context;
 

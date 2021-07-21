@@ -23,7 +23,7 @@ import ir.taha7900.yadnegar.Models.User;
  * Use the {@link ProfileEditModeFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ProfileEditModeFragment extends Fragment implements Toolbar.OnMenuItemClickListener {
+public class ProfileEditModeFragment extends Fragment implements Toolbar.OnMenuItemClickListener, android.widget.Toolbar.OnMenuItemClickListener {
 
     private EditText usernameInput;
     private EditText nameInput;
