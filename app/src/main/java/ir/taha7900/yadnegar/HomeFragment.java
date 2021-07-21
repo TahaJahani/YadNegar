@@ -67,7 +67,7 @@ public class HomeFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context.showLoading(true);
-        Network.getTopMemories(handler);
+        Network.getHomeMemories(handler);
     }
 
     @Override
@@ -87,8 +87,7 @@ public class HomeFragment extends Fragment {
         TextView name = header.findViewById(R.id.nameText);
         TextView username = header.findViewById(R.id.usernameText);
         User current = User.getCurrentUser();
-        //TODO: create string resource
-        name.setText(current.getFirst_name() + " " +current.getLast_name());
+        name.setText(current.getFullName());
         username.setText(current.getUsername());
     }
 
