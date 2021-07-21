@@ -47,12 +47,20 @@ public class TagSelectionAdapter extends RecyclerView.Adapter<TagSelectionAdapte
         if (selected.contains(tag.getId())){
             float[] hsv = new float[3];
             Color.colorToHSV(backgroundColor, hsv);
-            hsv[2] *= 0.8f;
+            hsv[2] *= 0.6f;
             backgroundColor = Color.HSVToColor(hsv);
         }
         background.setColor(backgroundColor);
         holder.titleText.setText(tag.getName());
+        holder.titleText.setOnClickListener(view -> {
+            if (selected.contains(tag.getId()))
+                selected.remove(tag.getId());
+            else
+                selected.add(tag.getId());
+            notifyDataSetChanged();
+        });
     }
+
 
     @Override
     public int getItemCount() {
@@ -66,6 +74,7 @@ public class TagSelectionAdapter extends RecyclerView.Adapter<TagSelectionAdapte
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             this.titleText = (TextView) itemView;
+            titleText.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         }
     }
 }

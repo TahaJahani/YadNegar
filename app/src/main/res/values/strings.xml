@@ -39,4 +39,5 @@
     <string name="connection_error">Connection Error</string>
     <string name="write_a_comment">Write a Comment...</string>
     <string name="done">Done</string>
+    <string name="add_memory">Add Memory</string>
 </resources>
