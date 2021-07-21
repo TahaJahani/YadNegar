@@ -20,6 +20,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
 
 import ir.taha7900.yadnegar.Adapters.MemoryAdapter;
+import ir.taha7900.yadnegar.Models.FriendRequest;
 import ir.taha7900.yadnegar.Models.Memory;
 import ir.taha7900.yadnegar.Models.User;
 import ir.taha7900.yadnegar.Utils.MsgCode;

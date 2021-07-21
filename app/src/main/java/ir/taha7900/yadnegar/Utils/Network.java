@@ -28,28 +28,7 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-import static ir.taha7900.yadnegar.Utils.MsgCode.COMMENT_ADDED;
-import static ir.taha7900.yadnegar.Utils.MsgCode.COMMENT_ERROR;
-import static ir.taha7900.yadnegar.Utils.MsgCode.CREATE_TAG_SUCCESSFUL;
-import static ir.taha7900.yadnegar.Utils.MsgCode.GET_FRIEND_REQUEST_ERROR;
-import static ir.taha7900.yadnegar.Utils.MsgCode.GET_FRIEND_REQUEST_SUCCESSFUL;
-import static ir.taha7900.yadnegar.Utils.MsgCode.GET_USERS_ERROR;
-import static ir.taha7900.yadnegar.Utils.MsgCode.GET_USERS_SUCCESSFUL;
-import static ir.taha7900.yadnegar.Utils.MsgCode.LOGIN_FAILED;
-import static ir.taha7900.yadnegar.Utils.MsgCode.LOGIN_SUCCESSFUL;
-import static ir.taha7900.yadnegar.Utils.MsgCode.MEMORY_DATA_READY;
-import static ir.taha7900.yadnegar.Utils.MsgCode.MEMORY_ERROR;
-import static ir.taha7900.yadnegar.Utils.MsgCode.NETWORK_ERROR;
-import static ir.taha7900.yadnegar.Utils.MsgCode.POST_LIKE_ERROR;
-import static ir.taha7900.yadnegar.Utils.MsgCode.POST_LIKE_SUCCESSFUL;
-import static ir.taha7900.yadnegar.Utils.MsgCode.REGISTER_ERROR;
-import static ir.taha7900.yadnegar.Utils.MsgCode.REGISTER_SUCCESSFUL;
-import static ir.taha7900.yadnegar.Utils.MsgCode.SEND_FRIEND_REQUEST_ERROR;
-import static ir.taha7900.yadnegar.Utils.MsgCode.SEND_FRIEND_REQUEST_SUCCESSFUL;
-import static ir.taha7900.yadnegar.Utils.MsgCode.TAG_DATA_READY;
-import static ir.taha7900.yadnegar.Utils.MsgCode.TAG_ERROR;
-import static ir.taha7900.yadnegar.Utils.MsgCode.USER_MEMORY_DATA_READY;
-import static ir.taha7900.yadnegar.Utils.MsgCode.USER_MEMORY_ERROR;
+import static ir.taha7900.yadnegar.Utils.MsgCode.*;
 
 public class Network {
 
@@ -388,6 +367,24 @@ public class Network {
                 } catch (JSONException e) {
                     handler.sendEmptyMessage(GET_FRIEND_REQUEST_ERROR);
                 }
+            }
+        });
+    }
+
+    public static void changeFriendRequestStatus(FriendRequest friendRequest, String new_status , Handler handler){
+        RequestBody body = new FormBody.Builder()
+                .add("status", new_status)
+                .build();
+        Request request = getAuthorizedRequest().url(getAuthorizedUrl(URL.FRIEND_REQUEST + friendRequest.getId() +"/")).patch(body).build();
+        httpClient.newCall(request).enqueue(new CustomCallback(handler) {
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) {
+                int code = response.code();
+                if (code / 100 != 2) {
+                    handler.sendEmptyMessage(CHANGE_FRIEND_REQUEST_STATUS_ERROR);
+                    return;
+                }
+                handler.sendEmptyMessage(CHANGE_FRIEND_REQUEST_STATUS_SUCCESSFUL);
             }
         });
     }
