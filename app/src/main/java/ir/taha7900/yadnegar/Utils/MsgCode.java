@@ -19,4 +19,8 @@ public class MsgCode {
     public static final int POST_LIKE_SUCCESSFUL = 13;
     public static final int GET_USERS_ERROR = 14;
     public static final int GET_USERS_SUCCESSFUL = 15;
+    public static final int SEND_FRIEND_REQUEST_ERROR = 16;
+    public static final int SEND_FRIEND_REQUEST_SUCCESSFUL = 17;
+    public static final int GET_FRIEND_REQUEST_ERROR = 18;
+    public static final int GET_FRIEND_REQUEST_SUCCESSFUL = 19;
 }

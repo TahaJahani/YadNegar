@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.Objects;
 
 import ir.taha7900.yadnegar.Models.Comment;
+import ir.taha7900.yadnegar.Models.FriendRequest;
 import ir.taha7900.yadnegar.Models.Memory;
 import ir.taha7900.yadnegar.Models.Tag;
 import ir.taha7900.yadnegar.Models.User;
@@ -30,6 +31,8 @@ import okhttp3.Response;
 import static ir.taha7900.yadnegar.Utils.MsgCode.COMMENT_ADDED;
 import static ir.taha7900.yadnegar.Utils.MsgCode.COMMENT_ERROR;
 import static ir.taha7900.yadnegar.Utils.MsgCode.CREATE_TAG_SUCCESSFUL;
+import static ir.taha7900.yadnegar.Utils.MsgCode.GET_FRIEND_REQUEST_ERROR;
+import static ir.taha7900.yadnegar.Utils.MsgCode.GET_FRIEND_REQUEST_SUCCESSFUL;
 import static ir.taha7900.yadnegar.Utils.MsgCode.GET_USERS_ERROR;
 import static ir.taha7900.yadnegar.Utils.MsgCode.GET_USERS_SUCCESSFUL;
 import static ir.taha7900.yadnegar.Utils.MsgCode.LOGIN_FAILED;
@@ -41,6 +44,8 @@ import static ir.taha7900.yadnegar.Utils.MsgCode.POST_LIKE_ERROR;
 import static ir.taha7900.yadnegar.Utils.MsgCode.POST_LIKE_SUCCESSFUL;
 import static ir.taha7900.yadnegar.Utils.MsgCode.REGISTER_ERROR;
 import static ir.taha7900.yadnegar.Utils.MsgCode.REGISTER_SUCCESSFUL;
+import static ir.taha7900.yadnegar.Utils.MsgCode.SEND_FRIEND_REQUEST_ERROR;
+import static ir.taha7900.yadnegar.Utils.MsgCode.SEND_FRIEND_REQUEST_SUCCESSFUL;
 import static ir.taha7900.yadnegar.Utils.MsgCode.TAG_DATA_READY;
 import static ir.taha7900.yadnegar.Utils.MsgCode.TAG_ERROR;
 
@@ -56,6 +61,7 @@ public class Network {
         static String ADD_COMMENT = BASE + "/api/v1/comment/";
         static String LIKE_COMMENT = BASE + "/api/v1/comment-like/";
         static String LIKE_POST = BASE + "/api/v1/post-like/";
+        static String FRIEND_REQUEST = BASE + "/api/v1/friend-request/";
     }
 
     static abstract class CustomCallback implements Callback {
@@ -333,6 +339,52 @@ public class Network {
                     handler.sendMessage(msg);
                 } catch (JSONException e) {
                     handler.sendEmptyMessage(GET_USERS_ERROR);
+                }
+            }
+        });
+    }
+
+    public static void sendFriendRequest(long to_user_id, Handler handler) {
+        RequestBody body = new FormBody.Builder()
+                .add("to_user", String.valueOf(to_user_id))
+                .build();
+        Request request = getAuthorizedRequest().url(getAuthorizedUrl(URL.FRIEND_REQUEST)).post(body).build();
+        httpClient.newCall(request).enqueue(new CustomCallback(handler) {
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) {
+                int code = response.code();
+                if (code / 100 != 2) {
+                    handler.sendEmptyMessage(SEND_FRIEND_REQUEST_ERROR);
+                    return;
+                }
+                handler.sendEmptyMessage(SEND_FRIEND_REQUEST_SUCCESSFUL);
+            }
+        });
+    }
+
+    public static void getFriendRequests(Handler handler) {
+        Request request = getAuthorizedRequest().url(getAuthorizedUrl(URL.FRIEND_REQUEST)).get().build();
+        httpClient.newCall(request).enqueue(new CustomCallback(handler) {
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                int code = response.code();
+                if (code / 100 != 2) {
+                    handler.sendEmptyMessage(GET_FRIEND_REQUEST_ERROR);
+                    return;
+                }
+                String body = Objects.requireNonNull(response.body()).string();
+                try {
+                    JSONObject outerObj = new JSONObject(body);
+                    ArrayList<FriendRequest> friend_requests = gson.fromJson(String.valueOf(outerObj.getJSONArray("results"))
+                            , new TypeToken<ArrayList<FriendRequest>>() {
+                            }.getType());
+                    Message msg = new Message();
+                    msg.obj = friend_requests;
+                    msg.what = GET_FRIEND_REQUEST_SUCCESSFUL;
+                    FriendRequest.setUserFriendRequests(friend_requests);
+                    handler.sendMessage(msg);
+                } catch (JSONException e) {
+                    handler.sendEmptyMessage(GET_FRIEND_REQUEST_ERROR);
                 }
             }
         });
