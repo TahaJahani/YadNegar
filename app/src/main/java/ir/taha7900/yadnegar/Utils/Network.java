@@ -389,4 +389,22 @@ public class Network {
         });
     }
 
+    public static void getUserDetail(long id , Handler handler){
+        Request request = getAuthorizedRequest().url(getAuthorizedUrl(URL.REGISTER + id +"/")).get().build();
+        httpClient.newCall(request).enqueue(new CustomCallback(handler) {
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                int code = response.code();
+                if (code / 100 != 2) {
+                    handler.sendEmptyMessage(GET_USER_DATA_ERROR);
+                    return;
+                }
+                String body = Objects.requireNonNull(response.body()).string();
+                User user = gson.fromJson(body, User.class);
+                User.setCurrentUser(user);
+                handler.sendEmptyMessage(GET_USER_DATA_SUCCESSFUL);
+            }
+        });
+    }
+
 }

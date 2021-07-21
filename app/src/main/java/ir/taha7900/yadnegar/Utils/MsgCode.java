@@ -25,6 +25,8 @@ public class MsgCode {
     public static final int GET_FRIEND_REQUEST_SUCCESSFUL = 19;
     public static final int USER_MEMORY_DATA_READY = 20;
     public static final int USER_MEMORY_ERROR = 21;
-    public static final int CHANGE_FRIEND_REQUEST_STATUS_ERROR = 16;
-    public static final int CHANGE_FRIEND_REQUEST_STATUS_SUCCESSFUL = 17;
+    public static final int CHANGE_FRIEND_REQUEST_STATUS_ERROR = 22;
+    public static final int CHANGE_FRIEND_REQUEST_STATUS_SUCCESSFUL = 23;
+    public static final int GET_USER_DATA_ERROR = 24;
+    public static final int GET_USER_DATA_SUCCESSFUL = 25;
 }
