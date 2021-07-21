@@ -51,7 +51,10 @@ public class LoginFragment extends Fragment {
                         break;
                     case MsgCode.LOGIN_FAILED:
                         context.showLoading(false);
-                        loginFailed();
+                        if (msg.obj == null){
+                            msg.obj = getString(R.string.login_failed);
+                        }
+                        loginFailed(msg.obj);
                         break;
                 }
             }
@@ -129,7 +132,7 @@ public class LoginFragment extends Fragment {
                 .commit();
     }
 
-    private void loginFailed() {
-        Snackbar.make(getView(), getString(R.string.login_failed), Snackbar.LENGTH_LONG).show();
+    private void loginFailed(Object error) {
+        Snackbar.make(getView(), String.valueOf(error), Snackbar.LENGTH_LONG).show();
     }
 }

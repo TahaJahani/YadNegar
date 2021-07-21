@@ -72,7 +72,8 @@ public class Network {
 
     private static Request.Builder getAuthorizedRequest() {
         return new Request.Builder()
-                .addHeader("Authorization", "token 3386fb2b1433447606917b3b70c837d834d6f505");
+                .addHeader("Authorization", "token 3386fb2b1433447606917b3b70c837d834d6f505")
+                .addHeader("Accept-Language","en");
     }
 
     private static String getAuthorizedUrl(String baseUrl) {
@@ -90,7 +91,15 @@ public class Network {
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 int code = response.code();
                 if (code != 200) {
-                    handler.sendEmptyMessage(LOGIN_FAILED);
+                    try {
+                        Message msg = new Message();
+                        JSONObject outerObj = new JSONObject(response.body().string());
+                        msg.obj = outerObj.getString("detail");
+                        msg.what = LOGIN_FAILED;
+                        handler.sendMessage(msg);
+                    } catch (JSONException e) {
+                        handler.sendEmptyMessage(LOGIN_FAILED);
+                    }
                     return;
                 }
                 String body = response.body().string();
