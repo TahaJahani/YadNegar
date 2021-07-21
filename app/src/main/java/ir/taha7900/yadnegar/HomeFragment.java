@@ -8,14 +8,14 @@ import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
@@ -30,6 +30,7 @@ public class HomeFragment extends Fragment {
 
     private MainActivity context;
     private RecyclerView memoriesList;
+    private FloatingActionButton addMemoryButton;
     private MemoryAdapter adapter;
     private ArrayList<Memory> memories;
 
@@ -96,8 +97,17 @@ public class HomeFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         memoriesList = view.findViewById(R.id.memoriesList);
+        addMemoryButton = view.findViewById(R.id.addMemoryButton);
+        addMemoryButton.setOnClickListener(this::openAddMemoryFragment);
         if (memories != null)
             showTopMemories();
         return view;
+    }
+
+    private void openAddMemoryFragment(View view) {
+        context.getSupportFragmentManager().beginTransaction()
+                .addToBackStack("addMemory")
+                .replace(R.id.mainFrame, AddMemoryFragment.newInstance())
+                .commit();
     }
 }

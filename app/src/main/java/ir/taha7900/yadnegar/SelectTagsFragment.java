@@ -1,6 +1,7 @@
 package ir.taha7900.yadnegar;
 
 import android.content.Context;
+import android.graphics.Rect;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -72,7 +73,8 @@ public class SelectTagsFragment extends Fragment {
     private void showTags() {
         context.showLoading(false);
         adapter = new TagSelectionAdapter(Tag.getUserTags(), selectedTags);
-        tagsList.setLayoutManager(new GridLayoutManager(context, 2));
+        tagsList.setLayoutManager(new GridLayoutManager(context, 3));
+        tagsList.addItemDecoration(new SpacesItemDecoration(4));
         tagsList.setAdapter(adapter);
     }
 
@@ -82,7 +84,8 @@ public class SelectTagsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_select_tags, container, false);
         doneButton = view.findViewById(R.id.doneButton);
         tagsList = view.findViewById(R.id.tagsList);
-        showTags();
+        if (Tag.getUserTags() != null)
+            showTags();
         return view;
     }
 
@@ -90,5 +93,28 @@ public class SelectTagsFragment extends Fragment {
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         this.context = (MainActivity) context;
+    }
+
+    static class SpacesItemDecoration extends RecyclerView.ItemDecoration {
+        private final int space;
+
+        public SpacesItemDecoration(int space) {
+            this.space = space;
+        }
+
+        @Override
+        public void getItemOffsets(Rect outRect, View view,
+                                   RecyclerView parent, RecyclerView.State state) {
+            outRect.left = space;
+            outRect.right = space;
+            outRect.bottom = space;
+
+            // Add top margin only for the first item to avoid double space between items
+            if (parent.getChildLayoutPosition(view) == 0) {
+                outRect.top = space;
+            } else {
+                outRect.top = 0;
+            }
+        }
     }
 }
