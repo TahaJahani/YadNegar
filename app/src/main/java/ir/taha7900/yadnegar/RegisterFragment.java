@@ -1,5 +1,6 @@
 package ir.taha7900.yadnegar;
 
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.os.Bundle;
 
@@ -10,13 +11,16 @@ import androidx.fragment.app.FragmentTransaction;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.DatePicker;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 
 import static ir.taha7900.yadnegar.Utils.MsgCode.*;
 
@@ -35,6 +39,7 @@ public class RegisterFragment extends Fragment {
     private TextInputEditText passwordInput;
     private TextInputEditText nameInput;
     private TextInputEditText emailInput;
+    private String birthday;
 
     private final Handler handler;
 
@@ -97,6 +102,14 @@ public class RegisterFragment extends Fragment {
         emailInput = view.findViewById(R.id.emailInput);
         MaterialButton registerButton = view.findViewById(R.id.registerButton);
         registerButton.setOnClickListener(this::registerClicked);
+        TextInputEditText birthdayInput = view.findViewById(R.id.birthdayInput);
+        DatePickerDialog datePickerDialog = new DatePickerDialog(context, (datePicker, i, i1, i2) -> {
+            birthday = i + "-" + i1 + "-" + i2;
+            birthdayInput.setText(birthday);
+        }, 1900, 1, 1);
+        TextInputLayout birthdayContainer = view.findViewById(R.id.birthdayContainer);
+        birthdayInput.setOnClickListener(view1 -> datePickerDialog.show());
+        birthdayContainer.setOnClickListener(view1 -> datePickerDialog.show());
         return view;
     }
 
@@ -129,8 +142,7 @@ public class RegisterFragment extends Fragment {
         data.put("first_name", Objects.requireNonNull(nameInput.getText()).toString());
         data.put("last_name", "L");
         // TODO: Birthday!
-//        if (birthdayInput.getText() != null)
-//            data.put("birthday_date", birthdayInput.getText().toString());
+        if (!birthday.equals("")) data.put("birthday_date", birthday);
         data.put("phone_number", "09112223344");
         data.put("email", Objects.requireNonNull(emailInput.getText()).toString());
         return data;

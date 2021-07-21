@@ -68,6 +68,23 @@
                 android:hint="@string/password"
                 android:inputType="textPassword" />
         </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
+            android:id="@+id/birthdayContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            app:startIconDrawable="@drawable/ic_baseline_vpn_key_24">
+
+            <!-- TOOD: Birthday icon! -->
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/birthdayInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="none"
+                android:editable="false"
+                android:hint="@string/birthday" />
+        </com.google.android.material.textfield.TextInputLayout>
         <com.google.android.material.button.MaterialButton
             android:id="@+id/registerButton"
             android:layout_width="match_parent"

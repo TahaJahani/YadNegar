@@ -20,6 +20,8 @@ import android.widget.Toast;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.navigation.NavigationView;
 
+import java.util.Objects;
+
 import ir.taha7900.yadnegar.Models.Memory;
 import ir.taha7900.yadnegar.Models.User;
 import ir.taha7900.yadnegar.Utils.AndroidUtilities;
@@ -36,7 +38,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         AndroidUtilities.setDensityFromContext(this);
         super.onCreate(savedInstanceState);
-        getSupportActionBar().hide();
+        Objects.requireNonNull(getSupportActionBar()).hide();
         setContentView(R.layout.activity_main);
         mainFrame = findViewById(R.id.mainFrame);
         progressBar = findViewById(R.id.progressBar);

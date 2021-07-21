@@ -37,7 +37,6 @@ public class HomeFragment extends Fragment {
     private Handler handler;
 
     public HomeFragment() {
-        // Required empty public constructor
         handler = new Handler(Looper.getMainLooper()) {
             @Override
             public void handleMessage(@NonNull Message msg) {

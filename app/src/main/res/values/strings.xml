@@ -15,8 +15,8 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="home">Home</string>
-    <string name="setting">Setting</string>
-    <string name="logout">Logout</string>
+    <string name="setting">Settings</string>
+    <string name="logout">Log Out</string>
     <string name="profile">Profile</string>
     <string name="edit">Edit</string>
     <string name="memories">Memories</string>
