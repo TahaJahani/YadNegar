@@ -14,4 +14,5 @@ public class MsgCode {
     public static final int COMMENT_ADDED = 8;
     public static final int COMMENT_ERROR = 9;
     public static final int LIKE_ERROR = 10;
+    public static final int TAG_DATA_READY = 11;
 }

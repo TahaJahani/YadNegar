@@ -22,10 +22,12 @@ import ir.taha7900.yadnegar.R;
 public class TagSelectionAdapter extends RecyclerView.Adapter<TagSelectionAdapter.ViewHolder> {
 
     private ArrayList<Tag> tags;
+    private ArrayList<Long> selected;
     private MainActivity context;
 
-    public TagSelectionAdapter(ArrayList<Tag> tags) {
+    public TagSelectionAdapter(ArrayList<Tag> tags, ArrayList<Long> selected) {
         this.tags = tags;
+        this.selected = selected;
     }
 
     @NonNull
@@ -41,7 +43,14 @@ public class TagSelectionAdapter extends RecyclerView.Adapter<TagSelectionAdapte
         Tag tag = tags.get(position);
         holder.titleText.setBackgroundResource(R.drawable.background_tag);
         GradientDrawable background = (GradientDrawable) holder.titleText.getBackground();
-        background.setColor(Color.parseColor("#" + tag.getColor()));
+        int backgroundColor = Color.parseColor("#" + tag.getColor());
+        if (selected.contains(tag.getId())){
+            float[] hsv = new float[3];
+            Color.colorToHSV(backgroundColor, hsv);
+            hsv[2] *= 0.8f;
+            backgroundColor = Color.HSVToColor(hsv);
+        }
+        background.setColor(backgroundColor);
         holder.titleText.setText(tag.getName());
     }
 
@@ -50,9 +59,9 @@ public class TagSelectionAdapter extends RecyclerView.Adapter<TagSelectionAdapte
         return tags.size();
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder {
+    static class ViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView titleText;
+        private final TextView titleText;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);

@@ -1,31 +1,52 @@
 package ir.taha7900.yadnegar;
 
+import android.content.Context;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.material.button.MaterialButton;
+
 import java.util.ArrayList;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link SelectTagsFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import ir.taha7900.yadnegar.Adapters.TagSelectionAdapter;
+import ir.taha7900.yadnegar.Models.Tag;
+import ir.taha7900.yadnegar.Utils.MsgCode;
+import ir.taha7900.yadnegar.Utils.Network;
+
+
 public class SelectTagsFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_TAGS = "tags";
-
-    // TODO: Rename and change types of parameters
-    private ArrayList<Long> tags;
+    private ArrayList<Long> selectedTags;
+    private MaterialButton doneButton;
+    private RecyclerView tagsList;
+    private TagSelectionAdapter adapter;
+    private Handler handler;
+    private MainActivity context;
 
     public SelectTagsFragment() {
-        // Required empty public constructor
+        handler = new Handler(Looper.getMainLooper()) {
+            @Override
+            public void handleMessage(@NonNull Message msg) {
+                switch (msg.what) {
+                    case MsgCode.TAG_DATA_READY:
+                        showTags();
+                        break;
+                }
+            }
+        };
     }
 
     public static SelectTagsFragment newInstance(ArrayList<Long> tags) {
@@ -40,14 +61,34 @@ public class SelectTagsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            tags = (ArrayList<Long>) getArguments().getSerializable(ARG_TAGS);
+            selectedTags = (ArrayList<Long>) getArguments().getSerializable(ARG_TAGS);
         }
+        if (Tag.getUserTags() == null) {
+            context.showLoading(true);
+            Network.getTags(handler);
+        }
+    }
+
+    private void showTags() {
+        context.showLoading(false);
+        adapter = new TagSelectionAdapter(Tag.getUserTags(), selectedTags);
+        tagsList.setLayoutManager(new GridLayoutManager(context, 2));
+        tagsList.setAdapter(adapter);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_select_tags, container, false);
+        doneButton = view.findViewById(R.id.doneButton);
+        tagsList = view.findViewById(R.id.tagsList);
+        showTags();
+        return view;
+    }
 
-        return inflater.inflate(R.layout.fragment_select_tags, container, false);
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        this.context = (MainActivity) context;
     }
 }
