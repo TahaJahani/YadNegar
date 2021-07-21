@@ -67,7 +67,7 @@ public class HomeFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context.showLoading(true);
-        Network.getHomeMemories(handler);
+        Network.getTopMemories(handler);
     }
 
     @Override
