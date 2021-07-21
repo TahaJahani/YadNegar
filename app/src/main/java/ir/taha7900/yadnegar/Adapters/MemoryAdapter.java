@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -45,30 +46,21 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.ViewHolder
         this.context = (MainActivity) parent.getContext();
         this.colorsList = context.getResources().getStringArray(R.array.profileColors);
         LayoutInflater inflater = LayoutInflater.from(context);
-        View view = inflater.inflate(R.layout.row_memory, parent, false);
+        View view = inflater.inflate(R.layout.new_row_memory, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Memory memory = memories.get(position);
-        String randomColor = colorsList[new Random().nextInt(colorsList.length)];
-        holder.userProfileImage.setBackgroundColor(Color.parseColor(randomColor));
-        holder.usernameText.setText(memory.getCreator_user().getUsername());
-        holder.fullNameText.setText(memory.getCreator_user().getFirst_name() + " " + memory.getCreator_user().getLast_name());
         holder.titleText.setText(memory.getTitle());
-        holder.contentText.setText(memory.getText());
         holder.likeButton.setLiked(hasLiked(memory));
         holder.likeButton.setOnTouchListener(this::likeMemory);
-        holder.commentButton.setOnTouchListener((view, motionEvent) -> {
-            openComments(memory);
-            view.performClick();
-            return false;
+        holder.nameAndDateText.setText(memory.getCreator_user().getFirst_name() + " - " + memory.getCreated());
+        holder.numberOfLikesText.setText(memory.getLikes().length);
+        holder.seeMoreButton.setOnClickListener(view -> {
+            // TODO: Open memory page!
         });
-        if (memory.hasFiles())
-            Glide.with(context).load(memory.getPost_files()[0]).into(holder.memoryImage);
-        else
-            holder.memoryImage.setVisibility(View.GONE);
     }
 
     private boolean likeMemory(View view, MotionEvent motionEvent) {
@@ -101,25 +93,19 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.ViewHolder
 
     static class ViewHolder extends RecyclerView.ViewHolder {
 
-        private final TextView usernameText;
-        private final TextView fullNameText;
+        private final TextView nameAndDateText;
         private final TextView titleText;
-        private final TextView contentText;
+        private final TextView numberOfLikesText;
+        private final Button seeMoreButton;
         private final LikeButton likeButton;
-        private final ImageView memoryImage;
-        private final ShapeableImageView userProfileImage;
-        private final CommentButton commentButton;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            this.fullNameText  = itemView.findViewById(R.id.fullNameText);
-            this.usernameText = itemView.findViewById(R.id.usernameText);
-            this.titleText = itemView.findViewById(R.id.titleText);
-            this.contentText = itemView.findViewById(R.id.contentText);
-            this.likeButton = itemView.findViewById(R.id.likeButton);
-            this.memoryImage = itemView.findViewById(R.id.memoryImage);
-            this.commentButton = itemView.findViewById(R.id.commentButton);
-            this.userProfileImage = itemView.findViewById(R.id.userProfileImage);
+            this.nameAndDateText  = itemView.findViewById(R.id.newRowMemory_nameAndDateText);
+            this.titleText = itemView.findViewById(R.id.newRowMemory_titleText);
+            this.numberOfLikesText = itemView.findViewById(R.id.newRowMemory_numberOfLikesText);
+            this.seeMoreButton = itemView.findViewById(R.id.newRowMemory_seeMoreButton);
+            this.likeButton = itemView.findViewById(R.id.newRowMemory_likeButton);
         }
     }
 }
