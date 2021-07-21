@@ -1,6 +1,7 @@
 package ir.taha7900.yadnegar.Models;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Objects;
@@ -8,6 +9,8 @@ import java.util.Objects;
 public class User {
 
     private static User currentUser;
+
+    private static ArrayList<User> allUsers;
 
     private long id;
     private String first_name;
@@ -79,6 +82,14 @@ public class User {
 
     public String getToken() {
         return token;
+    }
+
+    public static ArrayList<User> getAllUsers() {
+        return allUsers;
+    }
+
+    public static void setAllUsers(ArrayList<User> allUsers) {
+        User.allUsers = allUsers;
     }
 
     @Override

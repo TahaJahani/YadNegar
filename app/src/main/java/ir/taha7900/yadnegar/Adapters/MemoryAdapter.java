@@ -55,7 +55,8 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.ViewHolder
         String randomColor = colorsList[new Random().nextInt(colorsList.length)];
         holder.userProfileImage.setBackgroundColor(Color.parseColor(randomColor));
         holder.usernameText.setText(memory.getCreator_user().getUsername());
-        holder.fullNameText.setText(memory.getCreator_user().getFirst_name() + " " + memory.getCreator_user().getLast_name());
+        User current_user = User.getCurrentUser();
+        holder.fullNameText.setText(current_user.getFullName());
         holder.titleText.setText(memory.getTitle());
         holder.contentText.setText(memory.getText());
         holder.likeButton.setLiked(hasLiked(memory));

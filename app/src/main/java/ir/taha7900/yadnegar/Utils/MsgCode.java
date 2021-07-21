@@ -17,4 +17,6 @@ public class MsgCode {
     public static final int TAG_DATA_READY = 11;
     public static final int POST_LIKE_ERROR = 12;
     public static final int POST_LIKE_SUCCESSFUL = 13;
+    public static final int GET_USERS_ERROR = 14;
+    public static final int GET_USERS_SUCCESSFUL = 15;
 }

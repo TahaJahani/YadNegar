@@ -30,6 +30,8 @@ import okhttp3.Response;
 import static ir.taha7900.yadnegar.Utils.MsgCode.COMMENT_ADDED;
 import static ir.taha7900.yadnegar.Utils.MsgCode.COMMENT_ERROR;
 import static ir.taha7900.yadnegar.Utils.MsgCode.CREATE_TAG_SUCCESSFUL;
+import static ir.taha7900.yadnegar.Utils.MsgCode.GET_USERS_ERROR;
+import static ir.taha7900.yadnegar.Utils.MsgCode.GET_USERS_SUCCESSFUL;
 import static ir.taha7900.yadnegar.Utils.MsgCode.LOGIN_FAILED;
 import static ir.taha7900.yadnegar.Utils.MsgCode.LOGIN_SUCCESSFUL;
 import static ir.taha7900.yadnegar.Utils.MsgCode.MEMORY_DATA_READY;
@@ -303,6 +305,34 @@ public class Network {
                     handler.sendMessage(msg);
                 } catch (JSONException e) {
                     handler.sendEmptyMessage(MEMORY_ERROR);
+                }
+            }
+        });
+    }
+
+    public static void getUsers(Handler handler) {
+        Request request = getAuthorizedRequest().url(URL.REGISTER).get().build();
+        httpClient.newCall(request).enqueue(new CustomCallback(handler) {
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                int code = response.code();
+                if (code / 100 != 2) {
+                    handler.sendEmptyMessage(GET_USERS_ERROR);
+                    return;
+                }
+                String body = Objects.requireNonNull(response.body()).string();
+                try {
+                    JSONObject outerObj = new JSONObject(body);
+                    ArrayList<User> users = gson.fromJson(String.valueOf(outerObj.getJSONArray("results"))
+                            , new TypeToken<ArrayList<User>>() {
+                            }.getType());
+                    Message msg = new Message();
+                    msg.obj = users;
+                    msg.what = GET_USERS_SUCCESSFUL;
+                    User.setAllUsers(users);
+                    handler.sendMessage(msg);
+                } catch (JSONException e) {
+                    handler.sendEmptyMessage(GET_USERS_ERROR);
                 }
             }
         });
