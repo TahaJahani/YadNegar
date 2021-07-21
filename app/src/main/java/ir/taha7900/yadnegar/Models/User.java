@@ -49,6 +49,10 @@ public class User {
         return username;
     }
 
+    public String getFullName(){
+        return first_name + " " + last_name;
+    }
+
     public String getPassword() {
         return password;
     }

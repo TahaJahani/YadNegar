@@ -13,6 +13,8 @@ public class MsgCode {
     public static final int MEMORY_ERROR = 7;
     public static final int COMMENT_ADDED = 8;
     public static final int COMMENT_ERROR = 9;
-    public static final int LIKE_ERROR = 10;
+    public static final int COMMENT_LIKE_ERROR = 10;
     public static final int TAG_DATA_READY = 11;
+    public static final int POST_LIKE_ERROR = 12;
+    public static final int POST_LIKE_SUCCESSFUL = 13;
 }
