@@ -4,13 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_gravity="center"
     android:layout_marginTop="4dp"
-    android:layout_marginBottom="4dp"
+    android:layout_marginBottom="10dp"
     android:layout_marginStart="4dp"
     android:layout_marginEnd="4dp"
     android:clickable="true"
     android:focusable="true"
     android:layout_width="match_parent"
-    android:layout_height="170dp"
+    android:layout_height="140dp"
     app:cardCornerRadius="5dp"
     android:elevation="4dp"
     app:cardElevation="4dp">
@@ -67,6 +67,7 @@
             android:layout_marginBottom="16dp"
             android:text="245"
             android:textSize="14sp"
+            android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
@@ -74,7 +75,7 @@
             android:id="@+id/newRowMemory_likeButton"
             android:layout_width="20dp"
             android:layout_height="20dp"
-            android:layout_marginEnd="50dp"
+            android:layout_marginEnd="16dp"
             android:layout_marginBottom="16dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />

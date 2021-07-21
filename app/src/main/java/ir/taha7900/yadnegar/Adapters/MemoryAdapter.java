@@ -56,8 +56,8 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.ViewHolder
         holder.titleText.setText(memory.getTitle());
         holder.likeButton.setLiked(hasLiked(memory));
         holder.likeButton.setOnTouchListener(this::likeMemory);
-        holder.nameAndDateText.setText(memory.getCreator_user().getFirst_name() + " - " + memory.getCreated());
-        holder.numberOfLikesText.setText(memory.getLikes().length);
+        holder.nameAndDateText.setText(memory.getCreator_user().getFirst_name() + " - " + (memory.getCreated().contains("T") ? memory.getCreated().split("T")[0] : memory.getCreated()));
+//        holder.numberOfLikesText.setText(memory.getLikes().length);
         holder.seeMoreButton.setOnClickListener(view -> {
             // TODO: Open memory page!
         });
