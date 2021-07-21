@@ -16,7 +16,6 @@ import java.util.HashMap;
 import java.util.Objects;
 
 import ir.taha7900.yadnegar.Models.Comment;
-import ir.taha7900.yadnegar.Models.Like;
 import ir.taha7900.yadnegar.Models.Memory;
 import ir.taha7900.yadnegar.Models.Tag;
 import ir.taha7900.yadnegar.Models.User;
@@ -31,12 +30,13 @@ import okhttp3.Response;
 import static ir.taha7900.yadnegar.Utils.MsgCode.COMMENT_ADDED;
 import static ir.taha7900.yadnegar.Utils.MsgCode.COMMENT_ERROR;
 import static ir.taha7900.yadnegar.Utils.MsgCode.CREATE_TAG_SUCCESSFUL;
-import static ir.taha7900.yadnegar.Utils.MsgCode.LIKE_ERROR;
 import static ir.taha7900.yadnegar.Utils.MsgCode.LOGIN_FAILED;
 import static ir.taha7900.yadnegar.Utils.MsgCode.LOGIN_SUCCESSFUL;
 import static ir.taha7900.yadnegar.Utils.MsgCode.MEMORY_DATA_READY;
 import static ir.taha7900.yadnegar.Utils.MsgCode.MEMORY_ERROR;
 import static ir.taha7900.yadnegar.Utils.MsgCode.NETWORK_ERROR;
+import static ir.taha7900.yadnegar.Utils.MsgCode.POST_LIKE_ERROR;
+import static ir.taha7900.yadnegar.Utils.MsgCode.POST_LIKE_SUCCESSFUL;
 import static ir.taha7900.yadnegar.Utils.MsgCode.REGISTER_ERROR;
 import static ir.taha7900.yadnegar.Utils.MsgCode.REGISTER_SUCCESSFUL;
 import static ir.taha7900.yadnegar.Utils.MsgCode.TAG_DATA_READY;
@@ -50,8 +50,10 @@ public class Network {
         static String REGISTER = BASE + "/api/v1/memo-user/";
         static String TAG = BASE + "/api/v1/tag/";
         static String TOP_MEMO = BASE + "/api/v1/top-post/";
+        static String HOME_MEMOS = BASE + "/api/v1/post/";
         static String ADD_COMMENT = BASE + "/api/v1/comment/";
         static String LIKE_COMMENT = BASE + "/api/v1/comment-like/";
+        static String LIKE_POST = BASE + "/api/v1/post-like/";
     }
 
     static abstract class CustomCallback implements Callback {
@@ -68,13 +70,13 @@ public class Network {
         }
     }
 
-    private static OkHttpClient httpClient = new OkHttpClient();
-    private static Gson gson = new Gson();
+    private static final OkHttpClient httpClient = new OkHttpClient();
+    private static final Gson gson = new Gson();
 
     private static Request.Builder getAuthorizedRequest() {
         return new Request.Builder()
                 .addHeader("Authorization", "token 3386fb2b1433447606917b3b70c837d834d6f505")
-                .addHeader("Accept-Language","en");
+                .addHeader("Accept-Language", "en");
     }
 
     private static String getAuthorizedUrl(String baseUrl) {
@@ -245,7 +247,7 @@ public class Network {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 int code = response.code();
-                if (code / 2 == 100){
+                if (code / 2 == 100) {
                     try {
                         JSONObject jsonObject = new JSONObject(Objects.requireNonNull(response.body()).string());
 //                        Like like = new Like();
@@ -257,6 +259,51 @@ public class Network {
                     }
                 }
                 System.out.println(response.body().string()); //TODO: debug and complete
+            }
+        });
+    }
+
+    public static void likePost(Memory memory, Handler handler) {
+        RequestBody body = new FormBody.Builder()
+                .add("post", String.valueOf(memory.getId()))
+                .build();
+        Request request = getAuthorizedRequest().url(getAuthorizedUrl(URL.LIKE_POST)).post(body).build();
+        httpClient.newCall(request).enqueue(new CustomCallback(handler) {
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) {
+                int code = response.code();
+                if (code / 100 != 2) {
+                    handler.sendEmptyMessage(POST_LIKE_ERROR);
+                    return;
+                }
+                handler.sendEmptyMessage(POST_LIKE_SUCCESSFUL);
+            }
+        });
+    }
+
+    public static void getHomeMemories(Handler handler) {
+        Request request = getAuthorizedRequest().url(getAuthorizedUrl(URL.HOME_MEMOS)).get().build();
+        httpClient.newCall(request).enqueue(new CustomCallback(handler) {
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                int code = response.code();
+                if (code / 100 != 2) {
+                    handler.sendEmptyMessage(MEMORY_ERROR);
+                    return;
+                }
+                String body = Objects.requireNonNull(response.body()).string();
+                try {
+                    JSONObject outerObj = new JSONObject(body);
+                    ArrayList<Memory> memories = gson.fromJson(String.valueOf(outerObj.getJSONArray("results"))
+                            , new TypeToken<ArrayList<Memory>>() {
+                            }.getType());
+                    Message msg = new Message();
+                    msg.obj = memories;
+                    msg.what = MEMORY_DATA_READY;
+                    handler.sendMessage(msg);
+                } catch (JSONException e) {
+                    handler.sendEmptyMessage(MEMORY_ERROR);
+                }
             }
         });
     }
