@@ -23,4 +23,6 @@ public class MsgCode {
     public static final int SEND_FRIEND_REQUEST_SUCCESSFUL = 17;
     public static final int GET_FRIEND_REQUEST_ERROR = 18;
     public static final int GET_FRIEND_REQUEST_SUCCESSFUL = 19;
+    public static final int USER_MEMORY_DATA_READY = 20;
+    public static final int USER_MEMORY_ERROR = 21;
 }

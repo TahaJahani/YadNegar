@@ -48,6 +48,8 @@ import static ir.taha7900.yadnegar.Utils.MsgCode.SEND_FRIEND_REQUEST_ERROR;
 import static ir.taha7900.yadnegar.Utils.MsgCode.SEND_FRIEND_REQUEST_SUCCESSFUL;
 import static ir.taha7900.yadnegar.Utils.MsgCode.TAG_DATA_READY;
 import static ir.taha7900.yadnegar.Utils.MsgCode.TAG_ERROR;
+import static ir.taha7900.yadnegar.Utils.MsgCode.USER_MEMORY_DATA_READY;
+import static ir.taha7900.yadnegar.Utils.MsgCode.USER_MEMORY_ERROR;
 
 public class Network {
 
@@ -57,7 +59,7 @@ public class Network {
         static String REGISTER = BASE + "/api/v1/memo-user/";
         static String TAG = BASE + "/api/v1/tag/";
         static String TOP_MEMO = BASE + "/api/v1/top-post/";
-        static String HOME_MEMOS = BASE + "/api/v1/post/";
+        static String USER_MEMOS = BASE + "/api/v1/post/";
         static String ADD_COMMENT = BASE + "/api/v1/comment/";
         static String LIKE_COMMENT = BASE + "/api/v1/comment-like/";
         static String LIKE_POST = BASE + "/api/v1/post-like/";
@@ -289,14 +291,14 @@ public class Network {
         });
     }
 
-    public static void getHomeMemories(Handler handler) {
-        Request request = getAuthorizedRequest().url(getAuthorizedUrl(URL.HOME_MEMOS)).get().build();
+    public static void getUserMemories(Handler handler) {
+        Request request = getAuthorizedRequest().url(getAuthorizedUrl(URL.USER_MEMOS)).get().build();
         httpClient.newCall(request).enqueue(new CustomCallback(handler) {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 int code = response.code();
                 if (code / 100 != 2) {
-                    handler.sendEmptyMessage(MEMORY_ERROR);
+                    handler.sendEmptyMessage(USER_MEMORY_ERROR);
                     return;
                 }
                 String body = Objects.requireNonNull(response.body()).string();
@@ -307,10 +309,10 @@ public class Network {
                             }.getType());
                     Message msg = new Message();
                     msg.obj = memories;
-                    msg.what = MEMORY_DATA_READY;
+                    msg.what = USER_MEMORY_DATA_READY;
                     handler.sendMessage(msg);
                 } catch (JSONException e) {
-                    handler.sendEmptyMessage(MEMORY_ERROR);
+                    handler.sendEmptyMessage(USER_MEMORY_ERROR);
                 }
             }
         });
