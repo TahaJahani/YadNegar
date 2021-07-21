@@ -1,14 +1,7 @@
 package ir.taha7900.yadnegar;
 
 import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
-
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -16,29 +9,26 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 
-import java.lang.ref.WeakReference;
-import java.time.Instant;
-import java.util.Date;
 import java.util.Objects;
 
-import ir.taha7900.yadnegar.Models.User;
 import ir.taha7900.yadnegar.Utils.MsgCode;
 import ir.taha7900.yadnegar.Utils.Network;
-import okhttp3.OkHttpClient;
 
 public class LoginFragment extends Fragment {
 
     private TextInputEditText usernameInput;
     private TextInputEditText passwordInput;
-    private MaterialButton loginButton;
-    private MaterialButton registerButton;
     private MainActivity context;
 
-    private Handler handler;
+    private final Handler handler;
 
     public LoginFragment() {
         handler = new Handler(Looper.getMainLooper()) {
@@ -73,8 +63,8 @@ public class LoginFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_login, container, false);
         usernameInput = view.findViewById(R.id.usernameInput);
         passwordInput = view.findViewById(R.id.passwordInput);
-        loginButton = view.findViewById(R.id.loginButton);
-        registerButton = view.findViewById(R.id.registerButton);
+        MaterialButton loginButton = view.findViewById(R.id.loginButton);
+        MaterialButton registerButton = view.findViewById(R.id.registerButton);
         loginButton.setOnClickListener(this::loginClicked);
         registerButton.setOnClickListener(this::registerClicked);
         return view;
@@ -130,6 +120,6 @@ public class LoginFragment extends Fragment {
     }
 
     private void loginFailed() {
-        Snackbar.make(getView(), getString(R.string.login_failed), Snackbar.LENGTH_LONG).show();
+        Snackbar.make(Objects.requireNonNull(getView()), getString(R.string.login_failed), Snackbar.LENGTH_LONG).show();
     }
 }

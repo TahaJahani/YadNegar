@@ -21,6 +21,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import static ir.taha7900.yadnegar.Utils.MsgCode.*;
 
 import java.util.HashMap;
+import java.util.Objects;
 
 import ir.taha7900.yadnegar.Utils.Network;
 
@@ -32,15 +33,10 @@ public class RegisterFragment extends Fragment {
 
     private TextInputEditText usernameInput;
     private TextInputEditText passwordInput;
-    private TextInputEditText confirmPasswordInput;
     private TextInputEditText nameInput;
-    private TextInputEditText surnameInput;
-    private TextInputEditText birthdayInput;
     private TextInputEditText emailInput;
-    private TextInputEditText phoneNumberInput;
-    private MaterialButton registerButton;
 
-    private Handler handler;
+    private final Handler handler;
 
     public RegisterFragment() {
         this.handler = new Handler(Looper.getMainLooper()) {
@@ -97,13 +93,9 @@ public class RegisterFragment extends Fragment {
         if (username != null)
             usernameInput.setText(username);
         passwordInput = view.findViewById(R.id.passwordInput);
-        confirmPasswordInput = view.findViewById(R.id.confirmPasswordInput);
         nameInput = view.findViewById(R.id.firstNameInput);
-        surnameInput = view.findViewById(R.id.surnameInput);
-        birthdayInput = view.findViewById(R.id.birthdayInput);
         emailInput = view.findViewById(R.id.emailInput);
-        phoneNumberInput = view.findViewById(R.id.phoneNumberInput);
-        registerButton = view.findViewById(R.id.registerButton);
+        MaterialButton registerButton = view.findViewById(R.id.registerButton);
         registerButton.setOnClickListener(this::registerClicked);
         return view;
     }
@@ -132,25 +124,21 @@ public class RegisterFragment extends Fragment {
 
     private HashMap<String, String> collectData() {
         HashMap<String, String> data = new HashMap<>();
-        data.put("username", usernameInput.getText().toString());
-        data.put("password", passwordInput.getText().toString());
-        data.put("first_name", nameInput.getText().toString());
-        data.put("last_name", surnameInput.getText().toString());
-        if (birthdayInput.getText() != null)
-            data.put("birthday_date", birthdayInput.getText().toString());
-        data.put("password", passwordInput.getText().toString());
-        data.put("phone_number", phoneNumberInput.getText().toString());
-        data.put("email", emailInput.getText().toString());
+        data.put("username", Objects.requireNonNull(usernameInput.getText()).toString());
+        data.put("password", Objects.requireNonNull(passwordInput.getText()).toString());
+        data.put("first_name", Objects.requireNonNull(nameInput.getText()).toString());
+        data.put("last_name", "L");
+        // TODO: Birthday!
+//        if (birthdayInput.getText() != null)
+//            data.put("birthday_date", birthdayInput.getText().toString());
+        data.put("phone_number", "09112223344");
+        data.put("email", Objects.requireNonNull(emailInput.getText()).toString());
         return data;
     }
 
     private boolean isInputValid() {
         if (nameInput.length() == 0){
             setError(nameInput);
-            return false;
-        }
-        if (surnameInput.length() == 0){
-            setError(surnameInput);
             return false;
         }
         if (usernameInput.length() == 0) {
@@ -161,20 +149,8 @@ public class RegisterFragment extends Fragment {
             setError(passwordInput);
             return false;
         }
-        if (confirmPasswordInput.length() == 0) {
-            setError(confirmPasswordInput);
-            return false;
-        }
         if (emailInput.length() == 0) {
             setError(emailInput);
-            return false;
-        }
-        if (phoneNumberInput.length() != 11) {
-            setError(phoneNumberInput);
-            return false;
-        }
-        if (!passwordInput.getText().toString().equals(confirmPasswordInput.getText().toString())) {
-            passwordInput.setError(getString(R.string.passwords_do_not_match));
             return false;
         }
         return true;
@@ -185,10 +161,10 @@ public class RegisterFragment extends Fragment {
     }
 
     private void showNetworkError() {
-        Snackbar.make(getView(), R.string.connection_error, Snackbar.LENGTH_LONG).show();
+        Snackbar.make(Objects.requireNonNull(getView()), R.string.connection_error, Snackbar.LENGTH_LONG).show();
     }
 
     private void showRegisterError(String error) {
-        Snackbar.make(getView(), error, Snackbar.LENGTH_LONG).show();
+        Snackbar.make(Objects.requireNonNull(getView()), error, Snackbar.LENGTH_LONG).show();
     }
 }
