@@ -8,6 +8,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -52,6 +53,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 .add(R.id.mainFrame, LoginFragment.newInstance(), "loginFragment")
                 .commit();
         setShowNavigationIcon(false);
+        topAppBar.setTitleTextColor(Color.WHITE);
+        topAppBar.setBackgroundColor(Color.rgb(231, 133, 54));
         topAppBar.setTitle(R.string.login);
     }
 

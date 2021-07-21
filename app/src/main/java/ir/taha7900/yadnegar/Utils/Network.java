@@ -39,6 +39,7 @@ import static ir.taha7900.yadnegar.Utils.MsgCode.MEMORY_ERROR;
 import static ir.taha7900.yadnegar.Utils.MsgCode.NETWORK_ERROR;
 import static ir.taha7900.yadnegar.Utils.MsgCode.REGISTER_ERROR;
 import static ir.taha7900.yadnegar.Utils.MsgCode.REGISTER_SUCCESSFUL;
+import static ir.taha7900.yadnegar.Utils.MsgCode.TAG_DATA_READY;
 import static ir.taha7900.yadnegar.Utils.MsgCode.TAG_ERROR;
 
 public class Network {
@@ -172,11 +173,10 @@ public class Network {
                     JSONObject outerObj = new JSONObject(body);
                     ArrayList<Tag> tags = gson.fromJson(String.valueOf(outerObj.getJSONArray("results")), new TypeToken<ArrayList<Tag>>() {
                     }.getType());
-                    // todo
-                    handler.sendEmptyMessage(CREATE_TAG_SUCCESSFUL);
+                    Tag.setUserTags(tags);
+                    handler.sendEmptyMessage(TAG_DATA_READY);
                 } catch (JSONException e) {
                     handler.sendEmptyMessage(TAG_ERROR);
-                    return;
                 }
             }
         });
