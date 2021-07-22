@@ -44,7 +44,7 @@ public class Tag {
         this.id = id;
     }
 
-    public void setCreator_user(long creator_user) {
+    public void setCreatorUser(long creator_user) {
         this.creator_user = creator_user;
     }
 

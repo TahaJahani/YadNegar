@@ -77,6 +77,11 @@ public class ProfileFragment extends Fragment implements Toolbar.OnMenuItemClick
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (FriendRequest.getUserFriendRequests() == null)
+            Network.getFriendRequests(handler);
+        if (Memory.getUserMemories() == null)
+            Network.getUserMemories(handler);
     }
 
     @Override
@@ -92,38 +97,29 @@ public class ProfileFragment extends Fragment implements Toolbar.OnMenuItemClick
         context.topAppBar.setTitle(R.string.profile);
         context.topAppBar.inflateMenu(R.menu.profile_top_menu);
         context.topAppBar.setOnMenuItemClickListener(this);
-
-        if (FriendRequest.getUserFriendRequests() != null)
-            showFriendRequests();
-        else
-            Network.getFriendRequests(handler);
-        if (Memory.getUserMemories() != null)
-            showMemories();
-        else
-            Network.getUserMemories(handler);
     }
 
     private void showFriendRequests() {
         requestsLayout.setVisibility(View.VISIBLE);
         if (requestAdapter == null) {
-            if (requestAdapter.getItemCount() == 0) {
-                requestsLayout.setVisibility(View.GONE);
-                return;
-            }
             requestAdapter = new FriendRequestAdapter(FriendRequest.getUserFriendRequests());
-            requestsList.setAdapter(requestAdapter);
-            requestsList.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
-        }else
-            requestAdapter.notifyDataSetChanged();
+        }
+        requestsList.setAdapter(requestAdapter);
+        requestsList.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
+        if (requestAdapter.getItemCount() == 0) {
+            requestsLayout.setVisibility(View.GONE);
+            return;
+        }
+        requestAdapter.notifyDataSetChanged();
     }
 
     private void showMemories() {
         if (memoryAdapter == null) {
             memoryAdapter = new MemoryAdapter(Memory.getUserMemories());
-            memoriesList.setLayoutManager(new LinearLayoutManager(context));
-            memoriesList.setAdapter(memoryAdapter);
-        }else
-            memoryAdapter.notifyDataSetChanged();
+        }
+        memoriesList.setLayoutManager(new LinearLayoutManager(context));
+        memoriesList.setAdapter(memoryAdapter);
+        memoryAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -141,6 +137,10 @@ public class ProfileFragment extends Fragment implements Toolbar.OnMenuItemClick
         memoriesList = view.findViewById(R.id.memoriesList);
         requestsList = view.findViewById(R.id.requestsList);
         requestsLayout = view.findViewById(R.id.requestsLayout);
+        if (Memory.getUserMemories() != null)
+            showMemories();
+        if (FriendRequest.getUserFriendRequests() != null)
+            showFriendRequests();
         return view;
     }
 
@@ -150,7 +150,7 @@ public class ProfileFragment extends Fragment implements Toolbar.OnMenuItemClick
         if (id == R.id.edit) {
             openEditMode();
             return true;
-        }else if (id == R.id.sendFriendRequest) {
+        } else if (id == R.id.sendFriendRequest) {
             openSearchUsersFragment();
         }
         return false;
