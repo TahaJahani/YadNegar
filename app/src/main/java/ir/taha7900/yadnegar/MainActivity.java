@@ -102,6 +102,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             settingClicked();
         else if (clickedId == R.id.logout)
             logoutClicked();
+        else if (clickedId == R.id.tags) {
+            tagsClicked();
+        }
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;
     }
@@ -133,6 +136,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void settingClicked() {
 
+    }
+
+    private void tagsClicked() {
+        getSupportFragmentManager()
+                .beginTransaction()
+                .addToBackStack(null)
+                .replace(R.id.mainFrame, TagsFragment.newInstance(), "tagFragment")
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                .commit();
     }
 
     public void showLoading(boolean show) {

@@ -143,7 +143,7 @@ public class Network {
                 }
                 String body = Objects.requireNonNull(response.body()).string();
                 Tag tag = gson.fromJson(body, Tag.class);
-                // todo
+                Tag.addUserTag(tag);
                 handler.sendEmptyMessage(CREATE_TAG_SUCCESSFUL);
             }
         });

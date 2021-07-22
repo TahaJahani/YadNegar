@@ -1,6 +1,9 @@
 package ir.taha7900.yadnegar;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -17,7 +20,12 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 
+import com.flask.colorpicker.ColorPickerView;
+import com.flask.colorpicker.OnColorSelectedListener;
+import com.flask.colorpicker.builder.ColorPickerClickListener;
+import com.flask.colorpicker.builder.ColorPickerDialogBuilder;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 
 import ir.taha7900.yadnegar.Adapters.TagAdapter;
 import ir.taha7900.yadnegar.Models.Tag;
@@ -28,7 +36,10 @@ public class TagsFragment extends Fragment {
 
     private MainActivity context;
     private ImageButton addTagButton;
+    private ImageButton selectColorButton;
     private TextInputEditText labelInput;
+    private TextInputLayout labelInputLayout;
+    private int selectedColor;
     private RecyclerView tagList;
     private TagAdapter adapter;
     private ProgressBar tagsProgressBar;
@@ -41,6 +52,9 @@ public class TagsFragment extends Fragment {
                 switch (msg.what) {
                     case MsgCode.TAG_DATA_READY:
                         showTags();
+                        break;
+                    case MsgCode.CREATE_TAG_SUCCESSFUL:
+                        adapter.notifyDataSetChanged();
                 }
             }
         };
@@ -53,7 +67,7 @@ public class TagsFragment extends Fragment {
         tagList.setAdapter(adapter);
     }
 
-    public static TagsFragment newInstance(String param1, String param2) {
+    public static TagsFragment newInstance() {
         return new TagsFragment();
     }
 
@@ -66,12 +80,23 @@ public class TagsFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        context.topAppBar.setTitle(getString(R.string.tags));
+        context.clearTopAppBar();
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_tags, container, false);
         addTagButton = view.findViewById(R.id.addTagButton);
         addTagButton.setOnClickListener(this::addTag);
+        selectColorButton = view.findViewById(R.id.selectColorButton);
+        selectColorButton.setOnClickListener(this::openColorPicker);
         labelInput = view.findViewById(R.id.labelInput);
+        labelInputLayout = view.findViewById(R.id.labelInputLayout);
+        selectedColor = labelInputLayout.getBoxStrokeColor();
         tagList = view.findViewById(R.id.tagsList);
         tagsProgressBar = view.findViewById(R.id.tagsProgressBar);
         if (Tag.getUserTags() == null)
@@ -81,11 +106,35 @@ public class TagsFragment extends Fragment {
         return view;
     }
 
+    private void openColorPicker(View view) {
+        ColorPickerDialogBuilder
+                .with(context)
+                .setTitle("Choose color")
+                .initialColor(selectedColor)
+                .wheelType(ColorPickerView.WHEEL_TYPE.FLOWER)
+                .density(12)
+                .setPositiveButton("ok", new ColorPickerClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int selectedColor, Integer[] allColors) {
+                        changeSelectedColor(selectedColor);
+                    }
+                })
+                .build()
+                .show();
+    }
+
     private void addTag(View view) {
         if (labelInput.length() == 0){
             labelInput.setError(getString(R.string.this_field_is_required));
             return;
         }
+        Network.createTag(labelInput.getText().toString(), Integer.toHexString(selectedColor), handler);
+    }
+
+    private void changeSelectedColor(int newColor) {
+        labelInputLayout.setBoxStrokeColor(newColor);
+        System.out.println("SET!");
+        selectedColor = newColor;
     }
 
     @Override
