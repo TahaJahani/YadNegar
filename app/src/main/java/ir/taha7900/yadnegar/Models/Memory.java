@@ -4,6 +4,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 public class Memory implements Serializable {
+
+    private static ArrayList<Memory> userMemories;
+
     private long id;
     private User creator_user;
     private String title;
@@ -82,5 +85,17 @@ public class Memory implements Serializable {
 
     public void setPost_files(String[] post_files) {
         this.post_files = post_files;
+    }
+
+    public static ArrayList<Memory> getUserMemories() {
+        return userMemories;
+    }
+
+    public static void setUserMemories(ArrayList<Memory> userMemories) {
+        Memory.userMemories = userMemories;
+    }
+
+    public static void addUserMemory(Memory memory) {
+        Memory.userMemories.add(memory);
     }
 }

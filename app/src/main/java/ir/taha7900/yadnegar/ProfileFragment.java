@@ -29,7 +29,9 @@ import android.widget.TextView;
 import com.google.android.material.imageview.ShapeableImageView;
 
 import ir.taha7900.yadnegar.Adapters.FriendRequestAdapter;
+import ir.taha7900.yadnegar.Adapters.MemoryAdapter;
 import ir.taha7900.yadnegar.Models.FriendRequest;
+import ir.taha7900.yadnegar.Models.Memory;
 import ir.taha7900.yadnegar.Models.User;
 import ir.taha7900.yadnegar.Utils.MsgCode;
 import ir.taha7900.yadnegar.Utils.Network;
@@ -48,6 +50,7 @@ public class ProfileFragment extends Fragment implements Toolbar.OnMenuItemClick
     private RecyclerView requestsList;
     private LinearLayout requestsLayout;
     private FriendRequestAdapter requestAdapter;
+    private MemoryAdapter memoryAdapter;
     private Handler handler;
 
 
@@ -58,6 +61,10 @@ public class ProfileFragment extends Fragment implements Toolbar.OnMenuItemClick
                 switch (msg.what) {
                     case MsgCode.GET_FRIEND_REQUEST_SUCCESSFUL:
                         showFriendRequests();
+                        break;
+                    case MsgCode.USER_MEMORY_DATA_READY:
+                        showMemories();
+                        break;
                 }
             }
         };
@@ -70,8 +77,6 @@ public class ProfileFragment extends Fragment implements Toolbar.OnMenuItemClick
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (FriendRequest.getUserFriendRequests() == null)
-            Network.getFriendRequests(handler);
     }
 
     @Override
@@ -87,20 +92,38 @@ public class ProfileFragment extends Fragment implements Toolbar.OnMenuItemClick
         context.topAppBar.setTitle(R.string.profile);
         context.topAppBar.inflateMenu(R.menu.profile_top_menu);
         context.topAppBar.setOnMenuItemClickListener(this);
+
+        if (FriendRequest.getUserFriendRequests() != null)
+            showFriendRequests();
+        else
+            Network.getFriendRequests(handler);
+        if (Memory.getUserMemories() != null)
+            showMemories();
+        else
+            Network.getUserMemories(handler);
     }
 
     private void showFriendRequests() {
-        if (FriendRequest.getUserFriendRequests().isEmpty()){
-            requestsLayout.setVisibility(View.GONE);
-            return;
-        }
         requestsLayout.setVisibility(View.VISIBLE);
         if (requestAdapter == null) {
+            if (requestAdapter.getItemCount() == 0) {
+                requestsLayout.setVisibility(View.GONE);
+                return;
+            }
             requestAdapter = new FriendRequestAdapter(FriendRequest.getUserFriendRequests());
             requestsList.setAdapter(requestAdapter);
             requestsList.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
         }else
             requestAdapter.notifyDataSetChanged();
+    }
+
+    private void showMemories() {
+        if (memoryAdapter == null) {
+            memoryAdapter = new MemoryAdapter(Memory.getUserMemories());
+            memoriesList.setLayoutManager(new LinearLayoutManager(context));
+            memoriesList.setAdapter(memoryAdapter);
+        }else
+            memoryAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -118,8 +141,6 @@ public class ProfileFragment extends Fragment implements Toolbar.OnMenuItemClick
         memoriesList = view.findViewById(R.id.memoriesList);
         requestsList = view.findViewById(R.id.requestsList);
         requestsLayout = view.findViewById(R.id.requestsLayout);
-        if (FriendRequest.getUserFriendRequests() != null)
-            showFriendRequests();
         return view;
     }
 
@@ -129,8 +150,18 @@ public class ProfileFragment extends Fragment implements Toolbar.OnMenuItemClick
         if (id == R.id.edit) {
             openEditMode();
             return true;
+        }else if (id == R.id.sendFriendRequest) {
+            openSearchUsersFragment();
         }
         return false;
+    }
+
+    private void openSearchUsersFragment() {
+        context.getSupportFragmentManager().beginTransaction()
+                .addToBackStack("search users")
+                .replace(R.id.mainFrame, SearchUserFragment.newInstance())
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                .commit();
     }
 
     private void openEditMode() {

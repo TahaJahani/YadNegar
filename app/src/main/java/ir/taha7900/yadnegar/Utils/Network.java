@@ -293,10 +293,8 @@ public class Network {
                     ArrayList<Memory> memories = gson.fromJson(String.valueOf(outerObj.getJSONArray("results"))
                             , new TypeToken<ArrayList<Memory>>() {
                             }.getType());
-                    Message msg = new Message();
-                    msg.obj = memories;
-                    msg.what = USER_MEMORY_DATA_READY;
-                    handler.sendMessage(msg);
+                    Memory.setUserMemories(memories);
+                    handler.sendEmptyMessage(USER_MEMORY_DATA_READY);
                 } catch (JSONException e) {
                     handler.sendEmptyMessage(USER_MEMORY_ERROR);
                 }

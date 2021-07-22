@@ -50,4 +50,5 @@
     <string name="status">Status:</string>
     <string name="accept">accept</string>
     <string name="reject">reject</string>
+    <string name="send_friend_request">Send Friend Request</string>
 </resources>
