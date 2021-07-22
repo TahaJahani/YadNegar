@@ -35,6 +35,7 @@ public class Network {
     static class URL {
         static String BASE = "https://memoreminder.ir";
         static String LOGIN = BASE + "/api/v1/login/";
+        static String LOGOUT = BASE + "/api/v1/logout/";
         static String REGISTER = BASE + "/api/v1/memo-user/";
         static String TAG = BASE + "/api/v1/tag/";
         static String TOP_MEMO = BASE + "/api/v1/top-post/";
@@ -405,6 +406,23 @@ public class Network {
                 User user = gson.fromJson(body, User.class);
                 User.setCurrentUser(user);
                 handler.sendEmptyMessage(GET_USER_DATA_SUCCESSFUL);
+            }
+        });
+    }
+
+    public static void logout(Handler handler){
+        RequestBody body = new FormBody.Builder().build();
+        Request request = addMemoTokenToHeader(getAuthorizedRequest()).url(URL.LOGOUT).post(body).build();
+        httpClient.newCall(request).enqueue(new CustomCallback(handler) {
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) {
+                int code = response.code();
+                if (code / 100 != 2) {
+                    handler.sendEmptyMessage(LOGOUT_ERROR);
+                    return;
+                }
+                handler.sendEmptyMessage(LOGOUT_SUCCESSFUL);
+                User.setCurrentUser(null);
             }
         });
     }

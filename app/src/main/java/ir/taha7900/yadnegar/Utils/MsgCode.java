@@ -29,4 +29,6 @@ public class MsgCode {
     public static final int CHANGE_FRIEND_REQUEST_STATUS_SUCCESSFUL = 23;
     public static final int GET_USER_DATA_ERROR = 24;
     public static final int GET_USER_DATA_SUCCESSFUL = 25;
+    public static final int LOGOUT_ERROR = 24;
+    public static final int LOGOUT_SUCCESSFUL = 25;
 }
