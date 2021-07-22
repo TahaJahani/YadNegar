@@ -366,11 +366,8 @@ public class Network {
                     ArrayList<FriendRequest> friend_requests = gson.fromJson(String.valueOf(outerObj.getJSONArray("results"))
                             , new TypeToken<ArrayList<FriendRequest>>() {
                             }.getType());
-                    Message msg = new Message();
-                    msg.obj = friend_requests;
-                    msg.what = GET_FRIEND_REQUEST_SUCCESSFUL;
                     FriendRequest.setUserFriendRequests(friend_requests);
-                    handler.sendMessage(msg);
+                    handler.sendEmptyMessage(GET_FRIEND_REQUEST_SUCCESSFUL);
                 } catch (JSONException e) {
                     handler.sendEmptyMessage(GET_FRIEND_REQUEST_ERROR);
                 }

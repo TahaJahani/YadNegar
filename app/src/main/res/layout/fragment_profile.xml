@@ -118,6 +118,25 @@
             android:layout_marginVertical="4dp"
             android:background="@color/black" />
 
+        <LinearLayout
+            android:id="@+id/requestsLayout"
+            android:layout_width="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone"
+            android:layout_height="wrap_content">
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/requestsList"
+                android:paddingStart="16dp"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginVertical="4dp"
+                android:background="@color/black" />
+        </LinearLayout>
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/memoriesList"
             android:layout_width="match_parent"

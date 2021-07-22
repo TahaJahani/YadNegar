@@ -14,7 +14,6 @@ import java.util.ArrayList;
 
 import ir.taha7900.yadnegar.MainActivity;
 import ir.taha7900.yadnegar.Models.FriendRequest;
-import ir.taha7900.yadnegar.Models.User;
 import ir.taha7900.yadnegar.R;
 
 public class FriendRequestAdapter extends RecyclerView.Adapter<FriendRequestAdapter.ViewHolder> {
@@ -40,7 +39,7 @@ public class FriendRequestAdapter extends RecyclerView.Adapter<FriendRequestAdap
         FriendRequest request = requests.get(position);
         holder.usernameText.setText(request.getFromUser().getUsername());
         holder.statusText.setText(request.getStatus());
-        holder.dateText.setText(request.getCreated());
+        holder.dateText.setText(request.getFormattedCreationDate());
         holder.rejectButton.setOnClickListener(view -> rejectRequest(request));
         holder.acceptButton.setOnClickListener(view -> acceptRequest(request));
     }

@@ -8,8 +8,12 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.transition.Slide;
 import android.transition.Transition;
 import android.transition.TransitionManager;
@@ -19,17 +23,18 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.android.material.imageview.ShapeableImageView;
 
+import ir.taha7900.yadnegar.Adapters.FriendRequestAdapter;
+import ir.taha7900.yadnegar.Models.FriendRequest;
 import ir.taha7900.yadnegar.Models.User;
+import ir.taha7900.yadnegar.Utils.MsgCode;
+import ir.taha7900.yadnegar.Utils.Network;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link ProfileFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+
 public class ProfileFragment extends Fragment implements Toolbar.OnMenuItemClickListener, android.widget.Toolbar.OnMenuItemClickListener {
 
     private MainActivity context;
@@ -40,9 +45,22 @@ public class ProfileFragment extends Fragment implements Toolbar.OnMenuItemClick
     private TextView likesCountText;
     private TextView commentsCountText;
     private RecyclerView memoriesList;
+    private RecyclerView requestsList;
+    private LinearLayout requestsLayout;
+    private FriendRequestAdapter requestAdapter;
+    private Handler handler;
+
 
     public ProfileFragment() {
-        // Required empty public constructor
+        handler = new Handler(Looper.getMainLooper()) {
+            @Override
+            public void handleMessage(@NonNull Message msg) {
+                switch (msg.what) {
+                    case MsgCode.GET_FRIEND_REQUEST_SUCCESSFUL:
+                        showFriendRequests();
+                }
+            }
+        };
     }
 
     public static ProfileFragment newInstance() {
@@ -52,6 +70,8 @@ public class ProfileFragment extends Fragment implements Toolbar.OnMenuItemClick
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (FriendRequest.getUserFriendRequests() == null)
+            Network.getFriendRequests(handler);
     }
 
     @Override
@@ -69,6 +89,20 @@ public class ProfileFragment extends Fragment implements Toolbar.OnMenuItemClick
         context.topAppBar.setOnMenuItemClickListener(this);
     }
 
+    private void showFriendRequests() {
+        if (FriendRequest.getUserFriendRequests().isEmpty()){
+            requestsLayout.setVisibility(View.GONE);
+            return;
+        }
+        requestsLayout.setVisibility(View.VISIBLE);
+        if (requestAdapter == null) {
+            requestAdapter = new FriendRequestAdapter(FriendRequest.getUserFriendRequests());
+            requestsList.setAdapter(requestAdapter);
+            requestsList.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
+        }else
+            requestAdapter.notifyDataSetChanged();
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -82,6 +116,10 @@ public class ProfileFragment extends Fragment implements Toolbar.OnMenuItemClick
         likesCountText = view.findViewById(R.id.likesCountText);
         commentsCountText = view.findViewById(R.id.commentsCountText);
         memoriesList = view.findViewById(R.id.memoriesList);
+        requestsList = view.findViewById(R.id.requestsList);
+        requestsLayout = view.findViewById(R.id.requestsLayout);
+        if (FriendRequest.getUserFriendRequests() != null)
+            showFriendRequests();
         return view;
     }
 

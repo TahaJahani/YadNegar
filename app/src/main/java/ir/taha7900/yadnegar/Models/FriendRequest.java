@@ -72,4 +72,10 @@ public class FriendRequest {
     public void setModified(String modified) {
         this.modified = modified;
     }
+
+    public String getFormattedCreationDate() {
+        String date = created.split("T")[0];
+        String time = created.split("T")[1].split("\\.")[0];
+        return date + ", " + time;
+    }
 }
