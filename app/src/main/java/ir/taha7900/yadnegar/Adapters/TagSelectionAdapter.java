@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import ir.taha7900.yadnegar.MainActivity;
 import ir.taha7900.yadnegar.Models.Tag;
 import ir.taha7900.yadnegar.R;
+import ir.taha7900.yadnegar.Utils.AndroidUtilities;
 
 public class TagSelectionAdapter extends RecyclerView.Adapter<TagSelectionAdapter.ViewHolder> {
 
@@ -44,13 +45,16 @@ public class TagSelectionAdapter extends RecyclerView.Adapter<TagSelectionAdapte
         holder.titleText.setBackgroundResource(R.drawable.background_tag);
         GradientDrawable background = (GradientDrawable) holder.titleText.getBackground();
         int backgroundColor = Color.parseColor("#" + tag.getColor());
+        int elevation = (int) AndroidUtilities.dp(4);
         if (selected.contains(tag.getId())){
+            elevation = 0;
             float[] hsv = new float[3];
             Color.colorToHSV(backgroundColor, hsv);
             hsv[2] *= 0.6f;
             backgroundColor = Color.HSVToColor(hsv);
         }
         background.setColor(backgroundColor);
+        holder.titleText.setElevation(elevation);
         holder.titleText.setText(tag.getName());
         holder.titleText.setOnClickListener(view -> {
             if (selected.contains(tag.getId()))

@@ -9,7 +9,7 @@ public class Memory implements Serializable {
     private String title;
     private String text;
     private User[] tagged_people;
-    private Tag[] tags;
+    private ArrayList<Tag> tags;
     private String[] post_files;
     private Like[] likes;
     private ArrayList<Comment> comments;
@@ -36,7 +36,7 @@ public class Memory implements Serializable {
         return tagged_people;
     }
 
-    public Tag[] getTags() {
+    public ArrayList<Tag> getTags() {
         return tags;
     }
 
@@ -66,5 +66,21 @@ public class Memory implements Serializable {
 
     public void addComment(Comment comment) {
         this.comments.add(comment);
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    public void setTags(ArrayList<Tag> tags) {
+        this.tags = tags;
+    }
+
+    public void setPost_files(String[] post_files) {
+        this.post_files = post_files;
     }
 }

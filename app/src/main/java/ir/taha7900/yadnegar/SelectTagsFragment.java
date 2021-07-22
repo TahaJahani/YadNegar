@@ -29,7 +29,6 @@ import ir.taha7900.yadnegar.Utils.Network;
 
 public class SelectTagsFragment extends Fragment {
 
-    private static final String ARG_TAGS = "tags";
     private ArrayList<Long> selectedTags;
     private MaterialButton doneButton;
     private RecyclerView tagsList;
@@ -52,47 +51,16 @@ public class SelectTagsFragment extends Fragment {
 
     public static SelectTagsFragment newInstance(ArrayList<Long> tags) {
         SelectTagsFragment fragment = new SelectTagsFragment();
-        Bundle args = new Bundle();
-        args.putSerializable(ARG_TAGS, tags);
-        fragment.setArguments(args);
+        fragment.selectedTags = tags;
         return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            selectedTags = (ArrayList<Long>) getArguments().getSerializable(ARG_TAGS);
-        }
-        if (Tag.getUserTags() == null) {
-            context.showLoading(true);
-            Network.getTags(handler);
-        }
     }
 
     private void showTags() {
         context.showLoading(false);
         adapter = new TagSelectionAdapter(Tag.getUserTags(), selectedTags);
-        tagsList.setLayoutManager(new GridLayoutManager(context, 3));
+        tagsList.setLayoutManager(new GridLayoutManager(context, 4));
         tagsList.addItemDecoration(new SpacesItemDecoration(4));
         tagsList.setAdapter(adapter);
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_select_tags, container, false);
-        doneButton = view.findViewById(R.id.doneButton);
-        tagsList = view.findViewById(R.id.tagsList);
-        if (Tag.getUserTags() != null)
-            showTags();
-        return view;
-    }
-
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-        this.context = (MainActivity) context;
     }
 
     static class SpacesItemDecoration extends RecyclerView.ItemDecoration {

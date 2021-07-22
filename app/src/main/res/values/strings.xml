@@ -40,4 +40,8 @@
     <string name="write_a_comment">Write a Comment...</string>
     <string name="done">Done</string>
     <string name="add_memory">Add Memory</string>
+    <string name="select_tags">select tags</string>
+    <string name="next">Next</string>
+    <string name="title">title</string>
+    <string name="text">text</string>
 </resources>
