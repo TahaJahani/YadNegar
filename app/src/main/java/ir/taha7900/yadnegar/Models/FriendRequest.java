@@ -4,6 +4,10 @@ import java.util.ArrayList;
 
 public class FriendRequest {
 
+    public static final String STATUS_ACCEPTED = "accepted";
+    public static final String STATUS_PENDING = "pending";
+    public static final String STATUS_REJECTED = "rejected";
+
     private static ArrayList<FriendRequest> userFriendRequests;
 
     private long id;
@@ -29,19 +33,19 @@ public class FriendRequest {
         this.id = id;
     }
 
-    public User getFrom_user() {
+    public User getFromUser() {
         return from_user;
     }
 
-    public void setFrom_user(User from_user) {
+    public void setFromUser(User from_user) {
         this.from_user = from_user;
     }
 
-    public long getTo_user() {
+    public long getToUser() {
         return to_user;
     }
 
-    public void setTo_user(long to_user_id) {
+    public void setToUser(long to_user_id) {
         this.to_user = to_user_id;
     }
 
