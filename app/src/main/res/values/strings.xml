@@ -47,4 +47,7 @@
     <string name="label">label</string>
     <string name="add">add</string>
     <string name="tags">Tags</string>
+    <string name="status">Status:</string>
+    <string name="accept">accept</string>
+    <string name="reject">reject</string>
 </resources>
