@@ -427,4 +427,28 @@ public class Network {
         });
     }
 
+    public static void editUser(Handler handler , HashMap<String , String> changed_fields){
+        FormBody.Builder builder = new FormBody.Builder();
+        for (String s : changed_fields.keySet()) {
+            builder.add(s,changed_fields.get(s));
+        }
+        RequestBody body = builder.build();
+        User user = User.getCurrentUser();
+        Request request = addMemoTokenToHeader(getAuthorizedRequest()).url(URL.REGISTER + user.getId() + "/").patch(body).build();
+        httpClient.newCall(request).enqueue(new CustomCallback(handler) {
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                int code = response.code();
+                if (code / 100 != 2) {
+                    handler.sendEmptyMessage(EDIT_USER_ERROR);
+                    return;
+                }
+                String body = Objects.requireNonNull(response.body()).string();
+                User newUser = gson.fromJson(body, User.class);
+                User.setCurrentUser(newUser);
+                handler.sendEmptyMessage(EDIT_USER_SUCCESSFUL);
+            }
+        });
+    }
+
 }
