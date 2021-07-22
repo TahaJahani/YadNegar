@@ -33,4 +33,6 @@ public class MsgCode {
     public static final int LOGOUT_SUCCESSFUL = 27;
     public static final int EDIT_USER_ERROR = 28;
     public static final int EDIT_USER_SUCCESSFUL = 29;
+    public static final int CREATE_POST_ERROR = 30;
+    public static final int CREATE_POST_SUCCESSFUL = 31;
 }

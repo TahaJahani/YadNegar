@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 public class Memory implements Serializable {
 
-    private static ArrayList<Memory> userMemories;
+    private static ArrayList<Memory> userMemories = new ArrayList<>();
 
     private long id;
     private User creator_user;

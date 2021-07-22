@@ -451,4 +451,27 @@ public class Network {
         });
     }
 
+    public static void createPost(Handler handler, HashMap<String , String> fields){
+        FormBody.Builder builder = new FormBody.Builder();
+        for (String s : fields.keySet()) {
+            builder.add(s,fields.get(s));
+        }
+        RequestBody body = builder.build();
+        Request request = addMemoTokenToHeader(getAuthorizedRequest()).url(URL.USER_MEMOS).post(body).build();
+        httpClient.newCall(request).enqueue(new CustomCallback(handler) {
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                int code = response.code();
+                if (code / 100 != 2) {
+                    handler.sendEmptyMessage(CREATE_POST_ERROR);
+                    return;
+                }
+                String body = Objects.requireNonNull(response.body()).string();
+                Memory post = gson.fromJson(body, Memory.class);
+                Memory.addUserMemory(post);
+                handler.sendEmptyMessage(CREATE_POST_SUCCESSFUL);
+            }
+        });
+    }
+
 }
