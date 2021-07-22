@@ -68,6 +68,13 @@ public class Network {
                 .addHeader("Accept-Language", "en");
     }
 
+    private static Request.Builder addMemoTokenToHeader(Request.Builder builder) {
+        User user = User.getCurrentUser();
+        if (user == null)
+            return builder;
+        return builder.addHeader("Memouser-Token", user.getToken());
+    }
+
     private static String getAuthorizedUrl(String baseUrl) {
         User user = User.getCurrentUser();
         return baseUrl + "?token=" + user.getToken();
@@ -132,7 +139,7 @@ public class Network {
         RequestBody body = new FormBody.Builder()
                 .add("name", name)
                 .add("color", color).build();
-        Request request = getAuthorizedRequest().url(getAuthorizedUrl(URL.TAG)).post(body).build();
+        Request request = addMemoTokenToHeader(getAuthorizedRequest()).url(URL.TAG).post(body).build();
         httpClient.newCall(request).enqueue(new CustomCallback(handler) {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
@@ -150,7 +157,7 @@ public class Network {
     }
 
     public static void getTags(Handler handler) {
-        Request request = getAuthorizedRequest().url(getAuthorizedUrl(URL.TAG)).get().build();
+        Request request =  addMemoTokenToHeader(getAuthorizedRequest()).url(URL.TAG).get().build();
         httpClient.newCall(request).enqueue(new CustomCallback(handler) {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
@@ -174,7 +181,7 @@ public class Network {
     }
 
     public static void getTopMemories(Handler handler) {
-        Request request = getAuthorizedRequest().url(getAuthorizedUrl(URL.TOP_MEMO)).get().build();
+        Request request =  addMemoTokenToHeader(getAuthorizedRequest()).url(URL.TOP_MEMO).get().build();
         httpClient.newCall(request).enqueue(new CustomCallback(handler) {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
@@ -204,8 +211,8 @@ public class Network {
         FormBody body = new FormBody.Builder()
                 .add("post", String.valueOf(memory.getId()))
                 .add("text", comment.getText()).build();
-        Request request = getAuthorizedRequest()
-                .url(getAuthorizedUrl(URL.ADD_COMMENT))
+        Request request =  addMemoTokenToHeader(getAuthorizedRequest())
+                .url(URL.ADD_COMMENT)
                 .post(body).build();
         httpClient.newCall(request).enqueue(new CustomCallback(handler) {
             @Override
@@ -229,8 +236,8 @@ public class Network {
     public static void likeComment(Comment comment) {
         FormBody body = new FormBody.Builder()
                 .add("comment", String.valueOf(comment.getId())).build();
-        Request request = getAuthorizedRequest()
-                .url(getAuthorizedUrl(URL.LIKE_COMMENT))
+        Request request =  addMemoTokenToHeader(getAuthorizedRequest())
+                .url(URL.LIKE_COMMENT)
                 .post(body).build();
         httpClient.newCall(request).enqueue(new CustomCallback(null) {
             @Override
@@ -256,7 +263,7 @@ public class Network {
         RequestBody body = new FormBody.Builder()
                 .add("post", String.valueOf(memory.getId()))
                 .build();
-        Request request = getAuthorizedRequest().url(getAuthorizedUrl(URL.LIKE_POST)).post(body).build();
+        Request request = addMemoTokenToHeader(getAuthorizedRequest()).url(URL.LIKE_POST).post(body).build();
         httpClient.newCall(request).enqueue(new CustomCallback(handler) {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) {
@@ -271,7 +278,7 @@ public class Network {
     }
 
     public static void getUserMemories(Handler handler) {
-        Request request = getAuthorizedRequest().url(getAuthorizedUrl(URL.USER_MEMOS)).get().build();
+        Request request =  addMemoTokenToHeader(getAuthorizedRequest()).url(URL.USER_MEMOS).get().build();
         httpClient.newCall(request).enqueue(new CustomCallback(handler) {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
@@ -298,7 +305,7 @@ public class Network {
     }
 
     public static void getUsers(Handler handler) {
-        Request request = getAuthorizedRequest().url(URL.REGISTER).get().build();
+        Request request =  addMemoTokenToHeader(getAuthorizedRequest()).url(URL.REGISTER).get().build();
         httpClient.newCall(request).enqueue(new CustomCallback(handler) {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
@@ -329,7 +336,7 @@ public class Network {
         RequestBody body = new FormBody.Builder()
                 .add("to_user", String.valueOf(to_user_id))
                 .build();
-        Request request = getAuthorizedRequest().url(getAuthorizedUrl(URL.FRIEND_REQUEST)).post(body).build();
+        Request request =  addMemoTokenToHeader(getAuthorizedRequest()).url(URL.FRIEND_REQUEST).post(body).build();
         httpClient.newCall(request).enqueue(new CustomCallback(handler) {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) {
@@ -344,7 +351,7 @@ public class Network {
     }
 
     public static void getFriendRequests(Handler handler) {
-        Request request = getAuthorizedRequest().url(getAuthorizedUrl(URL.FRIEND_REQUEST)).get().build();
+        Request request =  addMemoTokenToHeader(getAuthorizedRequest()).url(URL.FRIEND_REQUEST).get().build();
         httpClient.newCall(request).enqueue(new CustomCallback(handler) {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
@@ -375,7 +382,7 @@ public class Network {
         RequestBody body = new FormBody.Builder()
                 .add("status", new_status)
                 .build();
-        Request request = getAuthorizedRequest().url(getAuthorizedUrl(URL.FRIEND_REQUEST + friendRequest.getId() +"/")).patch(body).build();
+        Request request =  addMemoTokenToHeader(getAuthorizedRequest()).url(URL.FRIEND_REQUEST + friendRequest.getId() +"/").patch(body).build();
         httpClient.newCall(request).enqueue(new CustomCallback(handler) {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) {
@@ -390,7 +397,7 @@ public class Network {
     }
 
     public static void getUserDetail(long id , Handler handler){
-        Request request = getAuthorizedRequest().url(getAuthorizedUrl(URL.REGISTER + id +"/")).get().build();
+        Request request =  addMemoTokenToHeader(getAuthorizedRequest()).url(URL.REGISTER + id +"/").get().build();
         httpClient.newCall(request).enqueue(new CustomCallback(handler) {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
