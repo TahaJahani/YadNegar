@@ -28,7 +28,42 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-import static ir.taha7900.yadnegar.Utils.MsgCode.*;
+import static ir.taha7900.yadnegar.Utils.MsgCode.CHANGE_FRIEND_REQUEST_STATUS_ERROR;
+import static ir.taha7900.yadnegar.Utils.MsgCode.CHANGE_FRIEND_REQUEST_STATUS_SUCCESSFUL;
+import static ir.taha7900.yadnegar.Utils.MsgCode.COMMENT_ADDED;
+import static ir.taha7900.yadnegar.Utils.MsgCode.COMMENT_ERROR;
+import static ir.taha7900.yadnegar.Utils.MsgCode.CREATE_POST_ERROR;
+import static ir.taha7900.yadnegar.Utils.MsgCode.CREATE_POST_SUCCESSFUL;
+import static ir.taha7900.yadnegar.Utils.MsgCode.CREATE_TAG_SUCCESSFUL;
+import static ir.taha7900.yadnegar.Utils.MsgCode.DELETE_TAG_ERROR;
+import static ir.taha7900.yadnegar.Utils.MsgCode.DELETE_TAG_SUCCESSFUL;
+import static ir.taha7900.yadnegar.Utils.MsgCode.EDIT_POST_ERROR;
+import static ir.taha7900.yadnegar.Utils.MsgCode.EDIT_POST_SUCCESSFUL;
+import static ir.taha7900.yadnegar.Utils.MsgCode.EDIT_USER_ERROR;
+import static ir.taha7900.yadnegar.Utils.MsgCode.EDIT_USER_SUCCESSFUL;
+import static ir.taha7900.yadnegar.Utils.MsgCode.GET_FRIEND_REQUEST_ERROR;
+import static ir.taha7900.yadnegar.Utils.MsgCode.GET_FRIEND_REQUEST_SUCCESSFUL;
+import static ir.taha7900.yadnegar.Utils.MsgCode.GET_USERS_ERROR;
+import static ir.taha7900.yadnegar.Utils.MsgCode.GET_USERS_SUCCESSFUL;
+import static ir.taha7900.yadnegar.Utils.MsgCode.GET_USER_DATA_ERROR;
+import static ir.taha7900.yadnegar.Utils.MsgCode.GET_USER_DATA_SUCCESSFUL;
+import static ir.taha7900.yadnegar.Utils.MsgCode.LOGIN_FAILED;
+import static ir.taha7900.yadnegar.Utils.MsgCode.LOGIN_SUCCESSFUL;
+import static ir.taha7900.yadnegar.Utils.MsgCode.LOGOUT_ERROR;
+import static ir.taha7900.yadnegar.Utils.MsgCode.LOGOUT_SUCCESSFUL;
+import static ir.taha7900.yadnegar.Utils.MsgCode.MEMORY_DATA_READY;
+import static ir.taha7900.yadnegar.Utils.MsgCode.MEMORY_ERROR;
+import static ir.taha7900.yadnegar.Utils.MsgCode.NETWORK_ERROR;
+import static ir.taha7900.yadnegar.Utils.MsgCode.POST_LIKE_ERROR;
+import static ir.taha7900.yadnegar.Utils.MsgCode.POST_LIKE_SUCCESSFUL;
+import static ir.taha7900.yadnegar.Utils.MsgCode.REGISTER_ERROR;
+import static ir.taha7900.yadnegar.Utils.MsgCode.REGISTER_SUCCESSFUL;
+import static ir.taha7900.yadnegar.Utils.MsgCode.SEND_FRIEND_REQUEST_ERROR;
+import static ir.taha7900.yadnegar.Utils.MsgCode.SEND_FRIEND_REQUEST_SUCCESSFUL;
+import static ir.taha7900.yadnegar.Utils.MsgCode.TAG_DATA_READY;
+import static ir.taha7900.yadnegar.Utils.MsgCode.TAG_ERROR;
+import static ir.taha7900.yadnegar.Utils.MsgCode.USER_MEMORY_DATA_READY;
+import static ir.taha7900.yadnegar.Utils.MsgCode.USER_MEMORY_ERROR;
 
 public class Network {
 
@@ -158,7 +193,7 @@ public class Network {
     }
 
     public static void getTags(Handler handler) {
-        Request request =  addMemoTokenToHeader(getAuthorizedRequest()).url(URL.TAG).get().build();
+        Request request = addMemoTokenToHeader(getAuthorizedRequest()).url(URL.TAG).get().build();
         httpClient.newCall(request).enqueue(new CustomCallback(handler) {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
@@ -181,8 +216,24 @@ public class Network {
         });
     }
 
+    public static void deleteTag(Handler handler, Tag tag) {
+        Request request = addMemoTokenToHeader(getAuthorizedRequest()).url(URL.TAG + tag.getId() + "/").delete().build();
+        httpClient.newCall(request).enqueue(new CustomCallback(handler) {
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                int code = response.code();
+                if (code / 100 != 2) {
+                    handler.sendEmptyMessage(DELETE_TAG_ERROR);
+                    return;
+                }
+                Tag.removeUserTag(tag);
+                handler.sendEmptyMessage(DELETE_TAG_SUCCESSFUL);
+            }
+        });
+    }
+
     public static void getTopMemories(Handler handler) {
-        Request request =  addMemoTokenToHeader(getAuthorizedRequest()).url(URL.TOP_MEMO).get().build();
+        Request request = addMemoTokenToHeader(getAuthorizedRequest()).url(URL.TOP_MEMO).get().build();
         httpClient.newCall(request).enqueue(new CustomCallback(handler) {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
@@ -212,7 +263,7 @@ public class Network {
         FormBody body = new FormBody.Builder()
                 .add("post", String.valueOf(memory.getId()))
                 .add("text", comment.getText()).build();
-        Request request =  addMemoTokenToHeader(getAuthorizedRequest())
+        Request request = addMemoTokenToHeader(getAuthorizedRequest())
                 .url(URL.ADD_COMMENT)
                 .post(body).build();
         httpClient.newCall(request).enqueue(new CustomCallback(handler) {
@@ -237,7 +288,7 @@ public class Network {
     public static void likeComment(Comment comment) {
         FormBody body = new FormBody.Builder()
                 .add("comment", String.valueOf(comment.getId())).build();
-        Request request =  addMemoTokenToHeader(getAuthorizedRequest())
+        Request request = addMemoTokenToHeader(getAuthorizedRequest())
                 .url(URL.LIKE_COMMENT)
                 .post(body).build();
         httpClient.newCall(request).enqueue(new CustomCallback(null) {
@@ -279,7 +330,7 @@ public class Network {
     }
 
     public static void getUserMemories(Handler handler) {
-        Request request =  addMemoTokenToHeader(getAuthorizedRequest()).url(URL.USER_MEMOS).get().build();
+        Request request = addMemoTokenToHeader(getAuthorizedRequest()).url(URL.USER_MEMOS).get().build();
         httpClient.newCall(request).enqueue(new CustomCallback(handler) {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
@@ -304,7 +355,7 @@ public class Network {
     }
 
     public static void getUsers(Handler handler) {
-        Request request =  addMemoTokenToHeader(getAuthorizedRequest()).url(URL.REGISTER).get().build();
+        Request request = addMemoTokenToHeader(getAuthorizedRequest()).url(URL.REGISTER).get().build();
         httpClient.newCall(request).enqueue(new CustomCallback(handler) {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
@@ -335,7 +386,7 @@ public class Network {
         RequestBody body = new FormBody.Builder()
                 .add("to_user", String.valueOf(to_user_id))
                 .build();
-        Request request =  addMemoTokenToHeader(getAuthorizedRequest()).url(URL.FRIEND_REQUEST).post(body).build();
+        Request request = addMemoTokenToHeader(getAuthorizedRequest()).url(URL.FRIEND_REQUEST).post(body).build();
         httpClient.newCall(request).enqueue(new CustomCallback(handler) {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) {
@@ -350,7 +401,7 @@ public class Network {
     }
 
     public static void getFriendRequests(Handler handler) {
-        Request request =  addMemoTokenToHeader(getAuthorizedRequest()).url(URL.FRIEND_REQUEST).get().build();
+        Request request = addMemoTokenToHeader(getAuthorizedRequest()).url(URL.FRIEND_REQUEST).get().build();
         httpClient.newCall(request).enqueue(new CustomCallback(handler) {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
@@ -374,11 +425,11 @@ public class Network {
         });
     }
 
-    public static void changeFriendRequestStatus(FriendRequest friendRequest, String new_status , Handler handler){
+    public static void changeFriendRequestStatus(FriendRequest friendRequest, String new_status, Handler handler) {
         RequestBody body = new FormBody.Builder()
                 .add("status", new_status)
                 .build();
-        Request request =  addMemoTokenToHeader(getAuthorizedRequest()).url(URL.FRIEND_REQUEST + friendRequest.getId() +"/").patch(body).build();
+        Request request = addMemoTokenToHeader(getAuthorizedRequest()).url(URL.FRIEND_REQUEST + friendRequest.getId() + "/").patch(body).build();
         httpClient.newCall(request).enqueue(new CustomCallback(handler) {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) {
@@ -392,8 +443,8 @@ public class Network {
         });
     }
 
-    public static void getUserDetail(long id , Handler handler){
-        Request request =  addMemoTokenToHeader(getAuthorizedRequest()).url(URL.REGISTER + id +"/").get().build();
+    public static void getUserDetail(long id, Handler handler) {
+        Request request = addMemoTokenToHeader(getAuthorizedRequest()).url(URL.REGISTER + id + "/").get().build();
         httpClient.newCall(request).enqueue(new CustomCallback(handler) {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
@@ -410,7 +461,7 @@ public class Network {
         });
     }
 
-    public static void logout(Handler handler){
+    public static void logout(Handler handler) {
         RequestBody body = new FormBody.Builder().build();
         Request request = addMemoTokenToHeader(getAuthorizedRequest()).url(URL.LOGOUT).post(body).build();
         httpClient.newCall(request).enqueue(new CustomCallback(handler) {
@@ -423,11 +474,14 @@ public class Network {
                 }
                 handler.sendEmptyMessage(LOGOUT_SUCCESSFUL);
                 User.setCurrentUser(null);
+                Memory.setUserMemories(new ArrayList<>());
+                Tag.setUserTags(new ArrayList<>());
+                //todo
             }
         });
     }
 
-    public static void editUser(Handler handler , HashMap<String , String> changed_fields){
+    public static void editUser(Handler handler, HashMap<String, String> changed_fields) {
         FormBody.Builder builder = new FormBody.Builder();
         for (String s : changed_fields.keySet()) {
             builder.add(s, Objects.requireNonNull(changed_fields.get(s)));
@@ -451,7 +505,7 @@ public class Network {
         });
     }
 
-    public static void createPost(Handler handler, HashMap<String , String> fields){
+    public static void createPost(Handler handler, HashMap<String, String> fields) {
         FormBody.Builder builder = new FormBody.Builder();
         for (String s : fields.keySet()) {
             builder.add(s, Objects.requireNonNull(fields.get(s)));
@@ -475,7 +529,7 @@ public class Network {
     }
 
 
-    public static void editPost(Handler handler, HashMap<String , String> fields , Memory memory){
+    public static void editPost(Handler handler, HashMap<String, String> fields, Memory memory) {
         FormBody.Builder builder = new FormBody.Builder();
         for (String s : fields.keySet()) {
             builder.add(s, Objects.requireNonNull(fields.get(s)));

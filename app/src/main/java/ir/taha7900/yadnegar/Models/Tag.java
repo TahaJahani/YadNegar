@@ -24,6 +24,10 @@ public class Tag {
         userTags.add(tag);
     }
 
+    public static void removeUserTag(Tag tag) {
+        userTags.remove(tag);
+    }
+
     public static void setUserTags(ArrayList<Tag> userTags) {
         Tag.userTags = userTags;
     }
