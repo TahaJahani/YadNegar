@@ -53,4 +53,8 @@ public class Comment {
     public void setLikes(ArrayList<Like> likes) {
         this.likes = likes;
     }
+
+    public void removeLike(Like like) {
+        this.likes.remove(like);
+    }
 }

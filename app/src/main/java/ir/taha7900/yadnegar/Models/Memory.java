@@ -11,10 +11,10 @@ public class Memory implements Serializable {
     private User creator_user;
     private String title;
     private String text;
-    private User[] tagged_people;
+    private ArrayList<User> tagged_people;
     private ArrayList<Tag> tags;
-    private String[] post_files;
-    private Like[] likes;
+    private ArrayList<String> post_files;
+    private ArrayList<Like> likes;
     private ArrayList<Comment> comments;
     private String created;
     private String modified;
@@ -35,7 +35,7 @@ public class Memory implements Serializable {
         return text;
     }
 
-    public User[] getTagged_people() {
+    public ArrayList<User> getTagged_people() {
         return tagged_people;
     }
 
@@ -43,11 +43,11 @@ public class Memory implements Serializable {
         return tags;
     }
 
-    public String[] getPost_files() {
+    public ArrayList<String> getPost_files() {
         return post_files;
     }
 
-    public Like[] getLikes() {
+    public ArrayList<Like> getLikes() {
         return likes;
     }
 
@@ -64,7 +64,7 @@ public class Memory implements Serializable {
     }
 
     public boolean hasFiles() {
-        return this.post_files != null && this.post_files.length > 0;
+        return this.post_files != null && this.post_files.size() > 0;
     }
 
     public void addComment(Comment comment) {
@@ -83,15 +83,12 @@ public class Memory implements Serializable {
         this.tags = tags;
     }
 
-    public void setPost_files(String[] post_files) {
+    public void setPost_files(ArrayList<String> post_files) {
         this.post_files = post_files;
     }
 
     public void addPostFile(String postFile) {
-        String[] newPostFiles = new String[this.post_files.length + 1];
-        System.arraycopy(this.post_files, 0, newPostFiles, 0, this.post_files.length);
-        newPostFiles[this.post_files.length] = postFile;
-        this.post_files = newPostFiles;
+        this.post_files.add(postFile);
     }
 
     public static ArrayList<Memory> getUserMemories() {
@@ -106,7 +103,11 @@ public class Memory implements Serializable {
         Memory.userMemories.add(memory);
     }
 
-    public static void removeUserMemory(Memory memory){
+    public static void removeUserMemory(Memory memory) {
         Memory.userMemories.remove(memory);
+    }
+
+    public void removeLike(Like like) {
+        this.likes.remove(like);
     }
 }

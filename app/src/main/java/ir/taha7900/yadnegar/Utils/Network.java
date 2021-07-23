@@ -12,12 +12,14 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
 
 import ir.taha7900.yadnegar.Models.Comment;
 import ir.taha7900.yadnegar.Models.FriendRequest;
+import ir.taha7900.yadnegar.Models.Like;
 import ir.taha7900.yadnegar.Models.Memory;
 import ir.taha7900.yadnegar.Models.Tag;
 import ir.taha7900.yadnegar.Models.User;
@@ -39,8 +41,12 @@ import static ir.taha7900.yadnegar.Utils.MsgCode.CREATE_POST_ERROR;
 import static ir.taha7900.yadnegar.Utils.MsgCode.CREATE_POST_SUCCESSFUL;
 import static ir.taha7900.yadnegar.Utils.MsgCode.CREATE_TAG_SUCCESSFUL;
 import static ir.taha7900.yadnegar.Utils.MsgCode.DELETE_COMMENT_ERROR;
+import static ir.taha7900.yadnegar.Utils.MsgCode.DELETE_COMMENT_LIKE_ERROR;
+import static ir.taha7900.yadnegar.Utils.MsgCode.DELETE_COMMENT_LIKE_SUCCESSFUL;
 import static ir.taha7900.yadnegar.Utils.MsgCode.DELETE_COMMENT_SUCCESSFUL;
 import static ir.taha7900.yadnegar.Utils.MsgCode.DELETE_POST_ERROR;
+import static ir.taha7900.yadnegar.Utils.MsgCode.DELETE_POST_LIKE_ERROR;
+import static ir.taha7900.yadnegar.Utils.MsgCode.DELETE_POST_LIKE_SUCCESSFUL;
 import static ir.taha7900.yadnegar.Utils.MsgCode.DELETE_POST_SUCCESSFUL;
 import static ir.taha7900.yadnegar.Utils.MsgCode.DELETE_TAG_ERROR;
 import static ir.taha7900.yadnegar.Utils.MsgCode.DELETE_TAG_SUCCESSFUL;
@@ -650,4 +656,37 @@ public class Network {
             }
         });
     }
+
+    public static void deleteLikeForMemory(Handler handler, Like like ,Memory memory) {
+        Request request = addMemoTokenToHeader(getAuthorizedRequest()).url(URL.LIKE_POST + like.getId() + "/").delete().build();
+        httpClient.newCall(request).enqueue(new CustomCallback(handler) {
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) {
+                int code = response.code();
+                if (code / 100 != 2) {
+                    handler.sendEmptyMessage(DELETE_POST_LIKE_ERROR);
+                    return;
+                }
+                memory.removeLike(like);
+                handler.sendEmptyMessage(DELETE_POST_LIKE_SUCCESSFUL);
+            }
+        });
+    }
+
+    public static void deleteLikeForComment(Handler handler, Like like ,Comment comment) {
+        Request request = addMemoTokenToHeader(getAuthorizedRequest()).url(URL.LIKE_COMMENT + like.getId() + "/").delete().build();
+        httpClient.newCall(request).enqueue(new CustomCallback(handler) {
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) {
+                int code = response.code();
+                if (code / 100 != 2) {
+                    handler.sendEmptyMessage(DELETE_COMMENT_LIKE_ERROR);
+                    return;
+                }
+                comment.removeLike(like);
+                handler.sendEmptyMessage(DELETE_COMMENT_LIKE_SUCCESSFUL);
+            }
+        });
+    }
+
 }
