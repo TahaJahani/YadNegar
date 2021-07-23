@@ -39,6 +39,8 @@ import static ir.taha7900.yadnegar.Utils.MsgCode.DELETE_TAG_ERROR;
 import static ir.taha7900.yadnegar.Utils.MsgCode.DELETE_TAG_SUCCESSFUL;
 import static ir.taha7900.yadnegar.Utils.MsgCode.EDIT_POST_ERROR;
 import static ir.taha7900.yadnegar.Utils.MsgCode.EDIT_POST_SUCCESSFUL;
+import static ir.taha7900.yadnegar.Utils.MsgCode.EDIT_TAG_ERROR;
+import static ir.taha7900.yadnegar.Utils.MsgCode.EDIT_TAG_SUCCESSFUL;
 import static ir.taha7900.yadnegar.Utils.MsgCode.EDIT_USER_ERROR;
 import static ir.taha7900.yadnegar.Utils.MsgCode.EDIT_USER_SUCCESSFUL;
 import static ir.taha7900.yadnegar.Utils.MsgCode.GET_FRIEND_REQUEST_ERROR;
@@ -228,6 +230,30 @@ public class Network {
                 }
                 Tag.removeUserTag(tag);
                 handler.sendEmptyMessage(DELETE_TAG_SUCCESSFUL);
+            }
+        });
+    }
+
+    public static void editTag(Handler handler, Tag tag , HashMap<String , String> changed_fields) {
+        FormBody.Builder builder = new FormBody.Builder();
+        for (String s : changed_fields.keySet()) {
+            builder.add(s, Objects.requireNonNull(changed_fields.get(s)));
+        }
+        RequestBody body = builder.build();
+        Request request = addMemoTokenToHeader(getAuthorizedRequest()).url(URL.TAG + tag.getId() + "/").patch(body).build();
+        httpClient.newCall(request).enqueue(new CustomCallback(handler) {
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                int code = response.code();
+                if (code / 100 != 2) {
+                    handler.sendEmptyMessage(EDIT_TAG_ERROR);
+                    return;
+                }
+                String body = Objects.requireNonNull(response.body()).string();
+                Tag newTag = gson.fromJson(body, Tag.class);
+                Tag.removeUserTag(tag);
+                Tag.addUserTag(newTag);
+                handler.sendEmptyMessage(EDIT_TAG_SUCCESSFUL);
             }
         });
     }
@@ -527,7 +553,6 @@ public class Network {
             }
         });
     }
-
 
     public static void editPost(Handler handler, HashMap<String, String> fields, Memory memory) {
         FormBody.Builder builder = new FormBody.Builder();
