@@ -98,4 +98,8 @@ public class Memory implements Serializable {
     public static void addUserMemory(Memory memory) {
         Memory.userMemories.add(memory);
     }
+
+    public static void removeMemory(Memory memory){
+        Memory.userMemories.remove(memory);
+    }
 }
