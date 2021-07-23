@@ -87,6 +87,13 @@ public class Memory implements Serializable {
         this.post_files = post_files;
     }
 
+    public void addPostFile(String postFile) {
+        String[] newPostFiles = new String[this.post_files.length + 1];
+        System.arraycopy(this.post_files, 0, newPostFiles, 0, this.post_files.length);
+        newPostFiles[this.post_files.length] = postFile;
+        this.post_files = newPostFiles;
+    }
+
     public static ArrayList<Memory> getUserMemories() {
         return userMemories;
     }

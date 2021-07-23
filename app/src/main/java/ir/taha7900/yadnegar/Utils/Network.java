@@ -10,6 +10,7 @@ import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,12 +24,57 @@ import ir.taha7900.yadnegar.Models.User;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-import static ir.taha7900.yadnegar.Utils.MsgCode.*;
+import static ir.taha7900.yadnegar.Utils.MsgCode.CHANGE_FRIEND_REQUEST_STATUS_ERROR;
+import static ir.taha7900.yadnegar.Utils.MsgCode.CHANGE_FRIEND_REQUEST_STATUS_SUCCESSFUL;
+import static ir.taha7900.yadnegar.Utils.MsgCode.COMMENT_ADDED;
+import static ir.taha7900.yadnegar.Utils.MsgCode.COMMENT_ERROR;
+import static ir.taha7900.yadnegar.Utils.MsgCode.CREATE_POST_ERROR;
+import static ir.taha7900.yadnegar.Utils.MsgCode.CREATE_POST_SUCCESSFUL;
+import static ir.taha7900.yadnegar.Utils.MsgCode.CREATE_TAG_SUCCESSFUL;
+import static ir.taha7900.yadnegar.Utils.MsgCode.DELETE_COMMENT_ERROR;
+import static ir.taha7900.yadnegar.Utils.MsgCode.DELETE_COMMENT_SUCCESSFUL;
+import static ir.taha7900.yadnegar.Utils.MsgCode.DELETE_POST_ERROR;
+import static ir.taha7900.yadnegar.Utils.MsgCode.DELETE_POST_SUCCESSFUL;
+import static ir.taha7900.yadnegar.Utils.MsgCode.DELETE_TAG_ERROR;
+import static ir.taha7900.yadnegar.Utils.MsgCode.DELETE_TAG_SUCCESSFUL;
+import static ir.taha7900.yadnegar.Utils.MsgCode.EDIT_POST_ERROR;
+import static ir.taha7900.yadnegar.Utils.MsgCode.EDIT_POST_SUCCESSFUL;
+import static ir.taha7900.yadnegar.Utils.MsgCode.EDIT_TAG_ERROR;
+import static ir.taha7900.yadnegar.Utils.MsgCode.EDIT_TAG_SUCCESSFUL;
+import static ir.taha7900.yadnegar.Utils.MsgCode.EDIT_USER_ERROR;
+import static ir.taha7900.yadnegar.Utils.MsgCode.EDIT_USER_SUCCESSFUL;
+import static ir.taha7900.yadnegar.Utils.MsgCode.GET_FRIEND_REQUEST_ERROR;
+import static ir.taha7900.yadnegar.Utils.MsgCode.GET_FRIEND_REQUEST_SUCCESSFUL;
+import static ir.taha7900.yadnegar.Utils.MsgCode.GET_USERS_ERROR;
+import static ir.taha7900.yadnegar.Utils.MsgCode.GET_USERS_SUCCESSFUL;
+import static ir.taha7900.yadnegar.Utils.MsgCode.GET_USER_DATA_ERROR;
+import static ir.taha7900.yadnegar.Utils.MsgCode.GET_USER_DATA_SUCCESSFUL;
+import static ir.taha7900.yadnegar.Utils.MsgCode.LOGIN_FAILED;
+import static ir.taha7900.yadnegar.Utils.MsgCode.LOGIN_SUCCESSFUL;
+import static ir.taha7900.yadnegar.Utils.MsgCode.LOGOUT_ERROR;
+import static ir.taha7900.yadnegar.Utils.MsgCode.LOGOUT_SUCCESSFUL;
+import static ir.taha7900.yadnegar.Utils.MsgCode.MEMORY_DATA_READY;
+import static ir.taha7900.yadnegar.Utils.MsgCode.MEMORY_ERROR;
+import static ir.taha7900.yadnegar.Utils.MsgCode.NETWORK_ERROR;
+import static ir.taha7900.yadnegar.Utils.MsgCode.POST_FILE_ERROR;
+import static ir.taha7900.yadnegar.Utils.MsgCode.POST_FILE_SUCCESSFUL;
+import static ir.taha7900.yadnegar.Utils.MsgCode.POST_LIKE_ERROR;
+import static ir.taha7900.yadnegar.Utils.MsgCode.POST_LIKE_SUCCESSFUL;
+import static ir.taha7900.yadnegar.Utils.MsgCode.REGISTER_ERROR;
+import static ir.taha7900.yadnegar.Utils.MsgCode.REGISTER_SUCCESSFUL;
+import static ir.taha7900.yadnegar.Utils.MsgCode.SEND_FRIEND_REQUEST_ERROR;
+import static ir.taha7900.yadnegar.Utils.MsgCode.SEND_FRIEND_REQUEST_SUCCESSFUL;
+import static ir.taha7900.yadnegar.Utils.MsgCode.TAG_DATA_READY;
+import static ir.taha7900.yadnegar.Utils.MsgCode.TAG_ERROR;
+import static ir.taha7900.yadnegar.Utils.MsgCode.USER_MEMORY_DATA_READY;
+import static ir.taha7900.yadnegar.Utils.MsgCode.USER_MEMORY_ERROR;
 
 public class Network {
 
@@ -44,6 +90,7 @@ public class Network {
         static String LIKE_COMMENT = BASE + "/api/v1/comment-like/";
         static String LIKE_POST = BASE + "/api/v1/post-like/";
         static String FRIEND_REQUEST = BASE + "/api/v1/friend-request/";
+        static String POST_FILE = BASE + "/api/v1/post-file/";
     }
 
     static abstract class CustomCallback implements Callback {
@@ -197,7 +244,7 @@ public class Network {
         });
     }
 
-    public static void editTag(Handler handler, Tag tag , HashMap<String , String> changed_fields) {
+    public static void editTag(Handler handler, Tag tag, HashMap<String, String> changed_fields) {
         FormBody.Builder builder = new FormBody.Builder();
         for (String s : changed_fields.keySet()) {
             builder.add(s, Objects.requireNonNull(changed_fields.get(s)));
@@ -545,7 +592,7 @@ public class Network {
         Request request = addMemoTokenToHeader(getAuthorizedRequest()).url(URL.USER_MEMOS + memory.getId() + "/").delete().build();
         httpClient.newCall(request).enqueue(new CustomCallback(handler) {
             @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response){
+            public void onResponse(@NotNull Call call, @NotNull Response response) {
                 int code = response.code();
                 if (code / 100 != 2) {
                     handler.sendEmptyMessage(DELETE_POST_ERROR);
@@ -557,18 +604,18 @@ public class Network {
         });
     }
 
-    public static void deleteComment(Handler handler , Comment comment){
+    public static void deleteComment(Handler handler, Comment comment) {
         Request request = addMemoTokenToHeader(getAuthorizedRequest()).url(URL.ADD_COMMENT + comment.getId() + "/").delete().build();
         httpClient.newCall(request).enqueue(new CustomCallback(handler) {
             @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response){
+            public void onResponse(@NotNull Call call, @NotNull Response response) {
                 int code = response.code();
                 if (code / 100 != 2) {
                     handler.sendEmptyMessage(DELETE_COMMENT_ERROR);
                     return;
                 }
                 for (Memory userMemory : Memory.getUserMemories()) {
-                    if (userMemory.getId() == comment.getId()){
+                    if (userMemory.getId() == comment.getId()) {
                         userMemory.getComments().remove(comment);
                         break;
                     }
@@ -579,5 +626,28 @@ public class Network {
         });
     }
 
-
+    public static void addFileToPost(Handler handler, Memory memory, File file) {
+        RequestBody body = new MultipartBody.Builder().setType(MultipartBody.FORM)
+                .addFormDataPart("file", file.getName(), RequestBody.create(MediaType.parse("image/jpeg"), file))
+                .build();
+            Request request = addMemoTokenToHeader(getAuthorizedRequest()).url(URL.POST_FILE + "?post=" + memory.getId()).post(body).build();
+        httpClient.newCall(request).enqueue(new CustomCallback(handler) {
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                int code = response.code();
+                if (code / 100 != 2) {
+                    handler.sendEmptyMessage(POST_FILE_ERROR);
+                    return;
+                }
+                String body = Objects.requireNonNull(response.body()).string();
+                try {
+                    JSONObject outerObj = new JSONObject(body);
+                    memory.addPostFile(outerObj.getString("file"));
+                    handler.sendEmptyMessage(POST_FILE_SUCCESSFUL);
+                } catch (JSONException e) {
+                    handler.sendEmptyMessage(POST_FILE_ERROR);
+                }
+            }
+        });
+    }
 }
