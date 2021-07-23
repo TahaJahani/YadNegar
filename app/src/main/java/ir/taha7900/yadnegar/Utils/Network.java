@@ -545,7 +545,7 @@ public class Network {
         Request request = addMemoTokenToHeader(getAuthorizedRequest()).url(URL.USER_MEMOS + memory.getId() + "/").delete().build();
         httpClient.newCall(request).enqueue(new CustomCallback(handler) {
             @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+            public void onResponse(@NotNull Call call, @NotNull Response response){
                 int code = response.code();
                 if (code / 100 != 2) {
                     handler.sendEmptyMessage(DELETE_POST_ERROR);
@@ -553,6 +553,28 @@ public class Network {
                 }
                 Memory.removeUserMemory(memory);
                 handler.sendEmptyMessage(DELETE_POST_SUCCESSFUL);
+            }
+        });
+    }
+
+    public static void deleteComment(Handler handler , Comment comment){
+        Request request = addMemoTokenToHeader(getAuthorizedRequest()).url(URL.ADD_COMMENT + comment.getId() + "/").delete().build();
+        httpClient.newCall(request).enqueue(new CustomCallback(handler) {
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response){
+                int code = response.code();
+                if (code / 100 != 2) {
+                    handler.sendEmptyMessage(DELETE_COMMENT_ERROR);
+                    return;
+                }
+                for (Memory userMemory : Memory.getUserMemories()) {
+                    if (userMemory.getId() == comment.getId()){
+                        userMemory.getComments().remove(comment);
+                        break;
+                    }
+                }
+                //todo check if correct <taha>
+                handler.sendEmptyMessage(DELETE_COMMENT_SUCCESSFUL);
             }
         });
     }

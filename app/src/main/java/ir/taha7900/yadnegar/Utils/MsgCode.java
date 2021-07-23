@@ -43,4 +43,6 @@ public class MsgCode {
     public static final int EDIT_TAG_SUCCESSFUL = 37;
     public static final int DELETE_POST_ERROR = 38;
     public static final int DELETE_POST_SUCCESSFUL = 39;
+    public static final int DELETE_COMMENT_ERROR = 40;
+    public static final int DELETE_COMMENT_SUCCESSFUL = 41;
 }
