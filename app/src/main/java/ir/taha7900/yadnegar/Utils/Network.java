@@ -28,44 +28,7 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-import static ir.taha7900.yadnegar.Utils.MsgCode.CHANGE_FRIEND_REQUEST_STATUS_ERROR;
-import static ir.taha7900.yadnegar.Utils.MsgCode.CHANGE_FRIEND_REQUEST_STATUS_SUCCESSFUL;
-import static ir.taha7900.yadnegar.Utils.MsgCode.COMMENT_ADDED;
-import static ir.taha7900.yadnegar.Utils.MsgCode.COMMENT_ERROR;
-import static ir.taha7900.yadnegar.Utils.MsgCode.CREATE_POST_ERROR;
-import static ir.taha7900.yadnegar.Utils.MsgCode.CREATE_POST_SUCCESSFUL;
-import static ir.taha7900.yadnegar.Utils.MsgCode.CREATE_TAG_SUCCESSFUL;
-import static ir.taha7900.yadnegar.Utils.MsgCode.DELETE_TAG_ERROR;
-import static ir.taha7900.yadnegar.Utils.MsgCode.DELETE_TAG_SUCCESSFUL;
-import static ir.taha7900.yadnegar.Utils.MsgCode.EDIT_POST_ERROR;
-import static ir.taha7900.yadnegar.Utils.MsgCode.EDIT_POST_SUCCESSFUL;
-import static ir.taha7900.yadnegar.Utils.MsgCode.EDIT_TAG_ERROR;
-import static ir.taha7900.yadnegar.Utils.MsgCode.EDIT_TAG_SUCCESSFUL;
-import static ir.taha7900.yadnegar.Utils.MsgCode.EDIT_USER_ERROR;
-import static ir.taha7900.yadnegar.Utils.MsgCode.EDIT_USER_SUCCESSFUL;
-import static ir.taha7900.yadnegar.Utils.MsgCode.GET_FRIEND_REQUEST_ERROR;
-import static ir.taha7900.yadnegar.Utils.MsgCode.GET_FRIEND_REQUEST_SUCCESSFUL;
-import static ir.taha7900.yadnegar.Utils.MsgCode.GET_USERS_ERROR;
-import static ir.taha7900.yadnegar.Utils.MsgCode.GET_USERS_SUCCESSFUL;
-import static ir.taha7900.yadnegar.Utils.MsgCode.GET_USER_DATA_ERROR;
-import static ir.taha7900.yadnegar.Utils.MsgCode.GET_USER_DATA_SUCCESSFUL;
-import static ir.taha7900.yadnegar.Utils.MsgCode.LOGIN_FAILED;
-import static ir.taha7900.yadnegar.Utils.MsgCode.LOGIN_SUCCESSFUL;
-import static ir.taha7900.yadnegar.Utils.MsgCode.LOGOUT_ERROR;
-import static ir.taha7900.yadnegar.Utils.MsgCode.LOGOUT_SUCCESSFUL;
-import static ir.taha7900.yadnegar.Utils.MsgCode.MEMORY_DATA_READY;
-import static ir.taha7900.yadnegar.Utils.MsgCode.MEMORY_ERROR;
-import static ir.taha7900.yadnegar.Utils.MsgCode.NETWORK_ERROR;
-import static ir.taha7900.yadnegar.Utils.MsgCode.POST_LIKE_ERROR;
-import static ir.taha7900.yadnegar.Utils.MsgCode.POST_LIKE_SUCCESSFUL;
-import static ir.taha7900.yadnegar.Utils.MsgCode.REGISTER_ERROR;
-import static ir.taha7900.yadnegar.Utils.MsgCode.REGISTER_SUCCESSFUL;
-import static ir.taha7900.yadnegar.Utils.MsgCode.SEND_FRIEND_REQUEST_ERROR;
-import static ir.taha7900.yadnegar.Utils.MsgCode.SEND_FRIEND_REQUEST_SUCCESSFUL;
-import static ir.taha7900.yadnegar.Utils.MsgCode.TAG_DATA_READY;
-import static ir.taha7900.yadnegar.Utils.MsgCode.TAG_ERROR;
-import static ir.taha7900.yadnegar.Utils.MsgCode.USER_MEMORY_DATA_READY;
-import static ir.taha7900.yadnegar.Utils.MsgCode.USER_MEMORY_ERROR;
+import static ir.taha7900.yadnegar.Utils.MsgCode.*;
 
 public class Network {
 
@@ -571,11 +534,28 @@ public class Network {
                 }
                 String body = Objects.requireNonNull(response.body()).string();
                 Memory post = gson.fromJson(body, Memory.class);
-                Memory.removeMemory(memory);
+                Memory.removeUserMemory(memory);
                 Memory.addUserMemory(post);
                 handler.sendEmptyMessage(EDIT_POST_SUCCESSFUL);
             }
         });
     }
+
+    public static void deletePost(Handler handler, Memory memory) {
+        Request request = addMemoTokenToHeader(getAuthorizedRequest()).url(URL.USER_MEMOS + memory.getId() + "/").delete().build();
+        httpClient.newCall(request).enqueue(new CustomCallback(handler) {
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                int code = response.code();
+                if (code / 100 != 2) {
+                    handler.sendEmptyMessage(DELETE_POST_ERROR);
+                    return;
+                }
+                Memory.removeUserMemory(memory);
+                handler.sendEmptyMessage(DELETE_POST_SUCCESSFUL);
+            }
+        });
+    }
+
 
 }

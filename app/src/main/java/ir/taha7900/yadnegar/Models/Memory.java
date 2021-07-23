@@ -99,7 +99,7 @@ public class Memory implements Serializable {
         Memory.userMemories.add(memory);
     }
 
-    public static void removeMemory(Memory memory){
+    public static void removeUserMemory(Memory memory){
         Memory.userMemories.remove(memory);
     }
 }
