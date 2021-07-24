@@ -1,5 +1,7 @@
 package ir.taha7900.yadnegar.Models;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -97,5 +99,11 @@ public class User {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         return ((User) o).id == this.id;
+    }
+
+    @NotNull
+    @Override
+    public String toString() {
+        return username;
     }
 }

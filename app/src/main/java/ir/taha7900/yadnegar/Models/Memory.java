@@ -23,7 +23,7 @@ public class Memory implements Serializable {
         return id;
     }
 
-    public User getCreator_user() {
+    public User getCreatorUser() {
         return creator_user;
     }
 
@@ -35,7 +35,7 @@ public class Memory implements Serializable {
         return text;
     }
 
-    public ArrayList<User> getTagged_people() {
+    public ArrayList<User> getTaggedPeople() {
         return tagged_people;
     }
 
@@ -43,7 +43,7 @@ public class Memory implements Serializable {
         return tags;
     }
 
-    public ArrayList<String> getPost_files() {
+    public ArrayList<String> getPostFiles() {
         return post_files;
     }
 
@@ -109,5 +109,11 @@ public class Memory implements Serializable {
 
     public void removeLike(Like like) {
         this.likes.remove(like);
+    }
+
+    public String getFormattedCreationDate() {
+        String date = created.split("T")[0];
+        String time = created.split("T")[1].split("\\.")[0];
+        return date + ", " + time;
     }
 }

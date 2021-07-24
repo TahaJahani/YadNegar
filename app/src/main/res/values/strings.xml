@@ -55,4 +55,6 @@
     <string name="tick_image">Tick Image</string>
     <string name="search">Search</string>
     <string name="search_button">Search Button</string>
+    <string name="files">Files</string>
+    <string name="tagged_people">Tagged People</string>
 </resources>

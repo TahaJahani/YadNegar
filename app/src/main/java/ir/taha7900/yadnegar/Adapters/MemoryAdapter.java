@@ -1,29 +1,21 @@
 package ir.taha7900.yadnegar.Adapters;
 
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
-import com.google.android.material.imageview.ShapeableImageView;
-
 import java.util.ArrayList;
-import java.util.Random;
 
 import ir.taha7900.yadnegar.CommentsFragment;
-import ir.taha7900.yadnegar.Components.CommentButton;
 import ir.taha7900.yadnegar.Components.LikeButton;
 import ir.taha7900.yadnegar.MainActivity;
-import ir.taha7900.yadnegar.Models.Comment;
 import ir.taha7900.yadnegar.Models.Like;
 import ir.taha7900.yadnegar.Models.Memory;
 import ir.taha7900.yadnegar.Models.User;
@@ -56,7 +48,7 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.ViewHolder
         holder.titleText.setText(memory.getTitle());
         holder.likeButton.setLiked(hasLiked(memory));
         holder.likeButton.setOnTouchListener(this::likeMemory);
-        holder.nameAndDateText.setText(memory.getCreator_user().getFirst_name() + " - " + (memory.getCreated().contains("T") ? memory.getCreated().split("T")[0] : memory.getCreated()));
+        holder.nameAndDateText.setText(memory.getCreatorUser().getFirst_name() + " - " + (memory.getCreated().contains("T") ? memory.getCreated().split("T")[0] : memory.getCreated()));
 //        holder.numberOfLikesText.setText(memory.getLikes().length);
         holder.seeMoreButton.setOnClickListener(view -> {
             // TODO: Open memory page!

@@ -136,11 +136,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void memoriesClicked() {
-        //TODO: change
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.mainFrame, MemoryFragment.newInstance())
-                .addToBackStack(null)
-                .commit();
+
     }
 
     private void settingClicked() {
