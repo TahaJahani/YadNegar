@@ -88,6 +88,8 @@ public class AddMemoryFragment extends Fragment {
         nextButton.setOnClickListener(this::openStep2);
         if (Tag.getUserTags() == null)
             tagsProgressBar.setVisibility(View.VISIBLE);
+        else
+            showTags();
         return view;
     }
 
