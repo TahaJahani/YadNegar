@@ -28,6 +28,8 @@ import android.widget.TextView;
 
 import com.google.android.material.imageview.ShapeableImageView;
 
+import java.util.ArrayList;
+
 import ir.taha7900.yadnegar.Adapters.FriendRequestAdapter;
 import ir.taha7900.yadnegar.Adapters.MemoryAdapter;
 import ir.taha7900.yadnegar.Models.FriendRequest;
@@ -159,7 +161,7 @@ public class ProfileFragment extends Fragment implements Toolbar.OnMenuItemClick
     private void openSearchUsersFragment() {
         context.getSupportFragmentManager().beginTransaction()
                 .addToBackStack("search users")
-                .replace(R.id.mainFrame, SearchUserFragment.newInstance())
+                .replace(R.id.mainFrame, SearchUserFragment.newInstance(new ArrayList<>(), SearchUserFragment.TYPE_FOLLOW))
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                 .commit();
     }

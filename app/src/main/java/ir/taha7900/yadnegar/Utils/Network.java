@@ -97,6 +97,7 @@ public class Network {
         static String LIKE_POST = BASE + "/api/v1/post-like/";
         static String FRIEND_REQUEST = BASE + "/api/v1/friend-request/";
         static String POST_FILE = BASE + "/api/v1/post-file/";
+        static String SEARCH_USER = BASE + "/api/v1/memo-user/?username__contains=";
     }
 
     static abstract class CustomCallback implements Callback {
@@ -127,11 +128,6 @@ public class Network {
         if (user == null)
             return builder;
         return builder.addHeader("Memouser-Token", user.getToken());
-    }
-
-    private static String getAuthorizedUrl(String baseUrl) {
-        User user = User.getCurrentUser();
-        return baseUrl + "?token=" + user.getToken();
     }
 
     public static void sendLoginRequest(String username, String password, Handler handler) {
@@ -685,6 +681,31 @@ public class Network {
                 }
                 comment.removeLike(like);
                 handler.sendEmptyMessage(DELETE_COMMENT_LIKE_SUCCESSFUL);
+            }
+        });
+    }
+
+    public static void searchUsername(String username, Handler handler) {
+        Request request = addMemoTokenToHeader(getAuthorizedRequest()).url(URL.SEARCH_USER + username).get().build();
+        httpClient.newCall(request).enqueue(new CustomCallback(handler) {
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                int code = response.code();
+                if (code / 100 != 2) {
+                    handler.sendEmptyMessage(GET_USERS_ERROR);
+                    return;
+                }
+                String body = Objects.requireNonNull(response.body()).string();
+                try {
+                    JSONObject outerObj = new JSONObject(body);
+                    ArrayList<User> users = gson.fromJson(String.valueOf(outerObj.getJSONArray("results"))
+                            , new TypeToken<ArrayList<User>>() {
+                            }.getType());
+                    User.setAllUsers(users);
+                    handler.sendEmptyMessage(GET_USERS_SUCCESSFUL);
+                } catch (JSONException e) {
+                    handler.sendEmptyMessage(GET_USERS_ERROR);
+                }
             }
         });
     }

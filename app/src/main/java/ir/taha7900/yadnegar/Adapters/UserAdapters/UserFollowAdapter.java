@@ -25,7 +25,8 @@ public class UserFollowAdapter extends UserAdapter {
 
     private MainActivity context;
     private Handler handler;
-    private DialogInterface dialog;
+    private DialogInterface tempDialog;
+    private FollowViewHolder tempHolder;
 
     public UserFollowAdapter(ArrayList<User> allUsers, ArrayList<Long> selectedUsers) {
         super(allUsers, selectedUsers);
@@ -34,8 +35,10 @@ public class UserFollowAdapter extends UserAdapter {
             public void handleMessage(@NonNull Message msg) {
                 switch (msg.what) {
                     case MsgCode.SEND_FRIEND_REQUEST_SUCCESSFUL:
-                        dialog.cancel();
-                        dialog = null;
+                        tempHolder.followButton.setVisibility(View.GONE);
+                        tempDialog.cancel();
+                        tempDialog = null;
+                        tempHolder = null;
                         break;
                 }
             }
@@ -60,16 +63,17 @@ public class UserFollowAdapter extends UserAdapter {
         ((FollowViewHolder) holder).followButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                tempHolder = (FollowViewHolder) holder;
+                showFollowDialog(user);
             }
         });
     }
 
     private void showFollowDialog(User user) {
         MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(context)
-                .setTitle("UnFollow User")
+                .setTitle("Follow User?")
                 .setPositiveButton(context.getString(R.string.yes), (dialogInterface, i) -> {
-                    dialog = dialogInterface;
+                    tempDialog = dialogInterface;
                     Network.sendFriendRequest(user.getId(), handler);
                 })
                 .setNegativeButton(context.getString(R.string.no), (dialogInterface, i) -> dialogInterface.dismiss());
