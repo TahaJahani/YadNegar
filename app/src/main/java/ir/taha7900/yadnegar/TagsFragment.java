@@ -82,8 +82,9 @@ public class TagsFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        context.topAppBar.setTitle(getString(R.string.tags));
         context.clearTopAppBar();
+        context.topAppBar.setTitle(getString(R.string.tags));
+        context.setShowNavigationIcon(true);
     }
 
     @Override

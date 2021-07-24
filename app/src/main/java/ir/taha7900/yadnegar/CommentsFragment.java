@@ -80,9 +80,10 @@ public class CommentsFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        context.clearTopAppBar();
         context.topAppBar.setTitle(R.string.comments);
         context.setShowNavigationIcon(false);
-        context.clearTopAppBar();
+        context.setShowBackIcon(true);
     }
 
     @Override

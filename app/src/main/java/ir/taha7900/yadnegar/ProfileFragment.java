@@ -97,6 +97,7 @@ public class ProfileFragment extends Fragment implements Toolbar.OnMenuItemClick
         super.onResume();
         context.clearTopAppBar();
         context.topAppBar.setTitle(R.string.profile);
+        context.setShowNavigationIcon(true);
         context.topAppBar.inflateMenu(R.menu.profile_top_menu);
         context.topAppBar.setOnMenuItemClickListener(this);
     }

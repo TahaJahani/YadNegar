@@ -66,6 +66,8 @@ public class ProfileEditModeFragment extends Fragment implements Toolbar.OnMenuI
         super.onResume();
         context.clearTopAppBar();
         context.topAppBar.setTitle(getString(R.string.edit_profile));
+        context.setShowNavigationIcon(false);
+        context.setShowBackIcon(true);
         context.topAppBar.inflateMenu(R.menu.profile_edit_top_menu);
         context.topAppBar.setOnMenuItemClickListener(this);
     }

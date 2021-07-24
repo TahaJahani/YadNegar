@@ -136,6 +136,15 @@ public class AddMemoryFragment extends Fragment {
         this.context = (MainActivity) context;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        context.clearTopAppBar();
+        context.topAppBar.setTitle(getString(R.string.add_memory));
+        context.setShowNavigationIcon(false);
+        context.setShowBackIcon(true);
+    }
+
     static class SpacesItemDecoration extends RecyclerView.ItemDecoration {
         private final int space;
 
