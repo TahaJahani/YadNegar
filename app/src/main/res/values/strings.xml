@@ -51,4 +51,6 @@
     <string name="accept">accept</string>
     <string name="reject">reject</string>
     <string name="send_friend_request">Send Friend Request</string>
+    <string name="follow">follow</string>
+    <string name="tick_image">Tick Image</string>
 </resources>

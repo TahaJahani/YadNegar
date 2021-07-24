@@ -10,19 +10,29 @@ import android.view.ViewGroup;
 
 import java.util.ArrayList;
 
+import ir.taha7900.yadnegar.Adapters.UserAdapters.UserAdapter;
+import ir.taha7900.yadnegar.Models.User;
+
 
 public class SearchUserFragment extends Fragment {
 
-    private ArrayList<Long> users;
+    public static final String TYPE_FOLLOW = "follow";
+    public static final String TYPE_TAG = "tag";
+
+    private ArrayList<Long> selectedUsers;
+    private ArrayList<User> allUsers;
+    private String type;
+    private UserAdapter adapter;
 
     public SearchUserFragment() {
-        // Required empty public constructor
+
     }
 
 
-    public static SearchUserFragment newInstance(ArrayList<Long> users) {
+    public static SearchUserFragment newInstance(ArrayList<Long> users, String type) {
         SearchUserFragment fragment = new SearchUserFragment();
-        fragment.users = users;
+        fragment.selectedUsers = users;
+        fragment.type = type;
         return fragment;
     }
 

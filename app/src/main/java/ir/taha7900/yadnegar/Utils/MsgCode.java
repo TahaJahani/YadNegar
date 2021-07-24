@@ -51,4 +51,8 @@ public class MsgCode {
     public static final int DELETE_POST_LIKE_SUCCESSFUL = 45;
     public static final int DELETE_COMMENT_LIKE_ERROR = 46;
     public static final int DELETE_COMMENT_LIKE_SUCCESSFUL = 47;
+
+
+    public static final int SUCCESS = 1000;
+    public static final int ERROR = 10001;
 }

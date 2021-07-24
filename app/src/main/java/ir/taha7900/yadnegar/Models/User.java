@@ -20,7 +20,7 @@ public class User {
     private String email;
     private Date birthday_date;
     private String phone_number;
-    private int[] friends;
+    private ArrayList<Long> friends;
     private String created;
     private String token;
 
@@ -72,7 +72,7 @@ public class User {
         return phone_number;
     }
 
-    public int[] getFriends() {
+    public ArrayList<Long> getFriends() {
         return friends;
     }
 
