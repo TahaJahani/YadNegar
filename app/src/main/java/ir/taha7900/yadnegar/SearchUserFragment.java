@@ -113,5 +113,7 @@ public class SearchUserFragment extends Fragment {
         super.onResume();
         context.clearTopAppBar();
         context.topAppBar.setTitle(getString(R.string.follow));
+        context.setShowNavigationIcon(false);
+        context.setShowBackIcon(true);
     }
 }

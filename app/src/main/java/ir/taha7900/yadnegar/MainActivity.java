@@ -63,13 +63,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void setShowNavigationIcon(boolean show) {
         if (show) {
             topAppBar.setNavigationIcon(R.drawable.ic_baseline_menu_24);
+            topAppBar.setNavigationOnClickListener(this);
             drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
         }else {
             topAppBar.setNavigationIcon(null);
             drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
         }
-
     }
+
+    public void setShowBackIcon(boolean show) {
+        if (show) {
+            topAppBar.setNavigationIcon(R.drawable.ic_baseline_arrow_back_ios_24);
+            drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+            topAppBar.setNavigationOnClickListener(view -> getSupportFragmentManager().popBackStack());
+        }
+    }
+
 
     public void clearTopAppBar() {
         if (topAppBar.getMenu() != null) {
