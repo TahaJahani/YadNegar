@@ -31,8 +31,7 @@
         android:layout_marginHorizontal="16dp"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
-        android:minHeight="250dp"
-        app:layout_constraintBottom_toTopOf="@+id/materialCardView"
+        app:layout_constraintBottom_toTopOf="@+id/usersTitle"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textInputLayout2">
 
@@ -40,42 +39,84 @@
             android:id="@+id/contentInput"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:gravity="top"
             android:hint="@string/text"
-            android:minHeight="250dp" />
+            android:textAlignment="gravity" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/materialCardView"
+    <TextView
+        android:id="@+id/tagsTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="4dp"
+        android:text="@string/select_tags"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/tagsList"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/tagsList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
-        android:layout_marginTop="10dp"
+
+        app:layout_constraintBottom_toTopOf="@+id/nextButton"
+        tools:layout_editor_absoluteX="16dp" />
+
+    <TextView
+        android:id="@+id/usersTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="4dp"
+        android:text="@string/tagged_people"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/usersContainer"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/usersContainer"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginHorizontal="16dp"
         android:layout_marginBottom="10dp"
-        android:padding="4dp"
-        android:minHeight="150dp"
+        android:layout_weight="1"
         android:elevation="4dp"
         app:cardElevation="4dp"
-        app:layout_constraintBottom_toTopOf="@+id/nextButton"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintBottom_toTopOf="@id/tagsTitle">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/tagsList"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_constraintBottom_toTopOf="@+id/nextButton" />
+            android:orientation="vertical">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/taggedUsersList"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_margin="8dp"
+                android:layout_weight="1" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/addUserButton"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/add_user" />
+        </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 
     <ProgressBar
         android:id="@+id/tagsProgressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="gone"
         android:elevation="5dp"
-        app:layout_constraintBottom_toBottomOf="@+id/materialCardView"
-        app:layout_constraintEnd_toEndOf="@+id/materialCardView"
-        app:layout_constraintStart_toStartOf="@+id/materialCardView"
-        app:layout_constraintTop_toTopOf="@+id/materialCardView" />
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/tagsList"
+        app:layout_constraintEnd_toEndOf="@+id/tagsList"
+        app:layout_constraintStart_toStartOf="@+id/tagsList"
+        app:layout_constraintTop_toTopOf="@+id/tagsList" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/nextButton"

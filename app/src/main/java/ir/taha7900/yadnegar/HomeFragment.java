@@ -108,7 +108,7 @@ public class HomeFragment extends Fragment {
     private void openAddMemoryFragment(View view) {
         context.getSupportFragmentManager().beginTransaction()
                 .addToBackStack("addMemory")
-                .replace(R.id.mainFrame, AddMemoryFragment.newInstance())
+                .replace(R.id.mainFrame, AddMemoryFragment.newInstance(null))
                 .commit();
     }
 }

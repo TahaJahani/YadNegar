@@ -28,13 +28,11 @@ public class UploadFileFragment extends Fragment {
     private static final String ARG_MEMORY = "memory";
 
     private Memory memory;
-    private RecyclerView usersList;
     private RecyclerView filesList;
-    private MaterialButton addUserButton;
     private MaterialButton addFileButton;
+    private MaterialButton doneButton;
     private MainActivity context;
 
-    private UserAdapter userAdapter;
     private FileAdapter fileAdapter;
 
     public UploadFileFragment() {
@@ -60,37 +58,20 @@ public class UploadFileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_upload_file, container, false);
-        usersList = view.findViewById(R.id.taggedUsersList);
         filesList = view.findViewById(R.id.filesList);
-        addUserButton = view.findViewById(R.id.addUserButton);
         addFileButton = view.findViewById(R.id.addFileButton);
-
-        userAdapter = new UserAdapter(memory.getTaggedPeople());
-        fileAdapter = new FileAdapter(memory.getPostFiles());//TODO: initialize arraylist
-
-        usersList.setAdapter(userAdapter);
-        usersList.setLayoutManager(new LinearLayoutManager(context));
+        doneButton = view.findViewById(R.id.doneButton);
+        fileAdapter = new FileAdapter(memory.getPostFiles());
         filesList.setAdapter(fileAdapter);
         filesList.setLayoutManager(new LinearLayoutManager(context));
 
-        addUserButton.setOnClickListener(this::openSelectUserFragment);
-
         return view;
-    }
-
-    private void openSelectUserFragment(View view) {
-        context.getSupportFragmentManager().beginTransaction()
-                .addToBackStack("select users")
-                .replace(R.id.mainFrame, SearchUserFragment.newInstance(memory.getTaggedPeople(), SearchUserFragment.TYPE_TAG))
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                .commit();
     }
 
     @Override
     public void onResume() {
         super.onResume();
         fileAdapter.notifyDataSetChanged();
-        userAdapter.notifyDataSetChanged();
     }
 
     @Override
