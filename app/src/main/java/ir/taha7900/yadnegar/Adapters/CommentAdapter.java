@@ -45,7 +45,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
         holder.usernameText.setText(comment.getMemoUser().getUsername());
         holder.contentText.setText(comment.getText());
         holder.likeButton.setLiked(hasLiked(comment));
-        holder.likeButton.setOnClickListener(view -> Network.likeComment(comment));
+        holder.likeButton.setOnClickListener(view -> toggleLike(holder.likeButton.isLiked(), comment));
         holder.progressBar.setVisibility(comment.isSending() ? View.VISIBLE : View.GONE);
     }
 
@@ -65,6 +65,21 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
         return false;
     }
 
+    private void toggleLike(boolean isLiked, Comment comment) {
+        if (isLiked) {
+            Network.likeComment(comment);
+            Like like = new Like();
+            like.setMemo_user(User.getCurrentUser());
+            comment.addLike(like);
+        }else {
+            for (Like like : comment.getLikes()) {
+                if (like.getMemoUser().equals(User.getCurrentUser())){
+                    Network.deleteLikeForComment(null, like, comment);
+                    break;
+                }
+            }
+        }
+    }
     static class ViewHolder extends RecyclerView.ViewHolder {
 
         private CommentLikeButton likeButton;

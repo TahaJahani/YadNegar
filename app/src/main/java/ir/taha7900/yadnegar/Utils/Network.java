@@ -680,11 +680,13 @@ public class Network {
             public void onResponse(@NotNull Call call, @NotNull Response response) {
                 int code = response.code();
                 if (code / 100 != 2) {
-                    handler.sendEmptyMessage(DELETE_COMMENT_LIKE_ERROR);
+                    if (handler != null)
+                        handler.sendEmptyMessage(DELETE_COMMENT_LIKE_ERROR);
                     return;
                 }
                 comment.removeLike(like);
-                handler.sendEmptyMessage(DELETE_COMMENT_LIKE_SUCCESSFUL);
+                if (handler != null)
+                    handler.sendEmptyMessage(DELETE_COMMENT_LIKE_SUCCESSFUL);
             }
         });
     }
