@@ -113,6 +113,7 @@ public class MemoryFragment extends Fragment implements Toolbar.OnMenuItemClickL
         tagAdapter = new TagAdapter(memory.getTags());
         tagsList.setLayoutManager(new GridLayoutManager(context, 4));
         tagsList.setAdapter(tagAdapter);
+        tagsList.addItemDecoration(new TagAdapter.SpacesItemDecoration(4));
         userAdapter = new UserAdapter(memory.getTaggedPeople());
         taggedUsersList.setLayoutManager(new LinearLayoutManager(context));
         taggedUsersList.setAdapter(userAdapter);

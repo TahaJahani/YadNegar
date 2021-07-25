@@ -33,6 +33,8 @@ public class TagSelectionAdapter extends TagAdapter {
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Tag tag = tags.get(position);
         holder.titleText.setBackgroundResource(R.drawable.background_tag);
+        int padding = (int) Math.floor(AndroidUtilities.dp(6.0f));
+        holder.titleText.setPadding(0, padding, 0, padding);
         GradientDrawable background = (GradientDrawable) holder.titleText.getBackground();
         int backgroundColor = Color.parseColor("#" + tag.getColor());
         int elevation = (int) AndroidUtilities.dp(4);

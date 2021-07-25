@@ -23,6 +23,7 @@ import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.ArrayList;
 
+import ir.taha7900.yadnegar.Adapters.TagAdapter;
 import ir.taha7900.yadnegar.Adapters.TagSelectionAdapter;
 import ir.taha7900.yadnegar.Models.Memory;
 import ir.taha7900.yadnegar.Models.Tag;
@@ -72,7 +73,7 @@ public class AddMemoryFragment extends Fragment {
         tagsProgressBar.setVisibility(View.GONE);
         adapter = new TagSelectionAdapter(Tag.getUserTags(), selectedTags);
         tagsList.setLayoutManager(new GridLayoutManager(context, 4));
-        tagsList.addItemDecoration(new SpacesItemDecoration(4));
+        tagsList.addItemDecoration(new TagAdapter.SpacesItemDecoration(4));
         tagsList.setAdapter(adapter);
     }
 
@@ -146,22 +147,5 @@ public class AddMemoryFragment extends Fragment {
         context.topAppBar.setTitle(getString(R.string.add_memory));
         context.setShowNavigationIcon(false);
         context.setShowBackIcon(true);
-    }
-
-    static class SpacesItemDecoration extends RecyclerView.ItemDecoration {
-        private final int space;
-
-        public SpacesItemDecoration(int space) {
-            this.space = space;
-        }
-
-        @Override
-        public void getItemOffsets(Rect outRect, View view,
-                                   RecyclerView parent, RecyclerView.State state) {
-            outRect.left = space;
-            outRect.right = space;
-            outRect.bottom = space;
-            outRect.top = space;
-        }
     }
 }

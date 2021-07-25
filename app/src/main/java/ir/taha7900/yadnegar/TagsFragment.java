@@ -63,6 +63,7 @@ public class TagsFragment extends Fragment {
     private void showTags() {
         tagsProgressBar.setVisibility(View.GONE);
         adapter = new TagAdapter(Tag.getUserTags());
+        tagList.addItemDecoration(new TagAdapter.SpacesItemDecoration(4));
         tagList.setLayoutManager(new GridLayoutManager(context,4));
         tagList.setAdapter(adapter);
     }

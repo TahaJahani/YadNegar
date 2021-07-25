@@ -1,6 +1,7 @@
 package ir.taha7900.yadnegar.Adapters;
 
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.graphics.drawable.GradientDrawable;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,6 +38,8 @@ public class TagAdapter extends RecyclerView.Adapter<TagAdapter.ViewHolder> {
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Tag tag = tags.get(position);
         holder.titleText.setBackgroundResource(R.drawable.background_tag);
+        int padding = (int) Math.floor(AndroidUtilities.dp(6.0f));
+        holder.titleText.setPadding(0, padding, 0, padding);
         GradientDrawable background = (GradientDrawable) holder.titleText.getBackground();
         int backgroundColor;
         if (tag.getColor().startsWith("#"))
@@ -63,6 +66,23 @@ public class TagAdapter extends RecyclerView.Adapter<TagAdapter.ViewHolder> {
             super(itemView);
             this.titleText = (TextView) itemView;
             titleText.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        }
+    }
+
+    public static class SpacesItemDecoration extends RecyclerView.ItemDecoration {
+        private final int space;
+
+        public SpacesItemDecoration(int space) {
+            this.space = (int)Math.floor(AndroidUtilities.dp(space));
+        }
+
+        @Override
+        public void getItemOffsets(Rect outRect, View view,
+                                   RecyclerView parent, RecyclerView.State state) {
+//            outRect.left = space;
+            outRect.right = space;
+            outRect.bottom = space;
+//            outRect.top = space;
         }
     }
 }
