@@ -113,5 +113,6 @@ public class CommentsFragment extends Fragment {
         memory.addComment(comment);
         Network.addComment(memory ,comment, handler);
         adapter.notifyDataSetChanged();
+        newCommentInput.setText("");
     }
 }
