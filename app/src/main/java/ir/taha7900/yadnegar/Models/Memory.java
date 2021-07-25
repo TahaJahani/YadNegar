@@ -116,4 +116,8 @@ public class Memory implements Serializable {
         String time = created.split("T")[1].split("\\.")[0];
         return date + ", " + time;
     }
+
+    public void addLike(Like like) {
+        this.likes.add(like);
+    }
 }

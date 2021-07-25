@@ -36,10 +36,10 @@
             android:id="@+id/dateText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="2021-12-12"
-            android:textSize="16sp"
             android:layout_marginStart="12dp"
             android:layout_marginTop="4dp"
+            android:text="2021-12-12"
+            android:textSize="16sp"
             app:layout_constraintStart_toEndOf="@id/nameText"
             app:layout_constraintTop_toBottomOf="@+id/usernameText" />
 
@@ -48,18 +48,18 @@
             android:id="@+id/likeButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
             app:layout_constraintBottom_toTopOf="@id/separator1"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <ir.taha7900.yadnegar.Components.CommentButton
             android:id="@+id/commentButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
             app:layout_constraintBottom_toTopOf="@id/separator1"
-            app:layout_constraintEnd_toStartOf="@+id/likeButton"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintEnd_toStartOf="@+id/likeButton" />
 
         <View
             android:id="@+id/separator1"
@@ -86,6 +86,8 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="4dp"
             android:layout_marginTop="4dp"
+            android:elevation="4dp"
+            app:cardElevation="4dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/filesTitle">
@@ -93,7 +95,8 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/filesList"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:minHeight="100dp" />
         </com.google.android.material.card.MaterialCardView>
 
         <TextView
@@ -111,8 +114,10 @@
             android:id="@+id/materialCardView3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
             android:layout_marginHorizontal="4dp"
+            android:layout_marginTop="4dp"
+            android:elevation="4dp"
+            app:cardElevation="4dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tagsTitle">
@@ -120,7 +125,8 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/tagsList"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:minHeight="100dp" />
         </com.google.android.material.card.MaterialCardView>
 
         <TextView
@@ -137,8 +143,11 @@
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
             android:layout_marginHorizontal="4dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="8dp"
+            android:elevation="4dp"
+            app:cardElevation="4dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/taggedPeopleTitle">
@@ -146,7 +155,10 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/taggedUsersList"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:minHeight="100dp"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="8dp" />
         </com.google.android.material.card.MaterialCardView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

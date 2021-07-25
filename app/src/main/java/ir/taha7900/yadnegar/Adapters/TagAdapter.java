@@ -38,7 +38,11 @@ public class TagAdapter extends RecyclerView.Adapter<TagAdapter.ViewHolder> {
         Tag tag = tags.get(position);
         holder.titleText.setBackgroundResource(R.drawable.background_tag);
         GradientDrawable background = (GradientDrawable) holder.titleText.getBackground();
-        int backgroundColor = Color.parseColor("#" + tag.getColor());
+        int backgroundColor;
+        if (tag.getColor().startsWith("#"))
+            backgroundColor = Color.parseColor(tag.getColor());
+        else
+            backgroundColor = Color.parseColor("#" + tag.getColor());
         int elevation = (int) AndroidUtilities.dp(4);
         background.setColor(backgroundColor);
         holder.titleText.setElevation(elevation);

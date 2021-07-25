@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,6 +18,7 @@ import android.os.Looper;
 import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -26,6 +28,9 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import ir.taha7900.yadnegar.Adapters.FileAdapter;
 import ir.taha7900.yadnegar.Adapters.TagAdapter;
 import ir.taha7900.yadnegar.Adapters.UserAdapters.UserAdapter;
+import ir.taha7900.yadnegar.Components.CommentButton;
+import ir.taha7900.yadnegar.Components.LikeButton;
+import ir.taha7900.yadnegar.Models.Like;
 import ir.taha7900.yadnegar.Models.Memory;
 import ir.taha7900.yadnegar.Models.User;
 import ir.taha7900.yadnegar.Utils.MsgCode;
@@ -53,6 +58,8 @@ public class MemoryFragment extends Fragment implements Toolbar.OnMenuItemClickL
     private TagAdapter tagAdapter;
     private UserAdapter userAdapter;
     private FileAdapter fileAdapter;
+    private LikeButton likeButton;
+    private CommentButton commentButton;
 
     public MemoryFragment() {
         handler = new Handler(Looper.getMainLooper()) {
@@ -97,6 +104,8 @@ public class MemoryFragment extends Fragment implements Toolbar.OnMenuItemClickL
         filesList = view.findViewById(R.id.filesList);
         tagsList = view.findViewById(R.id.tagsList);
         taggedUsersList = view.findViewById(R.id.taggedUsersList);
+        likeButton = view.findViewById(R.id.likeButton);
+        commentButton = view.findViewById(R.id.commentButton);
 
         tagAdapter = new TagAdapter(memory.getTags());
         tagsList.setLayoutManager(new GridLayoutManager(context, 4));
@@ -107,12 +116,47 @@ public class MemoryFragment extends Fragment implements Toolbar.OnMenuItemClickL
         fileAdapter = new FileAdapter(memory.getPostFiles());
         filesList.setLayoutManager(new LinearLayoutManager(context));
         filesList.setAdapter(fileAdapter);
+        likeButton.setOnClickListener(this::likeMemory);
+        likeButton.setLiked(hasLiked());
+        commentButton.setOnClickListener(this::openComments);
 
         User creatorUser = memory.getCreatorUser();
         usernameText.setText(creatorUser.getUsername());
         nameText.setText(creatorUser.getFullName());
         dateText.setText(memory.getFormattedCreationDate());
 
+    }
+
+    private void openComments(View view) {
+        context.getSupportFragmentManager().beginTransaction()
+                .addToBackStack("comments fragment")
+                .replace(R.id.mainFrame, CommentsFragment.newInstance(memory))
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                .commit();
+    }
+
+    private void likeMemory(View view) {
+        if (likeButton.isLiked()) {
+            Network.likePost(memory, handler);
+            Like like = new Like();
+            like.setMemo_user(User.getCurrentUser());
+            memory.addLike(like);
+        }else{
+            for (Like like : memory.getLikes()) {
+                if (like.getMemoUser().equals(User.getCurrentUser())){
+                    Network.deleteLikeForMemory(handler, like,memory);
+                    break;
+                }
+            }
+        }
+    }
+
+    private boolean hasLiked() {
+        for (Like like : memory.getLikes()) {
+            if (like.getMemoUser().equals(User.getCurrentUser()))
+                return true;
+        }
+        return false;
     }
 
     @Override

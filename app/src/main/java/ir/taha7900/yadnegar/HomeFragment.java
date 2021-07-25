@@ -89,6 +89,8 @@ public class HomeFragment extends Fragment {
         User current = User.getCurrentUser();
         name.setText(current.getFullName());
         username.setText(current.getUsername());
+        if (adapter != null)
+            adapter.notifyDataSetChanged();
     }
 
     @Override

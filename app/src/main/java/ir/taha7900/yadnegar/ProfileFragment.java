@@ -100,6 +100,8 @@ public class ProfileFragment extends Fragment implements Toolbar.OnMenuItemClick
         context.setShowNavigationIcon(true);
         context.topAppBar.inflateMenu(R.menu.profile_top_menu);
         context.topAppBar.setOnMenuItemClickListener(this);
+        if (memoryAdapter != null)
+            memoryAdapter.notifyDataSetChanged();
     }
 
     private void showFriendRequests() {

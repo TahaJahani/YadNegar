@@ -1,7 +1,6 @@
 package ir.taha7900.yadnegar.Adapters;
 
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -13,19 +12,19 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
-import ir.taha7900.yadnegar.CommentsFragment;
 import ir.taha7900.yadnegar.Components.LikeButton;
 import ir.taha7900.yadnegar.MainActivity;
+import ir.taha7900.yadnegar.MemoryFragment;
 import ir.taha7900.yadnegar.Models.Like;
 import ir.taha7900.yadnegar.Models.Memory;
 import ir.taha7900.yadnegar.Models.User;
 import ir.taha7900.yadnegar.R;
+import ir.taha7900.yadnegar.Utils.Network;
 
 public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.ViewHolder> {
 
     private MainActivity context;
     private final ArrayList<Memory> memories;
-    private String[] colorsList;
 
     public MemoryAdapter(ArrayList<Memory> memories) {
         this.memories = memories;
@@ -36,7 +35,6 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.ViewHolder
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         this.context = (MainActivity) parent.getContext();
-        this.colorsList = context.getResources().getStringArray(R.array.profileColors);
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.new_row_memory, parent, false);
         return new ViewHolder(view);
@@ -47,27 +45,31 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.ViewHolder
         Memory memory = memories.get(position);
         holder.titleText.setText(memory.getTitle());
         holder.likeButton.setLiked(hasLiked(memory));
-        holder.likeButton.setOnTouchListener(this::likeMemory);
+        holder.likeButton.setOnClickListener(view -> toggleLike(holder.likeButton.isLiked(), memory));
         holder.nameAndDateText.setText(memory.getCreatorUser().getFirst_name() + " - " + (memory.getCreated().contains("T") ? memory.getCreated().split("T")[0] : memory.getCreated()));
-//        holder.numberOfLikesText.setText(memory.getLikes().length);
         holder.seeMoreButton.setOnClickListener(view -> {
-            // TODO: Open memory page!
+            context.getSupportFragmentManager().beginTransaction()
+                    .addToBackStack("memoryPage")
+                    .replace(R.id.mainFrame, MemoryFragment.newInstance(memory))
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                    .commit();
         });
     }
 
-    private boolean likeMemory(View view, MotionEvent motionEvent) {
-        //TODO: send toggle like request to server
-        return false;
-    }
-
-    private void openComments(Memory memory) {
-        CommentsFragment fragment = CommentsFragment.newInstance(memory);
-        context.getSupportFragmentManager()
-                .beginTransaction()
-                .addToBackStack("comments")
-                .replace(R.id.mainFrame, fragment)
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                .commit();
+    private void toggleLike(boolean like, Memory memory) {
+        if (like) {
+            Network.likePost(memory, null);
+            Like likeObject = new Like();
+            likeObject.setMemo_user(User.getCurrentUser());
+            memory.addLike(likeObject);
+        }else {
+            for (Like likeObject : memory.getLikes()) {
+                if (likeObject.getMemoUser().equals(User.getCurrentUser())) {
+                    Network.deleteLikeForMemory(null, likeObject, memory);
+                    break;
+                }
+            }
+        }
     }
 
     private boolean hasLiked(Memory memory) {

@@ -59,6 +59,7 @@ public class LikeButton extends View {
     @Override
     public void draw(Canvas canvas) {
         super.draw(canvas);
+        heartShape.setFilled(liked);
         heartShape.draw(canvas, (int) width, (int) height, 0, (int)jump);
     }
 
@@ -69,7 +70,6 @@ public class LikeButton extends View {
         if (result) {
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
                 this.liked = !this.liked;
-                heartShape.setFilled(liked);
                 invalidate();
                 requestLayout();
                 performClick();
@@ -93,6 +93,8 @@ public class LikeButton extends View {
 
     public void setLiked(boolean liked) {
         this.liked = liked;
+        invalidate();
+        requestLayout();
     }
 
     @Override
