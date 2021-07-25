@@ -24,6 +24,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.textfield.TextInputEditText;
 
 import ir.taha7900.yadnegar.Adapters.FileAdapter;
 import ir.taha7900.yadnegar.Adapters.TagAdapter;
@@ -52,7 +53,7 @@ public class MemoryFragment extends Fragment implements Toolbar.OnMenuItemClickL
     private TextView usernameText;
     private TextView nameText;
     private TextView dateText;
-    private TextView contentText;
+    private TextInputEditText contentText;
     private RecyclerView filesList;
     private RecyclerView tagsList;
     private RecyclerView taggedUsersList;
