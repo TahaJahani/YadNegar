@@ -120,4 +120,8 @@ public class Memory implements Serializable {
     public void addLike(Like like) {
         this.likes.add(like);
     }
+
+    public void setTaggedPeople(ArrayList<User> tagged_people) {
+        this.tagged_people = tagged_people;
+    }
 }

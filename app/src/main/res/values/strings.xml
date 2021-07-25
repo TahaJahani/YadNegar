@@ -57,4 +57,7 @@
     <string name="search_button">Search Button</string>
     <string name="files">Files</string>
     <string name="tagged_people">Tagged People</string>
+    <string name="add_user">Add User</string>
+    <string name="add_file">Add file</string>
+    <string name="caption">Caption</string>
 </resources>

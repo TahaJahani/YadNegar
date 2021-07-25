@@ -52,6 +52,7 @@ public class MemoryFragment extends Fragment implements Toolbar.OnMenuItemClickL
     private TextView usernameText;
     private TextView nameText;
     private TextView dateText;
+    private TextView contentText;
     private RecyclerView filesList;
     private RecyclerView tagsList;
     private RecyclerView taggedUsersList;
@@ -101,6 +102,7 @@ public class MemoryFragment extends Fragment implements Toolbar.OnMenuItemClickL
         usernameText = view.findViewById(R.id.usernameText);
         nameText = view.findViewById(R.id.nameText);
         dateText = view.findViewById(R.id.dateText);
+        contentText = view.findViewById(R.id.contentText);
         filesList = view.findViewById(R.id.filesList);
         tagsList = view.findViewById(R.id.tagsList);
         taggedUsersList = view.findViewById(R.id.taggedUsersList);
@@ -124,6 +126,7 @@ public class MemoryFragment extends Fragment implements Toolbar.OnMenuItemClickL
         usernameText.setText(creatorUser.getUsername());
         nameText.setText(creatorUser.getFullName());
         dateText.setText(memory.getFormattedCreationDate());
+        contentText.setText(memory.getText());
 
     }
 
