@@ -14,10 +14,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.transition.Slide;
-import android.transition.Transition;
-import android.transition.TransitionManager;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -44,10 +40,9 @@ public class ProfileFragment extends Fragment implements Toolbar.OnMenuItemClick
     private MainActivity context;
 
     private EditText usernameText;
-    private ShapeableImageView userProfilePicture;
+    private TextView friendsCountText;
+    private TextView requestsCountText;
     private TextView memoriesCountText;
-    private TextView likesCountText;
-    private TextView commentsCountText;
     private RecyclerView memoriesList;
     private RecyclerView requestsList;
     private LinearLayout requestsLayout;
@@ -111,6 +106,7 @@ public class ProfileFragment extends Fragment implements Toolbar.OnMenuItemClick
         }
         requestsList.setAdapter(requestAdapter);
         requestsList.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
+        requestsCountText.setText(String.valueOf(FriendRequest.getUserFriendRequests().size()));
         if (requestAdapter.getItemCount() == 0) {
             requestsLayout.setVisibility(View.GONE);
             return;
@@ -125,6 +121,7 @@ public class ProfileFragment extends Fragment implements Toolbar.OnMenuItemClick
         memoriesList.setLayoutManager(new LinearLayoutManager(context));
         memoriesList.setAdapter(memoryAdapter);
         memoryAdapter.notifyDataSetChanged();
+        memoriesCountText.setText(String.valueOf(Memory.getUserMemories().size()));
     }
 
     @Override
@@ -134,14 +131,15 @@ public class ProfileFragment extends Fragment implements Toolbar.OnMenuItemClick
         usernameText = view.findViewById(R.id.usernameText);
         usernameText.setText(User.getCurrentUser().getUsername());
         ViewCompat.setTransitionName(usernameText, "username_Text");
-        userProfilePicture = view.findViewById(R.id.userPicture);
-        ViewCompat.setTransitionName(userProfilePicture, "user_Picture");
+        friendsCountText = view.findViewById(R.id.friendsCountText);
+        requestsCountText = view.findViewById(R.id.friendRequestCountText);
         memoriesCountText = view.findViewById(R.id.memoriesCountText);
-        likesCountText = view.findViewById(R.id.likesCountText);
-        commentsCountText = view.findViewById(R.id.commentsCountText);
         memoriesList = view.findViewById(R.id.memoriesList);
         requestsList = view.findViewById(R.id.requestsList);
         requestsLayout = view.findViewById(R.id.requestsLayout);
+
+        friendsCountText.setText(String.valueOf(User.getCurrentUser().getFriends().size()));
+
         if (Memory.getUserMemories() != null)
             showMemories();
         if (FriendRequest.getUserFriendRequests() != null)
@@ -174,7 +172,6 @@ public class ProfileFragment extends Fragment implements Toolbar.OnMenuItemClick
                 .beginTransaction()
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .addSharedElement(usernameText, "nameText")
-                .addSharedElement(userProfilePicture, "userPicture")
                 .replace(R.id.mainFrame, ProfileEditModeFragment.newInstance())
                 .addToBackStack(null)
                 .commit();

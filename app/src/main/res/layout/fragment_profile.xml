@@ -12,24 +12,11 @@
         android:orientation="vertical"
         android:padding="8dp">
 
-        <LinearLayout
-            android:id="@+id/header_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/userPicture"
-                android:layout_width="125dp"
-                android:layout_height="124dp"
-                android:layout_margin="16dp"
-                android:src="@color/purple_500_light"
-                app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.Circle" />
-
             <EditText
                 android:id="@+id/usernameText"
-                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_margin="16dp"
                 android:layout_gravity="center"
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
@@ -38,7 +25,6 @@
                 android:editable="false"
                 android:text="Seyed Parsa Neshei"
                 android:textSize="24sp" />
-        </LinearLayout>
 
         <View
             android:layout_width="match_parent"
@@ -49,7 +35,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:baselineAligned="false">
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -62,7 +49,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="32" />
+                    android:text="125" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -78,17 +65,17 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/likesCountText"
+                    android:id="@+id/friendsCountText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="25k" />
+                    android:text="32" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="@string/likes" />
+                    android:text="@string/friends" />
             </LinearLayout>
 
             <LinearLayout
@@ -98,7 +85,7 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/commentsCountText"
+                    android:id="@+id/friendRequestCountText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -108,7 +95,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="@string/comments" />
+                    android:text="@string/requests" />
             </LinearLayout>
         </LinearLayout>
 

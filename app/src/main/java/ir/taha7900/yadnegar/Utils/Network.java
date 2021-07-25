@@ -534,6 +534,7 @@ public class Network {
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 int code = response.code();
                 if (code / 100 != 2) {
+                    System.out.println(response.body().string());
                     handler.sendEmptyMessage(EDIT_USER_ERROR);
                     return;
                 }

@@ -9,93 +9,90 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="8dp">
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="12dp"
+        android:orientation="vertical">
 
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/userPicture"
-            android:layout_width="125dp"
-            android:layout_height="124dp"
-            android:layout_gravity="center"
-            android:layout_margin="16dp"
-            android:src="@color/purple_500_light"
-            android:transitionName="userPicture"
-            app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.Circle" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="@string/username" />
-
-        <EditText
-            android:id="@+id/usernameInput"
-            android:layout_width="match_parent"
-            android:transitionName="nameText"
-            android:layout_height="wrap_content"
-            android:text="SPNeshaei" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="@string/name" />
-
-        <EditText
-            android:id="@+id/nameInput"
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Seyyed Parsa" />
+            android:layout_marginBottom="10dp"
+            app:startIconDrawable="@drawable/ic_baseline_person_24"
+            app:startIconTint="@color/purple_700">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="@string/surname" />
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/usernameInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/username"
+                android:text="SPNeshaei"
+                android:transitionName="nameText" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-        <EditText
-            android:id="@+id/surnameInput"
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Neshaei" />
+            android:layout_marginBottom="10dp"
+            app:startIconDrawable="@drawable/ic_baseline_info_24"
+            app:startIconTint="@color/purple_700">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="@string/email" />
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/nameInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/name"
+                android:text="Seyyed Parsa" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-        <EditText
-            android:id="@+id/emailInput"
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="seyedparsa@outlook.com" />
+            android:layout_marginBottom="10dp"
+            app:startIconDrawable="@drawable/ic_baseline_email_24"
+            app:startIconTint="@color/purple_700">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="@string/birthday" />
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/emailInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/email"
+                android:text="seyedparsa@outlook.com" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-        <EditText
-            android:id="@+id/birthdayInput"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/birthdayContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="date"
-            android:text="seyedparsa@outlook.com" />
+            android:layout_marginBottom="10dp"
+            app:startIconDrawable="@drawable/ic_baseline_cake_24"
+            app:startIconTint="@color/purple_700">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="@string/phone_number" />
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/birthdayInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:editable="false"
+                android:hint="@string/birthday"
+                android:inputType="date"
+                android:text="2021-12-12" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-        <EditText
-            android:id="@+id/phoneNumberInput"
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="phone"
-            android:text="09360000000" />
+            android:layout_marginBottom="10dp"
+            app:startIconDrawable="@drawable/ic_baseline_phone_android_24"
+            app:startIconTint="@color/purple_700">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/phoneNumberInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/phone_number"
+                android:inputType="phone"
+                android:text="09360000000" />
+
+        </com.google.android.material.textfield.TextInputLayout>
     </LinearLayout>
 
 </ScrollView>

@@ -60,4 +60,6 @@
     <string name="add_user">Add User</string>
     <string name="add_file">Add file</string>
     <string name="caption">Caption</string>
+    <string name="friends">Friends</string>
+    <string name="requests">Requests</string>
 </resources>

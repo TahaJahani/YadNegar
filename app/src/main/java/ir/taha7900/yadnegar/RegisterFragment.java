@@ -39,6 +39,7 @@ public class RegisterFragment extends Fragment {
     private TextInputEditText passwordInput;
     private TextInputEditText nameInput;
     private TextInputEditText emailInput;
+    private TextInputEditText birthdayInput;
     private String birthday;
 
     private final Handler handler;
@@ -100,9 +101,9 @@ public class RegisterFragment extends Fragment {
         passwordInput = view.findViewById(R.id.passwordInput);
         nameInput = view.findViewById(R.id.firstNameInput);
         emailInput = view.findViewById(R.id.emailInput);
+        birthdayInput = view.findViewById(R.id.birthdayInput);
         MaterialButton registerButton = view.findViewById(R.id.registerButton);
         registerButton.setOnClickListener(this::registerClicked);
-        TextInputEditText birthdayInput = view.findViewById(R.id.birthdayInput);
         DatePickerDialog datePickerDialog = new DatePickerDialog(context, (datePicker, i, i1, i2) -> {
             birthday = i + "-" + i1 + "-" + i2;
             birthdayInput.setText(birthday);
@@ -163,6 +164,10 @@ public class RegisterFragment extends Fragment {
         }
         if (emailInput.length() == 0) {
             setError(emailInput);
+            return false;
+        }
+        if (birthday.length() == 0){
+            setError(birthdayInput);
             return false;
         }
         return true;

@@ -2,10 +2,13 @@ package ir.taha7900.yadnegar.Models;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Objects;
 
 public class User {
@@ -66,7 +69,7 @@ public class User {
         return email;
     }
 
-    public Date getBirthday_date() {
+    public Date getBirthdayDate() {
         return birthday_date;
     }
 
@@ -105,5 +108,10 @@ public class User {
     @Override
     public String toString() {
         return username;
+    }
+
+    public String getFormattedBirthday() {
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+        return format.format(birthday_date);
     }
 }
