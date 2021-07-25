@@ -101,6 +101,7 @@ public class AddMemoryFragment extends Fragment {
             memory.setTags(getSelectedTags());
             memory.setPost_files(new ArrayList<>());
             memory.setTaggedPeople(new ArrayList<>());
+            context.hideKeyboard();
             context.getSupportFragmentManager().beginTransaction()
                     .addToBackStack("file upload")
                     .replace(R.id.mainFrame, UploadFileFragment.newInstance(memory))

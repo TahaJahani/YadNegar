@@ -75,7 +75,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (show) {
             topAppBar.setNavigationIcon(R.drawable.ic_baseline_arrow_back_ios_24);
             drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-            topAppBar.setNavigationOnClickListener(view -> getSupportFragmentManager().popBackStack());
+            topAppBar.setNavigationOnClickListener(view -> {
+                getSupportFragmentManager().popBackStack();
+                hideKeyboard();
+            });
         }
     }
 

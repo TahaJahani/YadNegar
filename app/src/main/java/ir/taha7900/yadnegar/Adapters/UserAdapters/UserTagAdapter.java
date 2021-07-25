@@ -14,7 +14,7 @@ import ir.taha7900.yadnegar.R;
 
 public class UserTagAdapter extends UserAdapter {
 
-    public UserTagAdapter(ArrayList<User> allUsers, ArrayList<Long> selectedUsers) {
+    public UserTagAdapter(ArrayList<User> allUsers, ArrayList<User> selectedUsers) {
         super(allUsers, selectedUsers);
     }
 
@@ -30,13 +30,13 @@ public class UserTagAdapter extends UserAdapter {
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         super.onBindViewHolder(holder, position);
         User user = allUsers.get(position);
-        boolean isSelected = selectedUsers.contains(user.getId());
+        boolean isSelected = selectedUsers.contains(user);
         ((TagViewHolder)holder).tickImage.setVisibility(isSelected ? View.VISIBLE : View.GONE);
         ((TagViewHolder)holder).parent.setOnClickListener(view -> {
             if (isSelected)
-                selectedUsers.remove(user.getId());
+                selectedUsers.remove(user);
             else
-                selectedUsers.add(user.getId());
+                selectedUsers.add(user);
             notifyDataSetChanged();
         });
     }

@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.ArrayList;
@@ -34,10 +35,11 @@ public class SearchUserFragment extends Fragment {
     public static final String TYPE_FOLLOW = "follow";
     public static final String TYPE_TAG = "tag";
 
-    private ArrayList<Long> selectedUsers;
+    private ArrayList<User> selectedUsers;
     private ArrayList<User> allUsers = new ArrayList<>();
     private String type;
     private UserAdapter adapter;
+    private MaterialButton doneButton;
 
     private TextInputEditText searchInput;
     private ImageButton searchButton;
@@ -66,7 +68,7 @@ public class SearchUserFragment extends Fragment {
     }
 
 
-    public static SearchUserFragment newInstance(ArrayList<Long> users, String type) {
+    public static SearchUserFragment newInstance(ArrayList<User> users, String type) {
         SearchUserFragment fragment = new SearchUserFragment();
         fragment.selectedUsers = users;
         fragment.type = type;
@@ -88,9 +90,20 @@ public class SearchUserFragment extends Fragment {
         usersList = view.findViewById(R.id.usersList);
         searchButton = view.findViewById(R.id.searchButton);
         searchInput = view.findViewById(R.id.searchInput);
+        doneButton = view.findViewById(R.id.doneButton);
+        doneButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                context.getSupportFragmentManager().popBackStack();
+                context.hideKeyboard();
+            }
+        });
         searchButton.setOnClickListener(this::searchUser);
         usersList.setAdapter(adapter);
         usersList.setLayoutManager(new LinearLayoutManager(context));
+
+        if (type.equals(TYPE_FOLLOW))
+            doneButton.setVisibility(View.GONE);
         return view;
     }
 

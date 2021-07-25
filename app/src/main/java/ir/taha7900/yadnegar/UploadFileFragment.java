@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -15,9 +16,10 @@ import android.view.ViewGroup;
 
 import com.google.android.material.button.MaterialButton;
 
+import java.util.ArrayList;
+
 import ir.taha7900.yadnegar.Adapters.FileAdapter;
 import ir.taha7900.yadnegar.Adapters.UserAdapters.UserAdapter;
-import ir.taha7900.yadnegar.Adapters.UserAdapters.UserTagAdapter;
 import ir.taha7900.yadnegar.Models.Memory;
 
 
@@ -71,7 +73,24 @@ public class UploadFileFragment extends Fragment {
         filesList.setAdapter(fileAdapter);
         filesList.setLayoutManager(new LinearLayoutManager(context));
 
+        addUserButton.setOnClickListener(this::openSelectUserFragment);
+
         return view;
+    }
+
+    private void openSelectUserFragment(View view) {
+        context.getSupportFragmentManager().beginTransaction()
+                .addToBackStack("select users")
+                .replace(R.id.mainFrame, SearchUserFragment.newInstance(memory.getTaggedPeople(), SearchUserFragment.TYPE_TAG))
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                .commit();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        fileAdapter.notifyDataSetChanged();
+        userAdapter.notifyDataSetChanged();
     }
 
     @Override

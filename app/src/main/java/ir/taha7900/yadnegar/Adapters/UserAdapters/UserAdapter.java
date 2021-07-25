@@ -19,9 +19,9 @@ import ir.taha7900.yadnegar.R;
 public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
 
     protected ArrayList<User> allUsers;
-    protected ArrayList<Long> selectedUsers;
+    protected ArrayList<User> selectedUsers;
 
-    public UserAdapter(ArrayList<User> allUsers, ArrayList<Long> selectedUsers) {
+    public UserAdapter(ArrayList<User> allUsers, ArrayList<User> selectedUsers) {
         this.allUsers = allUsers;
         this.selectedUsers = selectedUsers;
     }

@@ -28,7 +28,7 @@ public class UserFollowAdapter extends UserAdapter {
     private DialogInterface tempDialog;
     private FollowViewHolder tempHolder;
 
-    public UserFollowAdapter(ArrayList<User> allUsers, ArrayList<Long> selectedUsers) {
+    public UserFollowAdapter(ArrayList<User> allUsers, ArrayList<User> selectedUsers) {
         super(allUsers, selectedUsers);
         handler = new Handler(Looper.getMainLooper()) {
             @Override
@@ -58,7 +58,7 @@ public class UserFollowAdapter extends UserAdapter {
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         super.onBindViewHolder(holder, position);
         User user = allUsers.get(position);
-        boolean hasFollowed = selectedUsers.contains(user.getId());
+        boolean hasFollowed = selectedUsers.contains(user);
         ((FollowViewHolder)holder).followButton.setVisibility(hasFollowed ? View.GONE : View.VISIBLE);
         ((FollowViewHolder) holder).followButton.setOnClickListener(new View.OnClickListener() {
             @Override
