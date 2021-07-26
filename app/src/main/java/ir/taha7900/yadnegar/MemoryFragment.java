@@ -187,13 +187,20 @@ public class MemoryFragment extends Fragment implements Toolbar.OnMenuItemClickL
     public boolean onMenuItemClick(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.edit) {
-            //TODO
+            openEditMode();
             return true;
         }else if (id == R.id.delete) {
             showDeleteAlert();
             return true;
         }
         return false;
+    }
+
+    private void openEditMode() {
+        context.getSupportFragmentManager().beginTransaction()
+                .replace(R.id.mainFrame, AddMemoryFragment.newInstance(memory))
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                .commit();
     }
 
     private void showDeleteAlert() {

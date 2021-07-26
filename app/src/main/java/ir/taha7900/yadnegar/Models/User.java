@@ -2,6 +2,7 @@ package ir.taha7900.yadnegar.Models;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
@@ -11,7 +12,7 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Objects;
 
-public class User {
+public class User implements Serializable {
 
     private static User currentUser;
 
