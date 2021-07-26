@@ -16,6 +16,7 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="home">Home</string>
+    <string name="memories_feed">Memories Feed</string>
     <string name="setting">Settings</string>
     <string name="logout">Log Out</string>
     <string name="profile">Profile</string>
@@ -41,6 +42,7 @@
     <string name="write_a_comment">Write a Comment…</string>
     <string name="done">Done</string>
     <string name="add_memory">Add Memory</string>
+    <string name="edit_memory">Edit Memory</string>
     <string name="select_tags">Select Tags</string>
     <string name="next">Next</string>
     <string name="title">title</string>

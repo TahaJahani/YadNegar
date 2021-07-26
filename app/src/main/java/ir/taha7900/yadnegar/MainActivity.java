@@ -133,13 +133,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void homeClicked() {
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.mainFrame, HomeFragment.newInstance(), "homeFragment")
+                .replace(R.id.mainFrame, HomeFragment.newInstance(HomeFragment.TYPE_TOP_MEMORIES), "homeFragment")
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                 .commit();
     }
 
     private void memoriesClicked() {
-
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.mainFrame, HomeFragment.newInstance(HomeFragment.TYPE_SELF_MEMORIES), "homeFragment")
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                .commit();
     }
 
     private void tagsClicked() {

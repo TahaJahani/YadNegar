@@ -117,7 +117,7 @@ public class UploadFileFragment extends Fragment {
     private void goToHomePage() {
         context.showLoading(false);
         context.getSupportFragmentManager().beginTransaction()
-                .replace(R.id.mainFrame, HomeFragment.newInstance(), "homeFragment")
+                .replace(R.id.mainFrame, HomeFragment.newInstance(HomeFragment.TYPE_TOP_MEMORIES), "homeFragment")
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                 .commit();
     }

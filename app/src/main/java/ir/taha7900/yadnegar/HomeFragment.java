@@ -27,6 +27,8 @@ import ir.taha7900.yadnegar.Utils.Network;
 
 
 public class HomeFragment extends Fragment {
+    public static final String TYPE_TOP_MEMORIES = "top";
+    public static final String TYPE_SELF_MEMORIES = "self";
 
     private MainActivity context;
     private RecyclerView memoriesList;
@@ -35,6 +37,7 @@ public class HomeFragment extends Fragment {
     private ArrayList<Memory> memories;
 
     private Handler handler;
+    private String type;
 
     public HomeFragment() {
         handler = new Handler(Looper.getMainLooper()) {
@@ -45,8 +48,9 @@ public class HomeFragment extends Fragment {
                         memories = (ArrayList<Memory>) msg.obj;
                         showTopMemories();
                         break;
-                    case MsgCode.MEMORY_ERROR:
-                        //TODO: show error
+                    case MsgCode.USER_MEMORY_DATA_READY:
+                        memories = Memory.getUserMemories();
+                        showTopMemories();
                 }
             }
         };
@@ -59,15 +63,21 @@ public class HomeFragment extends Fragment {
         context.showLoading(false);
     }
 
-    public static HomeFragment newInstance() {
-        return new HomeFragment();
+    public static HomeFragment newInstance(String type) {
+
+        HomeFragment fragment = new HomeFragment();
+        fragment.type = type;
+        return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context.showLoading(true);
-        Network.getTopMemories(handler);
+        if (type.equals(TYPE_TOP_MEMORIES))
+            Network.getTopMemories(handler);
+        if (type.equals(TYPE_SELF_MEMORIES))
+            Network.getUserMemories(handler);
     }
 
     @Override
@@ -79,7 +89,12 @@ public class HomeFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        context.topAppBar.setTitle(R.string.home);
+        int title = 0;
+        if (type.equals(TYPE_TOP_MEMORIES))
+            title =R.string.home;
+        else if (type.equals(TYPE_SELF_MEMORIES))
+            title = R.string.memories_feed;
+        context.topAppBar.setTitle(title);
         context.setShowNavigationIcon(true);
         context.clearTopAppBar();
 
@@ -108,7 +123,7 @@ public class HomeFragment extends Fragment {
     private void openAddMemoryFragment(View view) {
         context.getSupportFragmentManager().beginTransaction()
                 .addToBackStack("addMemory")
-                .replace(R.id.mainFrame, AddMemoryFragment.newInstance(null , HomeFragment.this))
+                .replace(R.id.mainFrame, AddMemoryFragment.newInstance(null, HomeFragment.this))
                 .commit();
     }
 }

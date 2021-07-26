@@ -210,7 +210,12 @@ public class AddMemoryFragment extends Fragment {
     public void onResume() {
         super.onResume();
         context.clearTopAppBar();
-        context.topAppBar.setTitle(getString(R.string.add_memory));
+        int title;
+        if (type.equals(TYPE_CREATE))
+            title = R.string.add_memory;
+        else
+            title = R.string.edit_memory;
+        context.topAppBar.setTitle(getString(title));
         context.setShowNavigationIcon(false);
         context.setShowBackIcon(true);
         userAdapter.notifyDataSetChanged();

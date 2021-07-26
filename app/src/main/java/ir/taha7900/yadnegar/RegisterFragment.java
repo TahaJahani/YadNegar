@@ -68,7 +68,7 @@ public class RegisterFragment extends Fragment {
 
     private void login() {
         context.getSupportFragmentManager().beginTransaction()
-                .replace(R.id.mainFrame, HomeFragment.newInstance(), "homeFragment")
+                .replace(R.id.mainFrame, HomeFragment.newInstance(HomeFragment.TYPE_TOP_MEMORIES), "homeFragment")
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                 .commit();
 //        context.getSupportFragmentManager().popBackStackImmediate();
