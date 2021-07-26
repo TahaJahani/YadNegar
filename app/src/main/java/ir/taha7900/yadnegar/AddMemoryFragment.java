@@ -1,6 +1,7 @@
 package ir.taha7900.yadnegar;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -19,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 
@@ -29,6 +31,8 @@ import ir.taha7900.yadnegar.Models.Memory;
 import ir.taha7900.yadnegar.Models.Tag;
 import ir.taha7900.yadnegar.Utils.MsgCode;
 import ir.taha7900.yadnegar.Utils.Network;
+
+import static android.app.Activity.RESULT_OK;
 
 
 public class AddMemoryFragment extends Fragment {
@@ -49,6 +53,7 @@ public class AddMemoryFragment extends Fragment {
     private ArrayList<Long> selectedTags;
     private Handler handler;
     private Memory memory;
+    private Fragment previousFragment;
     private String type;
 
     public AddMemoryFragment() {
@@ -61,14 +66,24 @@ public class AddMemoryFragment extends Fragment {
                         showTags();
                         break;
                     case MsgCode.EDIT_POST_SUCCESSFUL:
-                        //  memoryUploaded();
+                        finishEdit();
                         break;
                 }
             }
         };
     }
 
-    public static AddMemoryFragment newInstance(Memory memory) {
+    private void finishEdit() {
+        context.showLoading(false);
+
+        Intent intent = new Intent(context, AddMemoryFragment.class);
+        intent.putExtra("memory", new Gson().toJson(memory));
+        context.getSupportFragmentManager().popBackStack();
+
+        previousFragment.onActivityResult(MemoryFragment.LOAD_NEW_MEMORY , RESULT_OK, intent);
+    }
+
+    public static AddMemoryFragment newInstance(Memory memory , Fragment previousFragment) {
         AddMemoryFragment fragment = new AddMemoryFragment();
         if (memory == null) {
             memory = new Memory();
@@ -76,9 +91,14 @@ public class AddMemoryFragment extends Fragment {
             memory.setPost_files(new ArrayList<>());
             memory.setTags(new ArrayList<>());
             fragment.type = TYPE_CREATE;
-        } else
+        } else{
+            for (Tag tag : memory.getTags()) {
+                fragment.selectedTags.add(tag.getId());
+            }
             fragment.type = TYPE_EDIT;
+        }
         fragment.memory = memory;
+        fragment.previousFragment = previousFragment;
         return fragment;
     }
 

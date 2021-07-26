@@ -97,7 +97,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void profileClicked(View view) {
-        Network.logout();
         getSupportFragmentManager().beginTransaction()
                 .addToBackStack("profileFragment")
                 .replace(R.id.mainFrame, ProfileFragment.newInstance(), "profileFragment")
@@ -112,8 +111,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             homeClicked();
         else if (clickedId == R.id.memories)
             memoriesClicked();
-        else if (clickedId == R.id.setting)
-            settingClicked();
         else if (clickedId == R.id.logout)
             logoutClicked();
         else if (clickedId == R.id.tags) {
@@ -124,6 +121,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void logoutClicked() {
+        Network.logout();
         User.logoutCurrentUser();
         getSupportFragmentManager()
                 .beginTransaction()
@@ -141,10 +139,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void memoriesClicked() {
-
-    }
-
-    private void settingClicked() {
 
     }
 

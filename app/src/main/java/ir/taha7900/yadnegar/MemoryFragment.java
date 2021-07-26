@@ -2,6 +2,7 @@ package ir.taha7900.yadnegar;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -16,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -25,6 +27,7 @@ import android.widget.TextView;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.gson.Gson;
 
 import ir.taha7900.yadnegar.Adapters.FileAdapter;
 import ir.taha7900.yadnegar.Adapters.TagAdapter;
@@ -37,6 +40,8 @@ import ir.taha7900.yadnegar.Models.User;
 import ir.taha7900.yadnegar.Utils.MsgCode;
 import ir.taha7900.yadnegar.Utils.Network;
 
+import static android.app.Activity.RESULT_OK;
+
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link MemoryFragment#newInstance} factory method to
@@ -45,6 +50,7 @@ import ir.taha7900.yadnegar.Utils.Network;
 public class MemoryFragment extends Fragment implements Toolbar.OnMenuItemClickListener, DialogInterface.OnClickListener {
 
     private static final String ARG_MEMORY = "memory";
+    public static int LOAD_NEW_MEMORY = 2;
 
     private Memory memory;
     private MainActivity context;
@@ -128,7 +134,6 @@ public class MemoryFragment extends Fragment implements Toolbar.OnMenuItemClickL
         usernameText.setText(creatorUser.getUsername());
         nameText.setText(creatorUser.getFirst_name());
         dateText.setText(memory.getFormattedCreationDate());
-        contentText.setText(memory.getText());
 
     }
 
@@ -173,6 +178,9 @@ public class MemoryFragment extends Fragment implements Toolbar.OnMenuItemClickL
     @Override
     public void onResume() {
         super.onResume();
+        contentText.setText(memory.getText());
+        tagAdapter.notifyDataSetChanged();
+        userAdapter.notifyDataSetChanged();
         context.clearTopAppBar();
         context.setShowNavigationIcon(false);
         context.setShowBackIcon(true);
@@ -198,7 +206,8 @@ public class MemoryFragment extends Fragment implements Toolbar.OnMenuItemClickL
 
     private void openEditMode() {
         context.getSupportFragmentManager().beginTransaction()
-                .replace(R.id.mainFrame, AddMemoryFragment.newInstance(memory))
+                .addToBackStack("editMemory")
+                .replace(R.id.mainFrame, AddMemoryFragment.newInstance(memory , MemoryFragment.this))
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                 .commit();
     }
@@ -224,5 +233,24 @@ public class MemoryFragment extends Fragment implements Toolbar.OnMenuItemClickL
     private void memoryDeleted() {
         context.showLoading(false);
         context.getSupportFragmentManager().popBackStack();
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == RESULT_OK) {
+            if (requestCode==LOAD_NEW_MEMORY){
+                memory = new Gson().fromJson(data.getStringExtra("memory") , Memory.class);
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.d("aboots",memory.getText());
+                        contentText.setText(memory.getText());
+                        tagAdapter.notifyDataSetChanged();
+                        userAdapter.notifyDataSetChanged();
+                    }
+                });
+            }
+        }
     }
 }
