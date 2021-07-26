@@ -8,31 +8,31 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.provider.MediaStore;
+import android.provider.OpenableColumns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.android.material.button.MaterialButton;
 
 import java.io.File;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 import ir.taha7900.yadnegar.Adapters.FileAdapter;
-import ir.taha7900.yadnegar.Adapters.UserAdapters.UserAdapter;
 import ir.taha7900.yadnegar.Models.Memory;
 import ir.taha7900.yadnegar.Utils.MsgCode;
 import ir.taha7900.yadnegar.Utils.Network;
@@ -47,7 +47,7 @@ public class UploadFileFragment extends Fragment {
     private MainActivity context;
 
     private FileAdapter fileAdapter;
-    private int filePickerCode = 2;
+    private static final int PICK_FILE = 2;
     private Handler handler;
 
     public UploadFileFragment() {
@@ -111,25 +111,53 @@ public class UploadFileFragment extends Fragment {
         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         intent.setType("*/*");
-        startActivityForResult(intent, filePickerCode);
+        startActivityForResult(intent, PICK_FILE);
+
+//        Intent gallery = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+//        startActivityForResult(gallery, PICK_FILE);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == filePickerCode) {
-            if (resultCode == Activity.RESULT_OK) {
-                Uri uri;
-                if (data != null) {
-                    uri = data.getData();
-                    File selectedFile = new File(uri.getPath());
-                    Network.addFileToPost(handler, memory, selectedFile);
-                    context.showLoading(true);
+        if (resultCode == Activity.RESULT_OK && requestCode == PICK_FILE) {
+            File file = null;
+            if (data != null) {
+                Uri uri = data.getData();
+                try {
+                    InputStream input = getActivity().getContentResolver().openInputStream(uri);
+                    file = new File(getActivity().getFilesDir(), getNameFromURI(getActivity().getContentResolver(), uri));
+                    try (OutputStream output = new FileOutputStream(file)) {
+                        byte[] buffer = new byte[16 * 1024]; // or other buffer size
+                        int read;
+
+                        while ((read = input.read(buffer)) != -1) {
+                            try {
+                                output.write(buffer, 0, read);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                        output.flush();
+                        input.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
                 }
-            } else {
-                ;//todo something
+                Network.addFileToPost(handler, memory, file);
+                context.showLoading(true);
             }
         }
+    }
+
+    public static String getNameFromURI(ContentResolver resolver, Uri contentUri) {
+        Cursor returnCursor = resolver.query(contentUri, null, null, null, null);
+        int nameIndex = returnCursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
+        returnCursor.moveToFirst();
+        return returnCursor.getString(nameIndex);
     }
 
 }

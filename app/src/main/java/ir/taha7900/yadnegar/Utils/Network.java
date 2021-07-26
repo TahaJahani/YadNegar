@@ -626,7 +626,7 @@ public class Network {
 
     public static void addFileToPost(Handler handler, Memory memory, File file) {
         RequestBody body = new MultipartBody.Builder().setType(MultipartBody.FORM)
-                .addFormDataPart("file", file.getName(), RequestBody.create(MediaType.parse("text/plain"), file))
+                .addFormDataPart("file", file.getName(), RequestBody.create(MediaType.parse("multipart/form-data"), file))
                 .build();
             Request request = addMemoTokenToHeader(getAuthorizedRequest()).url(URL.POST_FILE + "?post=" + memory.getId()).post(body).build();
         httpClient.newCall(request).enqueue(new CustomCallback(handler) {

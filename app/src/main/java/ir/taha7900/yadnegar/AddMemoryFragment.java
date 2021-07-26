@@ -35,8 +35,6 @@ import ir.taha7900.yadnegar.Models.User;
 import ir.taha7900.yadnegar.Utils.MsgCode;
 import ir.taha7900.yadnegar.Utils.Network;
 
-import static ir.taha7900.yadnegar.Utils.MsgCode.EDIT_POST_SUCCESSFUL;
-
 
 public class AddMemoryFragment extends Fragment {
 
@@ -68,6 +66,9 @@ public class AddMemoryFragment extends Fragment {
                         showTags();
                         break;
                     case MsgCode.CREATE_POST_SUCCESSFUL:
+                        memory = Memory.getUserMemories().get(Memory.getUserMemories().size() - 1);
+                        memoryUploaded();
+                        break;
                     case MsgCode.EDIT_POST_SUCCESSFUL:
                         memoryUploaded();
                         break;
