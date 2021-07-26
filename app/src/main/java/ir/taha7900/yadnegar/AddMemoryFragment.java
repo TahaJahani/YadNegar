@@ -21,6 +21,7 @@ import android.widget.ProgressBar;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,6 +31,7 @@ import ir.taha7900.yadnegar.Adapters.TagSelectionAdapter;
 import ir.taha7900.yadnegar.Adapters.UserAdapters.UserAdapter;
 import ir.taha7900.yadnegar.Models.Memory;
 import ir.taha7900.yadnegar.Models.Tag;
+import ir.taha7900.yadnegar.Models.User;
 import ir.taha7900.yadnegar.Utils.MsgCode;
 import ir.taha7900.yadnegar.Utils.Network;
 
@@ -63,7 +65,7 @@ public class AddMemoryFragment extends Fragment {
                     case MsgCode.TAG_DATA_READY:
                         showTags();
                         break;
-                    case MsgCode.MEMORY_DATA_READY:
+                    case MsgCode.CREATE_POST_SUCCESSFUL:
                         memoryUploaded();
                         break;
                 }
@@ -139,15 +141,29 @@ public class AddMemoryFragment extends Fragment {
             memory.setTags(getSelectedTags());
             context.hideKeyboard();
             Network.createPost(handler, extractMemoryData());
+            context.showLoading(true);
         }
     }
 
-    private HashMap<String, String> extractMemoryData() {
-        HashMap<String, String> data = new HashMap<>();
-        return data;
+    private String extractMemoryData() {
+        Gson gson = new Gson();
+        HashMap<String, Object> data = new HashMap<>();
+        data.put("title", memory.getTitle());
+        data.put("text", memory.getText());
+        ArrayList<Long> taggedPeople = new ArrayList<>();
+        ArrayList<Long> tags = new ArrayList<>();
+        for (User person : memory.getTaggedPeople())
+            taggedPeople.add(person.getId());
+        for (Tag tag : memory.getTags())
+            tags.add(tag.getId());
+        data.put("tagged_people", taggedPeople);
+        data.put("tags", tags);
+        System.out.println(gson.toJson(data));
+        return gson.toJson(data);
     }
 
     private void memoryUploaded() {
+        context.showLoading(false);
         context.getSupportFragmentManager().beginTransaction()
                 .addToBackStack("file upload")
                 .replace(R.id.mainFrame, UploadFileFragment.newInstance(memory))

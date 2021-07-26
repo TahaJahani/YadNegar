@@ -546,18 +546,15 @@ public class Network {
         });
     }
 
-    public static void createPost(Handler handler, HashMap<String, String> fields) {
-        FormBody.Builder builder = new FormBody.Builder();
-        for (String s : fields.keySet()) {
-            builder.add(s, Objects.requireNonNull(fields.get(s)));
-        }
-        RequestBody body = builder.build();
+    public static void createPost(Handler handler, String json) {
+        RequestBody body = RequestBody.create(MediaType.parse("application/json"), json);
         Request request = addMemoTokenToHeader(getAuthorizedRequest()).url(URL.USER_MEMOS).post(body).build();
         httpClient.newCall(request).enqueue(new CustomCallback(handler) {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 int code = response.code();
                 if (code / 100 != 2) {
+                    System.out.println(response.body().string());
                     handler.sendEmptyMessage(CREATE_POST_ERROR);
                     return;
                 }
