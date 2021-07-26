@@ -35,6 +35,8 @@ import ir.taha7900.yadnegar.Models.User;
 import ir.taha7900.yadnegar.Utils.MsgCode;
 import ir.taha7900.yadnegar.Utils.Network;
 
+import static ir.taha7900.yadnegar.Utils.MsgCode.EDIT_POST_SUCCESSFUL;
+
 
 public class AddMemoryFragment extends Fragment {
 
@@ -66,6 +68,7 @@ public class AddMemoryFragment extends Fragment {
                         showTags();
                         break;
                     case MsgCode.CREATE_POST_SUCCESSFUL:
+                    case MsgCode.EDIT_POST_SUCCESSFUL:
                         memoryUploaded();
                         break;
                 }
@@ -140,7 +143,10 @@ public class AddMemoryFragment extends Fragment {
             memory.setText(contentInput.getText().toString());
             memory.setTags(getSelectedTags());
             context.hideKeyboard();
-            Network.createPost(handler, extractMemoryData());
+            if (type.equals(TYPE_CREATE))
+                Network.createPost(handler, extractMemoryData());
+            else if (type.equals(TYPE_EDIT))
+                Network.editPost(handler, extractMemoryData(), memory);
             context.showLoading(true);
         }
     }
@@ -165,7 +171,6 @@ public class AddMemoryFragment extends Fragment {
     private void memoryUploaded() {
         context.showLoading(false);
         context.getSupportFragmentManager().beginTransaction()
-                .addToBackStack("file upload")
                 .replace(R.id.mainFrame, UploadFileFragment.newInstance(memory))
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                 .commit();
