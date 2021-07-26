@@ -172,6 +172,7 @@ public class AddMemoryFragment extends Fragment {
     private void goNextPage() {
         context.showLoading(false);
         context.getSupportFragmentManager().beginTransaction()
+                .addToBackStack("addFile")
                 .replace(R.id.mainFrame, UploadFileFragment.newInstance(memory))
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                 .commit();
