@@ -37,6 +37,7 @@ public class HomeFragment extends Fragment {
     private ArrayList<Memory> memories;
 
     private Handler handler;
+    private TextView titleTextView;
     private String type;
 
     public HomeFragment() {
@@ -89,12 +90,17 @@ public class HomeFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        int title = 0;
-        if (type.equals(TYPE_TOP_MEMORIES))
-            title =R.string.home;
-        else if (type.equals(TYPE_SELF_MEMORIES))
-            title = R.string.memories_feed;
-        context.topAppBar.setTitle(title);
+        int topAppBarTitle = 0;
+        int memoTitle = 0;
+        if (type.equals(TYPE_TOP_MEMORIES)) {
+            topAppBarTitle = R.string.home;
+            memoTitle = R.string.top_memories;
+        } else if (type.equals(TYPE_SELF_MEMORIES)) {
+            topAppBarTitle = R.string.memories_feed;
+            memoTitle = R.string.your_memories;
+        }
+        context.topAppBar.setTitle(topAppBarTitle);
+        titleTextView.setText(memoTitle);
         context.setShowNavigationIcon(true);
         context.clearTopAppBar();
 
@@ -114,6 +120,7 @@ public class HomeFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         memoriesList = view.findViewById(R.id.memoriesList);
         addMemoryButton = view.findViewById(R.id.addMemoryButton);
+        titleTextView = view.findViewById(R.id.titleMemos);
         addMemoryButton.setOnClickListener(this::openAddMemoryFragment);
         if (memories != null)
             showTopMemories();

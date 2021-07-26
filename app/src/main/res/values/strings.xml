@@ -4,6 +4,8 @@
     <string name="password">Password</string>
     <string name="login">Login</string>
     <string name="welcome">Welcome to memoreminder</string>
+    <string name="top_memories">Top Memories</string>
+    <string name="your_memories">Your Memories</string>
     <string name="or">or</string>
     <string name="register">Register</string>
     <string name="email">Email</string>
