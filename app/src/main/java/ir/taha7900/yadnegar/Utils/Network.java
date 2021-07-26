@@ -12,7 +12,6 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
@@ -64,8 +63,6 @@ import static ir.taha7900.yadnegar.Utils.MsgCode.GET_USER_DATA_ERROR;
 import static ir.taha7900.yadnegar.Utils.MsgCode.GET_USER_DATA_SUCCESSFUL;
 import static ir.taha7900.yadnegar.Utils.MsgCode.LOGIN_FAILED;
 import static ir.taha7900.yadnegar.Utils.MsgCode.LOGIN_SUCCESSFUL;
-import static ir.taha7900.yadnegar.Utils.MsgCode.LOGOUT_ERROR;
-import static ir.taha7900.yadnegar.Utils.MsgCode.LOGOUT_SUCCESSFUL;
 import static ir.taha7900.yadnegar.Utils.MsgCode.MEMORY_DATA_READY;
 import static ir.taha7900.yadnegar.Utils.MsgCode.MEMORY_ERROR;
 import static ir.taha7900.yadnegar.Utils.MsgCode.NETWORK_ERROR;
@@ -501,22 +498,15 @@ public class Network {
         });
     }
 
-    public static void logout(Handler handler) {
+    public static void logout() {
         RequestBody body = new FormBody.Builder().build();
         Request request = addMemoTokenToHeader(getAuthorizedRequest()).url(URL.LOGOUT).post(body).build();
-        httpClient.newCall(request).enqueue(new CustomCallback(handler) {
+        httpClient.newCall(request).enqueue(new CustomCallback(null) {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) {
-                int code = response.code();
-                if (code / 100 != 2) {
-                    handler.sendEmptyMessage(LOGOUT_ERROR);
-                    return;
-                }
-                handler.sendEmptyMessage(LOGOUT_SUCCESSFUL);
                 User.setCurrentUser(null);
                 Memory.setUserMemories(new ArrayList<>());
                 Tag.setUserTags(new ArrayList<>());
-                //todo
             }
         });
     }
@@ -628,7 +618,7 @@ public class Network {
         RequestBody body = new MultipartBody.Builder().setType(MultipartBody.FORM)
                 .addFormDataPart("file", file.getName(), RequestBody.create(MediaType.parse("multipart/form-data"), file))
                 .build();
-            Request request = addMemoTokenToHeader(getAuthorizedRequest()).url(URL.POST_FILE + "?post=" + memory.getId()).post(body).build();
+        Request request = addMemoTokenToHeader(getAuthorizedRequest()).url(URL.POST_FILE + "?post=" + memory.getId()).post(body).build();
         httpClient.newCall(request).enqueue(new CustomCallback(handler) {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
@@ -649,7 +639,7 @@ public class Network {
         });
     }
 
-    public static void deleteLikeForMemory(Handler handler, Like like ,Memory memory) {
+    public static void deleteLikeForMemory(Handler handler, Like like, Memory memory) {
         Request request = addMemoTokenToHeader(getAuthorizedRequest()).url(URL.LIKE_POST + like.getId() + "/").delete().build();
         httpClient.newCall(request).enqueue(new CustomCallback(handler) {
             @Override
@@ -667,7 +657,7 @@ public class Network {
         });
     }
 
-    public static void deleteLikeForComment(Handler handler, Like like ,Comment comment) {
+    public static void deleteLikeForComment(Handler handler, Like like, Comment comment) {
         Request request = addMemoTokenToHeader(getAuthorizedRequest()).url(URL.LIKE_COMMENT + like.getId() + "/").delete().build();
         httpClient.newCall(request).enqueue(new CustomCallback(handler) {
             @Override

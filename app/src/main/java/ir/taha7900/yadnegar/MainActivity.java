@@ -25,6 +25,7 @@ import java.util.Objects;
 import ir.taha7900.yadnegar.Models.Memory;
 import ir.taha7900.yadnegar.Models.User;
 import ir.taha7900.yadnegar.Utils.AndroidUtilities;
+import ir.taha7900.yadnegar.Utils.Network;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, NavigationView.OnNavigationItemSelectedListener {
 
@@ -96,6 +97,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void profileClicked(View view) {
+        Network.logout();
         getSupportFragmentManager().beginTransaction()
                 .addToBackStack("profileFragment")
                 .replace(R.id.mainFrame, ProfileFragment.newInstance(), "profileFragment")
