@@ -462,20 +462,19 @@ public class Network {
         });
     }
 
-    public static void changeFriendRequestStatus(FriendRequest friendRequest, String new_status, Handler handler) {
+    public static void changeFriendRequestStatus(FriendRequest friendRequest, String new_status) {
         RequestBody body = new FormBody.Builder()
                 .add("status", new_status)
                 .build();
         Request request = addMemoTokenToHeader(getAuthorizedRequest()).url(URL.FRIEND_REQUEST + friendRequest.getId() + "/").patch(body).build();
-        httpClient.newCall(request).enqueue(new CustomCallback(handler) {
+        httpClient.newCall(request).enqueue(new CustomCallback(null) {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) {
                 int code = response.code();
-                if (code / 100 != 2) {
-                    handler.sendEmptyMessage(CHANGE_FRIEND_REQUEST_STATUS_ERROR);
-                    return;
+                friendRequest.setStatus(new_status);
+                if (new_status.equals(FriendRequest.STATUS_ACCEPTED)){
+                    User.getCurrentUser().getFriends().add(friendRequest.getFromUser().getId());
                 }
-                handler.sendEmptyMessage(CHANGE_FRIEND_REQUEST_STATUS_SUCCESSFUL);
             }
         });
     }
@@ -505,8 +504,8 @@ public class Network {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) {
                 User.setCurrentUser(null);
-                Memory.setUserMemories(new ArrayList<>());
-                Tag.setUserTags(new ArrayList<>());
+                Memory.setUserMemories(null);
+                Tag.setUserTags(null);
             }
         });
     }

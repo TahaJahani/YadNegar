@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import ir.taha7900.yadnegar.MainActivity;
 import ir.taha7900.yadnegar.Models.FriendRequest;
 import ir.taha7900.yadnegar.R;
+import ir.taha7900.yadnegar.Utils.Network;
 
 public class FriendRequestAdapter extends RecyclerView.Adapter<FriendRequestAdapter.ViewHolder> {
 
@@ -45,11 +46,11 @@ public class FriendRequestAdapter extends RecyclerView.Adapter<FriendRequestAdap
     }
 
     private void rejectRequest(FriendRequest request) {
-        //todo
+        Network.changeFriendRequestStatus(request,FriendRequest.STATUS_REJECTED);
     }
 
     private void acceptRequest(FriendRequest request) {
-        //todo
+        Network.changeFriendRequestStatus(request,FriendRequest.STATUS_ACCEPTED);
     }
 
     @Override
