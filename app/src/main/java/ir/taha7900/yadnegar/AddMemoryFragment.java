@@ -1,16 +1,7 @@
 package ir.taha7900.yadnegar;
 
 import android.content.Context;
-import android.graphics.Rect;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -19,19 +10,23 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.gson.Gson;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import ir.taha7900.yadnegar.Adapters.TagAdapter;
 import ir.taha7900.yadnegar.Adapters.TagSelectionAdapter;
 import ir.taha7900.yadnegar.Adapters.UserAdapters.UserAdapter;
 import ir.taha7900.yadnegar.Models.Memory;
 import ir.taha7900.yadnegar.Models.Tag;
-import ir.taha7900.yadnegar.Models.User;
 import ir.taha7900.yadnegar.Utils.MsgCode;
 import ir.taha7900.yadnegar.Utils.Network;
 
@@ -65,12 +60,8 @@ public class AddMemoryFragment extends Fragment {
                     case MsgCode.TAG_DATA_READY:
                         showTags();
                         break;
-                    case MsgCode.CREATE_POST_SUCCESSFUL:
-                        memory = Memory.getUserMemories().get(Memory.getUserMemories().size() - 1);
-                        memoryUploaded();
-                        break;
                     case MsgCode.EDIT_POST_SUCCESSFUL:
-                        memoryUploaded();
+                        //  memoryUploaded();
                         break;
                 }
             }
@@ -128,7 +119,7 @@ public class AddMemoryFragment extends Fragment {
         else
             showTags();
 
-        if (type.equals(TYPE_EDIT)){
+        if (type.equals(TYPE_EDIT)) {
             titleInput.setText(memory.getTitle());
             contentInput.setText(memory.getText());
         }
@@ -150,31 +141,16 @@ public class AddMemoryFragment extends Fragment {
             memory.setTags(getSelectedTags());
             context.hideKeyboard();
             if (type.equals(TYPE_CREATE))
-                Network.createPost(handler, extractMemoryData());
-            else if (type.equals(TYPE_EDIT))
-                Network.editPost(handler, extractMemoryData(), memory);
-            context.showLoading(true);
+                goNextPage();
+                // Network.createPost(handler, extractMemoryData());
+            else if (type.equals(TYPE_EDIT)) {
+                Network.editPost(handler, memory.extractMemoryData(), memory);
+                context.showLoading(true);
+            }
         }
     }
 
-    private String extractMemoryData() {
-        Gson gson = new Gson();
-        HashMap<String, Object> data = new HashMap<>();
-        data.put("title", memory.getTitle());
-        data.put("text", memory.getText());
-        ArrayList<Long> taggedPeople = new ArrayList<>();
-        ArrayList<Long> tags = new ArrayList<>();
-        for (User person : memory.getTaggedPeople())
-            taggedPeople.add(person.getId());
-        for (Tag tag : memory.getTags())
-            tags.add(tag.getId());
-        data.put("tagged_people", taggedPeople);
-        data.put("tags", tags);
-        System.out.println(gson.toJson(data));
-        return gson.toJson(data);
-    }
-
-    private void memoryUploaded() {
+    private void goNextPage() {
         context.showLoading(false);
         context.getSupportFragmentManager().beginTransaction()
                 .replace(R.id.mainFrame, UploadFileFragment.newInstance(memory))

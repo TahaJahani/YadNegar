@@ -1,7 +1,10 @@
 package ir.taha7900.yadnegar.Models;
 
+import com.google.gson.Gson;
+
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Memory implements Serializable {
 
@@ -123,5 +126,22 @@ public class Memory implements Serializable {
 
     public void setTaggedPeople(ArrayList<User> tagged_people) {
         this.tagged_people = tagged_people;
+    }
+
+    public String extractMemoryData() {
+        Gson gson = new Gson();
+        HashMap<String, Object> data = new HashMap<>();
+        data.put("title", this.getTitle());
+        data.put("text", this.getText());
+        ArrayList<Long> taggedPeople = new ArrayList<>();
+        ArrayList<Long> tags = new ArrayList<>();
+        for (User person : this.getTaggedPeople())
+            taggedPeople.add(person.getId());
+        for (Tag tag : this.getTags())
+            tags.add(tag.getId());
+        data.put("tagged_people", taggedPeople);
+        data.put("tags", tags);
+        System.out.println(gson.toJson(data));
+        return gson.toJson(data);
     }
 }

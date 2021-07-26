@@ -11,8 +11,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.provider.MediaStore;
 import android.provider.OpenableColumns;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -31,6 +32,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 
 import ir.taha7900.yadnegar.Adapters.FileAdapter;
 import ir.taha7900.yadnegar.Models.Memory;
@@ -50,23 +52,75 @@ public class UploadFileFragment extends Fragment {
     private static final int PICK_FILE = 2;
     private Handler handler;
 
+    private static ArrayList<Uri> filesSelected = new ArrayList<>();
+
+
     public UploadFileFragment() {
         handler = new Handler(Looper.getMainLooper()) {
             @Override
             public void handleMessage(@NonNull Message msg) {
                 switch (msg.what) {
                     case MsgCode.POST_FILE_SUCCESSFUL:
-                        fileUploaded();
+                        uploadFiles();
+                        break;
+                    case MsgCode.CREATE_POST_SUCCESSFUL:
+                        memory = Memory.getUserMemories().get(Memory.getUserMemories().size() - 1);
+                        memory.setPost_files(new ArrayList<>());
+                        uploadFiles();
+                        break;
                 }
             }
         };
     }
 
-    private void fileUploaded() {
-        context.showLoading(false);
-        fileAdapter.notifyDataSetChanged();
+    private void uploadFiles() {
+        if (filesSelected.size() == 0) {
+            goToHomePage();
+            return;
+        }
+        Uri uri = filesSelected.get(0);
+        File file;
+        try {
+            InputStream input = getActivity().getContentResolver().openInputStream(uri);
+            file = new File(getActivity().getFilesDir(), getNameFromURI(getActivity().getContentResolver(), uri));
+            try (OutputStream output = new FileOutputStream(file)) {
+                byte[] buffer = new byte[16 * 1024]; // or other buffer size
+                int read;
+
+                while ((read = input.read(buffer)) != -1) {
+                    try {
+                        output.write(buffer, 0, read);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                output.flush();
+                input.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+                Log.w("file" , e.getMessage());
+                goToHomePage();
+                return;
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            Log.w("file" , e.getMessage());
+            goToHomePage();
+            return;
+        }
+        filesSelected.remove(uri);
+        Network.addFileToPost(handler, memory, file);
     }
 
+
+    private void goToHomePage() {
+        context.showLoading(false);
+        context.getSupportFragmentManager().beginTransaction()
+                .replace(R.id.mainFrame, HomeFragment.newInstance(), "homeFragment")
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                .commit();
+    }
 
     public static UploadFileFragment newInstance(Memory memory) {
         UploadFileFragment fragment = new UploadFileFragment();
@@ -90,10 +144,17 @@ public class UploadFileFragment extends Fragment {
         filesList.setAdapter(fileAdapter);
         filesList.setLayoutManager(new LinearLayoutManager(context));
 
+        doneButton.setOnClickListener(view1 -> uploadMemory());
         addFileButton.setOnClickListener(view1 -> openFilePicker());
 
         return view;
     }
+
+    private void uploadMemory() {
+        Network.createPost(handler, memory.extractMemoryData());
+        context.showLoading(true);
+    }
+
 
     @Override
     public void onResume() {
@@ -112,44 +173,46 @@ public class UploadFileFragment extends Fragment {
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         intent.setType("*/*");
         startActivityForResult(intent, PICK_FILE);
-
-//        Intent gallery = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
-//        startActivityForResult(gallery, PICK_FILE);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK && requestCode == PICK_FILE) {
-            File file = null;
-            if (data != null) {
-                Uri uri = data.getData();
-                try {
-                    InputStream input = getActivity().getContentResolver().openInputStream(uri);
-                    file = new File(getActivity().getFilesDir(), getNameFromURI(getActivity().getContentResolver(), uri));
-                    try (OutputStream output = new FileOutputStream(file)) {
-                        byte[] buffer = new byte[16 * 1024]; // or other buffer size
-                        int read;
+            Uri uri = data.getData();
+            filesSelected.add(uri);
+            memory.addPostFile(getNameFromURI(getActivity().getContentResolver(), uri));
+            fileAdapter.notifyDataSetChanged();
 
-                        while ((read = input.read(buffer)) != -1) {
-                            try {
-                                output.write(buffer, 0, read);
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                        }
-
-                        output.flush();
-                        input.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                }
-                Network.addFileToPost(handler, memory, file);
-                context.showLoading(true);
-            }
+//            File file = null;
+//            if (data != null) {
+//                Uri uri = data.getData();
+//                filesSelected.add(uri);
+//                try {
+//                    InputStream input = getActivity().getContentResolver().openInputStream(uri);
+//                    file = new File(getActivity().getFilesDir(), getNameFromURI(getActivity().getContentResolver(), uri));
+//                    try (OutputStream output = new FileOutputStream(file)) {
+//                        byte[] buffer = new byte[16 * 1024]; // or other buffer size
+//                        int read;
+//
+//                        while ((read = input.read(buffer)) != -1) {
+//                            try {
+//                                output.write(buffer, 0, read);
+//                            } catch (IOException e) {
+//                                e.printStackTrace();
+//                            }
+//                        }
+//
+//                        output.flush();
+//                        input.close();
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    }
+//                } catch (FileNotFoundException e) {
+//                    e.printStackTrace();
+//                }
+//                Network.addFileToPost(handler, memory, file);
+//            }
         }
     }
 
