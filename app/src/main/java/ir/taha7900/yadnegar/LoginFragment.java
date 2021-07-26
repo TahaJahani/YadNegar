@@ -16,9 +16,11 @@ import androidx.fragment.app.FragmentTransaction;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.gson.Gson;
 
 import java.util.Objects;
 
+import ir.taha7900.yadnegar.Utils.DataProvider;
 import ir.taha7900.yadnegar.Utils.MsgCode;
 import ir.taha7900.yadnegar.Utils.Network;
 

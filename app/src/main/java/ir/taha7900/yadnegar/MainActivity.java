@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.core.view.ViewCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.app.Activity;
@@ -25,6 +26,7 @@ import java.util.Objects;
 import ir.taha7900.yadnegar.Models.Memory;
 import ir.taha7900.yadnegar.Models.User;
 import ir.taha7900.yadnegar.Utils.AndroidUtilities;
+import ir.taha7900.yadnegar.Utils.DataProvider;
 import ir.taha7900.yadnegar.Utils.Network;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, NavigationView.OnNavigationItemSelectedListener {
@@ -52,14 +54,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         sideDrawer.setNavigationItemSelectedListener(this);
         drawerHeader.setOnClickListener(this::profileClicked);
 
-        getSupportFragmentManager().beginTransaction()
-                .add(R.id.mainFrame, LoginFragment.newInstance(), "loginFragment")
-                .commit();
+        loadInitialFragment();
+
         setShowNavigationIcon(false);
         topAppBar.setTitleTextColor(Color.WHITE);
         topAppBar.setBackgroundColor(Color.rgb(231, 133, 54));
         topAppBar.setTitle(R.string.login);
     }
+
+    private void loadInitialFragment() {
+        Fragment fragment;
+        if (DataProvider.loadData(this))
+            fragment = HomeFragment.newInstance(HomeFragment.TYPE_TOP_MEMORIES);
+        else
+            fragment = LoginFragment.newInstance();
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.mainFrame, fragment, "initialFragment")
+                .commit();
+    }
+
 
     public void setShowNavigationIcon(boolean show) {
         if (show) {
@@ -169,4 +182,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        DataProvider.saveData(this);
+    }
 }
