@@ -26,6 +26,8 @@ import ir.taha7900.yadnegar.Models.Memory;
 public class UploadFileFragment extends Fragment {
 
     private static final String ARG_MEMORY = "memory";
+    private static final int PICK_IMAGE = 1;
+
 
     private Memory memory;
     private RecyclerView filesList;
@@ -64,8 +66,13 @@ public class UploadFileFragment extends Fragment {
         fileAdapter = new FileAdapter(memory.getPostFiles());
         filesList.setAdapter(fileAdapter);
         filesList.setLayoutManager(new LinearLayoutManager(context));
+        addFileButton.setOnClickListener(this::addFile);
 
         return view;
+    }
+
+    private void addFile(View view) {
+
     }
 
     @Override

@@ -37,7 +37,7 @@
     <string name="login_failed">Login failed</string>
     <string name="surname">Surname</string>
     <string name="connection_error">Connection Error</string>
-    <string name="write_a_comment">Write a Comment...</string>
+    <string name="write_a_comment">Write a Comment…</string>
     <string name="done">Done</string>
     <string name="add_memory">Add Memory</string>
     <string name="select_tags">Select Tags</string>
