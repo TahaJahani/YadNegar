@@ -126,6 +126,11 @@ public class AddMemoryFragment extends Fragment {
             tagsProgressBar.setVisibility(View.VISIBLE);
         else
             showTags();
+
+        if (type.equals(TYPE_EDIT)){
+            titleInput.setText(memory.getTitle());
+            contentInput.setText(memory.getText());
+        }
         return view;
     }
 

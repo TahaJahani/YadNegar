@@ -2,8 +2,10 @@ package ir.taha7900.yadnegar;
 
 
 import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -17,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +27,8 @@ import android.view.ViewGroup;
 import com.google.android.material.button.MaterialButton;
 
 import java.io.File;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 
 import ir.taha7900.yadnegar.Adapters.FileAdapter;
@@ -105,6 +110,7 @@ public class UploadFileFragment extends Fragment {
     private void openFilePicker() {
         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
         intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("*/*");
         startActivityForResult(intent, filePickerCode);
     }
 
@@ -112,17 +118,18 @@ public class UploadFileFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == filePickerCode) {
-            if (resultCode == Activity.RESULT_OK){
+            if (resultCode == Activity.RESULT_OK) {
                 Uri uri;
-                if (data != null){
+                if (data != null) {
                     uri = data.getData();
                     File selectedFile = new File(uri.getPath());
                     Network.addFileToPost(handler, memory, selectedFile);
                     context.showLoading(true);
                 }
-            }else{
+            } else {
                 ;//todo something
             }
         }
     }
+
 }
