@@ -142,7 +142,6 @@ public class AddMemoryFragment extends Fragment {
             context.hideKeyboard();
             if (type.equals(TYPE_CREATE))
                 goNextPage();
-                // Network.createPost(handler, extractMemoryData());
             else if (type.equals(TYPE_EDIT)) {
                 Network.editPost(handler, memory.extractMemoryData(), memory);
                 context.showLoading(true);

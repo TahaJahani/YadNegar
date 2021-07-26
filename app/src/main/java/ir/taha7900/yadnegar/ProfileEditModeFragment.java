@@ -97,7 +97,7 @@ public class ProfileEditModeFragment extends Fragment implements Toolbar.OnMenuI
 
         User current = User.getCurrentUser();
         usernameInput.setText(current.getUsername());
-        nameInput.setText(current.getFullName());
+        nameInput.setText(current.getFirst_name());
         emailInput.setText(current.getEmail());
         birthdayInput.setText(current.getFormattedBirthday());
         phoneNumberInput.setText(current.getPhone_number());

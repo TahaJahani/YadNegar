@@ -184,35 +184,6 @@ public class UploadFileFragment extends Fragment {
             memory.addPostFile(getNameFromURI(getActivity().getContentResolver(), uri));
             fileAdapter.notifyDataSetChanged();
 
-//            File file = null;
-//            if (data != null) {
-//                Uri uri = data.getData();
-//                filesSelected.add(uri);
-//                try {
-//                    InputStream input = getActivity().getContentResolver().openInputStream(uri);
-//                    file = new File(getActivity().getFilesDir(), getNameFromURI(getActivity().getContentResolver(), uri));
-//                    try (OutputStream output = new FileOutputStream(file)) {
-//                        byte[] buffer = new byte[16 * 1024]; // or other buffer size
-//                        int read;
-//
-//                        while ((read = input.read(buffer)) != -1) {
-//                            try {
-//                                output.write(buffer, 0, read);
-//                            } catch (IOException e) {
-//                                e.printStackTrace();
-//                            }
-//                        }
-//
-//                        output.flush();
-//                        input.close();
-//                    } catch (IOException e) {
-//                        e.printStackTrace();
-//                    }
-//                } catch (FileNotFoundException e) {
-//                    e.printStackTrace();
-//                }
-//                Network.addFileToPost(handler, memory, file);
-//            }
         }
     }
 

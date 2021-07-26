@@ -126,7 +126,7 @@ public class MemoryFragment extends Fragment implements Toolbar.OnMenuItemClickL
 
         User creatorUser = memory.getCreatorUser();
         usernameText.setText(creatorUser.getUsername());
-        nameText.setText(creatorUser.getFullName());
+        nameText.setText(creatorUser.getFirst_name());
         dateText.setText(memory.getFormattedCreationDate());
         contentText.setText(memory.getText());
 

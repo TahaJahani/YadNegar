@@ -87,7 +87,7 @@ public class HomeFragment extends Fragment {
         TextView name = header.findViewById(R.id.nameText);
         TextView username = header.findViewById(R.id.usernameText);
         User current = User.getCurrentUser();
-        name.setText(current.getFullName());
+        name.setText(current.getFirst_name());
         username.setText(current.getUsername());
         if (adapter != null)
             adapter.notifyDataSetChanged();
